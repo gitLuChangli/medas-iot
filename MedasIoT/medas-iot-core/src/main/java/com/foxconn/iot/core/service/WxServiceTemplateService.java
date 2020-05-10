@@ -6,11 +6,15 @@ import com.foxconn.iot.core.dto.WxServiceTemplateDto;
 
 public interface WxServiceTemplateService {
 	
+	WxServiceTemplateDto create(WxServiceTemplateDto template);
+	
 	WxServiceTemplateDto save(WxServiceTemplateDto template);
 	
-	WxServiceTemplateDto findByTemplateId(String templateId);
+	WxServiceTemplateDto findById(long id);
 	
-	List<WxServiceTemplateDto> findByServiceId(String serviceId);
+	List<WxServiceTemplateDto> findByWxServiceAccountId(long wxServiceAccountId);
 	
-	int udpateStatusByTemplateId(int status, String templateId);
+	int udpateStatusById(int status, long id);
+	
+	void deleteById(long id);
 }

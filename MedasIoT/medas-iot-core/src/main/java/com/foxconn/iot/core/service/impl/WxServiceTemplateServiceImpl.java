@@ -17,50 +17,90 @@ import com.foxconn.iot.core.exception.ErrorCode;
 import com.foxconn.iot.core.repository.WxServiceAccountRepository;
 import com.foxconn.iot.core.repository.WxServiceTemplateRepository;
 import com.foxconn.iot.core.service.WxServiceTemplateService;
+import com.mysql.cj.util.StringUtils;
+
+import io.netty.util.internal.StringUtil;
 
 @Service
 public class WxServiceTemplateServiceImpl implements WxServiceTemplateService {
 
 	@Autowired
 	private WxServiceTemplateRepository wxServiceTemplateRepository;
-	
+
 	@Autowired
 	private WxServiceAccountRepository wxServiceAccountRepository;
-	
+
 	@Override
-	public WxServiceTemplateDto save(WxServiceTemplateDto template) {
+	public WxServiceTemplateDto create(WxServiceTemplateDto template) {
 		WxServiceAccount account = wxServiceAccountRepository.findByAppId(template.getAccountId());
 		if (account == null) {
 			throw new BizException(ErrorCode.NOT_FOUND, "无效的微信公众平台服务号ID");
 		}
-		
+
 		WxServiceTemplate wxTemplate = new WxServiceTemplate();
 		BeanUtils.copyProperties(template, wxTemplate);
+		wxTemplate.setAccount(account);
 		wxServiceTemplateRepository.save(wxTemplate);
 		template.setId(wxTemplate.getId());
 		return template;
 	}
 
 	@Override
-	public WxServiceTemplateDto findByTemplateId(String templateId) {
-		WxServiceTemplate template = wxServiceTemplateRepository.findByTemplateId(templateId);
+	public WxServiceTemplateDto save(WxServiceTemplateDto template) {
+		WxServiceTemplate wxTemplate = wxServiceTemplateRepository.findByTemplateId(template.getTemplateId());
+		if (wxTemplate == null) {
+			throw new BizException(ErrorCode.NOT_FOUND, "无效的微信公众号服务消息模板");
+		}
+
+		if (!StringUtil.isNullOrEmpty(template.getName())) {
+			wxTemplate.setName(template.getName());
+		}
+		if (!StringUtils.isNullOrEmpty(template.getFormat())) {
+			wxTemplate.setFormat(template.getFormat());
+		}
+
+		if (!StringUtils.isNullOrEmpty(template.getAccountId())) {
+			WxServiceAccount account = wxServiceAccountRepository.findByAppId(template.getAccountId());
+			if (account == null) {
+				throw new BizException(ErrorCode.NOT_FOUND, "无效的微信公众平台服务号");
+			}
+
+			wxTemplate.setAccount(account);
+		}
+		wxServiceTemplateRepository.save(wxTemplate);
+		template.setId(wxTemplate.getId());
+		return template;
+	}
+
+	@Override
+	public WxServiceTemplateDto findById(long id) {
+		WxServiceTemplate template = wxServiceTemplateRepository.findById(id);
 		WxServiceTemplateDto dto = new WxServiceTemplateDto();
 		BeanUtils.copyProperties(template, dto);
 		return dto;
 	}
 
 	@Override
-	public List<WxServiceTemplateDto> findByServiceId(String serviceId) {
-		List<WxServiceTemplate> templates = wxServiceTemplateRepository.queryByServiceAppId(serviceId);
+	public List<WxServiceTemplateDto> findByWxServiceAccountId(long wxServiceAccountId) {
+		List<WxServiceTemplate> templates = wxServiceTemplateRepository.queryByWxServiceAccountId(wxServiceAccountId);
 		List<WxServiceTemplateDto> dtos = new ArrayList<>();
- 		BeanUtils.copyProperties(templates, dtos);
+		for (WxServiceTemplate template : templates) {
+			WxServiceTemplateDto dto = new WxServiceTemplateDto();
+			BeanUtils.copyProperties(template, dto);
+			dtos.add(dto);
+		}
 		return dtos;
 	}
 
 	@Override
 	@Transactional
-	public int udpateStatusByTemplateId(int status, String templateId) {
-		return wxServiceTemplateRepository.updateStatusByTemplateId(status, templateId);
+	public int udpateStatusById(int status, long id) {
+		return wxServiceTemplateRepository.updateStatusById(status, id);
 	}
 
+	@Override
+	@Transactional
+	public void deleteById(long id) {
+		wxServiceTemplateRepository.deleteById(id);
+	}
 }

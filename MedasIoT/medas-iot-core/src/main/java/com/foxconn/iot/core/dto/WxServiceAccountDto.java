@@ -39,6 +39,9 @@ public class WxServiceAccountDto {
 	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	@JsonView(WxServiceAccountDetail.class)
 	private Date lastModify;
+	
+	@JsonView(WxServiceAccountDetail.class)
+	private int status;
 
 	public long getId() {
 		return id;
@@ -88,4 +91,11 @@ public class WxServiceAccountDto {
 		this.lastModify = lastModify;
 	}
 
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
 }

@@ -54,7 +54,13 @@ public class WxServiceAccountServiceImpl implements WxServiceAccountService {
 	public Page<WxServiceAccountDto> findAll(Pageable pageable) {
 		Page<WxServiceAccount> accounts = wxServiceAccountRepository.findAll(pageable);
 		List<WxServiceAccountDto> dtos = new ArrayList<>();
-		BeanUtils.copyProperties(accounts, dtos);
+		accounts.getContent().forEach(item-> {
+			WxServiceAccountDto dto = new WxServiceAccountDto();
+			BeanUtils.copyProperties(item, dto);
+			dtos.add(dto);
+		});
+		
+		BeanUtils.copyProperties(accounts.getContent(), dtos);
 		return new PageImpl<>(dtos, pageable, accounts.getTotalElements());
 	}
 

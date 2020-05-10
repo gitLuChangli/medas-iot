@@ -3,6 +3,9 @@ package com.foxconn.iot.core.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +28,8 @@ public class WxServiceAccountController {
 	@Autowired
 	private WxServiceAccountService wxServiceAccountService;
 
-	@PostMapping(value = "/")
 	@ResponseSimple
+	@PostMapping(value = "/")
 	public void createAccount(
 			@Valid @JsonView(WxServiceAccountDto.WxServiceAccountSimple.class) @RequestBody WxServiceAccountDto account,
 			BindingResult result) {
@@ -34,12 +37,20 @@ public class WxServiceAccountController {
 		wxServiceAccountService.create(account);
 	}
 
+	@ResponseSimple
 	@GetMapping(value = "/{id:\\d+}")
 	@JsonView(WxServiceAccountDto.WxServiceAccountDetail.class)
-	@ResponseSimple
 	public WxServiceAccountDto query(@PathVariable long id) {
 		WxServiceAccountDto dto = wxServiceAccountService.findById(id);
 		return dto;
+	}
+
+	@GetMapping(value = "/query/")
+	@ResponseSimple
+	@JsonView(WxServiceAccountDto.WxServiceAccountDetail.class)
+	public Page<WxServiceAccountDto> query(
+			@PageableDefault(size = 10) Pageable pageable) {
+		return wxServiceAccountService.findAll(pageable);
 	}
 
 	@ResponseSimple

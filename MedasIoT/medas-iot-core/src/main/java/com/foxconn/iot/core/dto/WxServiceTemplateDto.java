@@ -1,15 +1,17 @@
 package com.foxconn.iot.core.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-import com.foxconn.iot.core.entity.WxServiceAccount;
+import com.fasterxml.jackson.annotation.JsonView;
 
-public class WxServiceTemplateDto {
+public class WxServiceTemplateDto implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
 	public interface WxServiceTemplateSimple {
 	
@@ -22,7 +24,7 @@ public class WxServiceTemplateDto {
 	public interface WxServiceTemplateDetail extends WxServiceTemplateSimple {
 	}
 
-	@JsonView(WxServiceTemplateSimple.class)
+	@JsonView(WxServiceTemplateDetail.class)
 	@JsonFormat(shape = Shape.STRING)
 	private long id;
 
@@ -38,19 +40,18 @@ public class WxServiceTemplateDto {
 	private String format;
 
 	@JsonView(WxServiceTemplateDetail.class)
+	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date createOn;
 
 	@JsonView(WxServiceTemplateDetail.class)
-	private Date modifyOn;
+	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date lastModify;
 
 	@JsonView(WxServiceTemplateDetail.class)
 	private int status;
 	
-	@JsonView(WxServiceTemplateCreate.class)
 	@NotBlank(message = "微信公众平台服务号ID不能为空")
 	private String accountId;
-	
-	private WxServiceAccount account;
 	
 	public long getId() {
 		return id;
@@ -92,12 +93,12 @@ public class WxServiceTemplateDto {
 		this.createOn = createOn;
 	}
 
-	public Date getModifyOn() {
-		return modifyOn;
+	public Date getLastModify() {
+		return lastModify;
 	}
 
-	public void setModifyOn(Date modifyOn) {
-		this.modifyOn = modifyOn;
+	public void setLastModify(Date lastModify) {
+		this.lastModify = lastModify;
 	}
 
 	public int getStatus() {
@@ -107,20 +108,13 @@ public class WxServiceTemplateDto {
 	public void setStatus(int status) {
 		this.status = status;
 	}
-
+	
+	@JsonView(WxServiceTemplateCreate.class)
 	public String getAccountId() {
 		return accountId;
 	}
 
 	public void setAccountId(String accountId) {
 		this.accountId = accountId;
-	}
-
-	public WxServiceAccount getAccount() {
-		return account;
-	}
-
-	public void setAccount(WxServiceAccount account) {
-		this.account = account;
 	}
 }

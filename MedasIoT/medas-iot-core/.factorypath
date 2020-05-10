@@ -108,6 +108,5 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/mysql/mysql-connector-java/8.0.18/mysql-connector-java-8.0.18.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/google/protobuf/protobuf-java/3.6.1/protobuf-java-3.6.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/boot/spring-boot-configuration-processor/2.2.2.RELEASE/spring-boot-configuration-processor-2.2.2.RELEASE.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/junit/junit/4.12/junit-4.12.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/org/hamcrest/hamcrest-core/2.1/hamcrest-core-2.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/alibaba/fastjson/1.2.66/fastjson-1.2.66.jar" enabled="true" runInBatchMode="false"/>
 </factorypath>

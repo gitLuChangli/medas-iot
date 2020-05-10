@@ -24,6 +24,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "tb_wx_service_account")
@@ -61,6 +63,7 @@ public class WxServiceAccount {
 	@OneToMany(targetEntity = WxServiceTemplate.class, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "wx_service_id")
 	@NotFound(action = NotFoundAction.IGNORE)
+	@JsonIgnore
 	private Set<WxServiceTemplate> templates;
 
 	public long getId() {

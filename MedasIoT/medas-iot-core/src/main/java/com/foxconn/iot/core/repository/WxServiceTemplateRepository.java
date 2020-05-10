@@ -11,12 +11,14 @@ import com.foxconn.iot.core.entity.WxServiceTemplate;
 
 public interface WxServiceTemplateRepository extends JpaRepository<WxServiceTemplate, Long> {
 
+	WxServiceTemplate findById(long id);
+	
 	WxServiceTemplate findByTemplateId(String templateId);
 
-	@Query(value = "select a from WxServiceTemplate a where a.account.appId=:appId ")
-	List<WxServiceTemplate> queryByServiceAppId(@Param("appId") String appId);
+	@Query(value = "select a from WxServiceTemplate a where a.account.id=:wxServiceAccountId ")
+	List<WxServiceTemplate> queryByWxServiceAccountId(@Param("wxServiceAccountId") long wxServiceAccountId);
 
 	@Modifying
-	@Query(value = "update WxServiceTemplate a set a.status=:status where a.templateId=:templateId")
-	int updateStatusByTemplateId(@Param("status") int status, @Param("templateId") String templateId);
+	@Query(value = "update WxServiceTemplate a set a.status=:status where a.id=:id")
+	int updateStatusById(@Param("status") int status, @Param("id") long id);
 }
