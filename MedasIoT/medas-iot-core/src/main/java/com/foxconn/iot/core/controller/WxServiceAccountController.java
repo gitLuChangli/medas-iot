@@ -48,8 +48,7 @@ public class WxServiceAccountController {
 	@GetMapping(value = "/query/")
 	@ResponseSimple
 	@JsonView(WxServiceAccountDto.WxServiceAccountDetail.class)
-	public Page<WxServiceAccountDto> query(
-			@PageableDefault(size = 10) Pageable pageable) {
+	public Page<WxServiceAccountDto> query(@PageableDefault(size = 10) Pageable pageable) {
 		return wxServiceAccountService.findAll(pageable);
 	}
 

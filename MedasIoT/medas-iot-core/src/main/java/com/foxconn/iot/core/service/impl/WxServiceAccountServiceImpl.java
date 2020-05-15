@@ -74,7 +74,7 @@ public class WxServiceAccountServiceImpl implements WxServiceAccountService {
 	public WxServiceAccountDto save(WxServiceAccountDto account) {
 		WxServiceAccount wxAccount = wxServiceAccountRepository.findByAppId(account.getAppId());
 		if (wxAccount == null) {
-			throw new BizException(ErrorCode.NOT_FOUND, "无效的微信公众平台服务号ID");			
+			throw new BizException(ErrorCode.ENTITY_NOT_FOUND);			
 		}
 		wxAccount.setSecret(account.getSecret());
 		wxAccount.setName(account.getName());

@@ -1,4 +1,4 @@
-package com.foxconn.iot.core.exception;
+package com.foxconn.iot.support;
 
 public enum ErrorCode {
 	

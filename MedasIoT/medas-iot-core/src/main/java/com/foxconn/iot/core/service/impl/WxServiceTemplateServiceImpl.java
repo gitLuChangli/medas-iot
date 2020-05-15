@@ -34,7 +34,7 @@ public class WxServiceTemplateServiceImpl implements WxServiceTemplateService {
 	public WxServiceTemplateDto create(WxServiceTemplateDto template) {
 		WxServiceAccount account = wxServiceAccountRepository.findByAppId(template.getAccountId());
 		if (account == null) {
-			throw new BizException(ErrorCode.NOT_FOUND, "无效的微信公众平台服务号ID");
+			throw new BizException(ErrorCode.ENTITY_NOT_FOUND);
 		}
 
 		WxServiceTemplate wxTemplate = new WxServiceTemplate();
@@ -49,7 +49,7 @@ public class WxServiceTemplateServiceImpl implements WxServiceTemplateService {
 	public WxServiceTemplateDto save(WxServiceTemplateDto template) {
 		WxServiceTemplate wxTemplate = wxServiceTemplateRepository.findByTemplateId(template.getTemplateId());
 		if (wxTemplate == null) {
-			throw new BizException(ErrorCode.NOT_FOUND, "无效的微信公众号服务消息模板");
+			throw new BizException(ErrorCode.ENTITY_NOT_FOUND);
 		}
 
 		if (!StringUtil.isNullOrEmpty(template.getName())) {
@@ -62,7 +62,7 @@ public class WxServiceTemplateServiceImpl implements WxServiceTemplateService {
 		if (!StringUtils.isNullOrEmpty(template.getAccountId())) {
 			WxServiceAccount account = wxServiceAccountRepository.findByAppId(template.getAccountId());
 			if (account == null) {
-				throw new BizException(ErrorCode.NOT_FOUND, "无效的微信公众平台服务号");
+				throw new BizException(ErrorCode.ENTITY_NOT_FOUND);
 			}
 
 			wxTemplate.setAccount(account);

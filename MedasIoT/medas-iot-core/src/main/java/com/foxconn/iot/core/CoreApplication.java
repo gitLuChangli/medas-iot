@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @EnableAutoConfiguration
 public class CoreApplication {
 	
-	
 	public static void main(String[] args) {
 		SpringApplication.run(CoreApplication.class, args);
 	}

@@ -1,4 +1,4 @@
-package com.foxconn.iot.core.config;
+package com.foxconn.iot.config;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,9 +12,9 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.foxconn.iot.core.exception.ErrorCode;
-import com.foxconn.iot.core.support.ResponseSimple;
-import com.foxconn.iot.core.support.SimpleResponse;
+import com.foxconn.iot.support.CommonResponse;
+import com.foxconn.iot.support.CommonResult;
+import com.foxconn.iot.support.ErrorCode;
 
 @Component
 public class CoreReturnHandler implements HandlerMethodReturnValueHandler {
@@ -24,7 +24,7 @@ public class CoreReturnHandler implements HandlerMethodReturnValueHandler {
 
 	@Override
 	public boolean supportsReturnType(MethodParameter returnType) {
-		return returnType.hasMethodAnnotation(ResponseSimple.class);
+		return returnType.hasMethodAnnotation(CommonResponse.class);
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class CoreReturnHandler implements HandlerMethodReturnValueHandler {
 			NativeWebRequest webRequest) throws Exception {
 		mavContainer.setRequestHandled(true);
 		
-		SimpleResponse simple = new SimpleResponse(ErrorCode.SUCCESS.getCode(), ErrorCode.SUCCESS.getMessage(), null);
+		CommonResult result = new CommonResult(ErrorCode.SUCCESS.getCode(), ErrorCode.SUCCESS.getMessage(), null);
 
 		HttpServletResponse response = webRequest.getNativeResponse(HttpServletResponse.class);
 		response.setContentType("application/json;charset=UTF-8");
@@ -42,14 +42,14 @@ public class CoreReturnHandler implements HandlerMethodReturnValueHandler {
 				if (jsonView.value().length > 0) {
 					JSONObject obj = JSONObject
 							.parseObject(objectMapper.writerWithView(jsonView.value()[0]).writeValueAsString(returnValue));
-					simple.setData(obj);
+					result.setData(obj);
 				} else {
-					simple.setData(returnValue);
+					result.setData(returnValue);
 				}
 			} else {
-				simple.setData(returnValue);
+				result.setData(returnValue);
 			}
 		}
-		response.getWriter().append(objectMapper.writeValueAsString(simple)).flush();
+		response.getWriter().append(objectMapper.writeValueAsString(result)).flush();
 	}
 }
