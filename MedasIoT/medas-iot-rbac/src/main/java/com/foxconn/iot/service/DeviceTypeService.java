@@ -15,8 +15,6 @@ public interface DeviceTypeService {
 	
 	void save(DeviceTypeDto type);
 	
-	void updateStatusById(int status, long id);
-	
 	void deleteById(long id);
 	
 	Page<DeviceTypeDto> findAll(Pageable pageable);

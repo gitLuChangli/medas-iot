@@ -17,9 +17,12 @@ import javax.persistence.UniqueConstraint;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+/**
+ * 设备一旦录入，禁止修改序列号，型号及名称，允许修改版本号（已禁止修改设备类型基本信息）
+ *
+ */
 @Entity
-@Table(name = "tb_dev", uniqueConstraints = {@UniqueConstraint(name="uq_dev_sn", columnNames = "sn"), 
-		@UniqueConstraint(name="uq_dev_mac", columnNames = "mac")})
+@Table(name = "tb_dev", uniqueConstraints = {@UniqueConstraint(name="uq_dev_sn", columnNames = "sn")})
 @EntityListeners(AuditingEntityListener.class)
 public class DeviceEntity {
 	
@@ -30,11 +33,20 @@ public class DeviceEntity {
 	@JoinColumn(name = "ver_id")
 	private DeviceVersionEntity version;
 	
+	/**
+	 * 设备型号，适当的冗余
+	 */
+	@Column(name = "model", length = 45, nullable = false)
+	private String model;
+
+	/**
+	 * 设备名称，适当冗余
+	 */
+	@Column(name = "name", length = 90, nullable = false)
+	private String name;
+	
 	@Column(name = "sn", length = 32, nullable = false)
 	private String sn;
-	
-	@Column(name = "mac", length = 32, nullable = false)
-	private String mac;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "company_id")
@@ -52,7 +64,7 @@ public class DeviceEntity {
 	
 	@CreatedDate
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "create_on")
+	@Column(name = "create_on", updatable = false)
 	private Date createOn;
 	
 	@Column(name = "status")
@@ -73,6 +85,22 @@ public class DeviceEntity {
 	public void setVersion(DeviceVersionEntity version) {
 		this.version = version;
 	}
+	
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public String getSn() {
 		return sn;
@@ -81,7 +109,7 @@ public class DeviceEntity {
 	public void setSn(String sn) {
 		this.sn = sn;
 	}
-
+	
 	public CompanyEntity getCompany() {
 		return company;
 	}

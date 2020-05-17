@@ -58,19 +58,10 @@ public class DeviceTypeServiceImpl implements DeviceTypeService {
 		if (entity == null) {
 			throw new BizException("Invalid device type");
 		}
-		if (!StringUtils.isNullOrEmpty(type.getName())) {
-			entity.setName(type.getName());
-		}
 		if (!StringUtils.isNullOrEmpty(type.getDetails())) {
 			entity.setDetails(type.getDetails());
 		}
 		deviceTypeRepository.save(entity);
-	}
-
-	@Override
-	@Transactional
-	public void updateStatusById(int status, long id) {
-		deviceTypeRepository.udpateStatusById(status, id);
 	}
 
 	@Override

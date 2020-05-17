@@ -24,8 +24,6 @@ public class DeviceTypeDto {
 	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date createOn;
 	
-	private int status;
-	
 	private List<DeviceVersionDto> versions;
 
 	public long getId() {
@@ -66,14 +64,6 @@ public class DeviceTypeDto {
 
 	public void setCreateOn(Date createOn) {
 		this.createOn = createOn;
-	}
-
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
 	}
 
 	public List<DeviceVersionDto> getVersions() {

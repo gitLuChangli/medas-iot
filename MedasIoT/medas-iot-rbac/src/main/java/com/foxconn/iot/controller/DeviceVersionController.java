@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.foxconn.iot.dto.DeviceVersionDto;
 import com.foxconn.iot.service.DeviceVersionService;
 import com.foxconn.iot.support.CommonResponse;
@@ -32,7 +31,7 @@ public class DeviceVersionController {
 
 	@PostMapping(value = "/")
 	@CommonResponse
-	public void create(@Valid @JsonView(DeviceVersionDto.class) @RequestBody DeviceVersionDto version,
+	public void create(@Valid @RequestBody DeviceVersionDto version,
 			BindingResult result) {
 		deviceVersionService.create(version);
 	}
@@ -52,18 +51,18 @@ public class DeviceVersionController {
 
 	@PutMapping(value = "/")
 	@CommonResponse
-	public void update(@Valid @JsonView(DeviceVersionDto.class) @RequestBody DeviceVersionDto version,
+	public void update(@Valid @RequestBody DeviceVersionDto version,
 			BindingResult result) {
 		deviceVersionService.save(version);
 	}
 
-	@DeleteMapping(value = "{id\\d+}")
+	@DeleteMapping(value = "/{id:\\d+}")
 	@CommonResponse
 	public void delete(@PathVariable(value = "id") long id) {
 		deviceVersionService.deleteById(id);
 	}
 
-	@GetMapping(value = "latest/type/{id:\\d+}")
+	@GetMapping(value = "/latest/type/{id:\\d+}")
 	@CommonResponse
 	public DeviceVersionDto queryLatest(@PathVariable(value = "id") long type) {
 		return deviceVersionService.queryLatestVersion(type);

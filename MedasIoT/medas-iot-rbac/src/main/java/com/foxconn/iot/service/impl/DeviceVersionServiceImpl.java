@@ -59,7 +59,7 @@ public class DeviceVersionServiceImpl implements DeviceVersionService {
 			entity.setHardVersion(version.getHardVersion());
 		}
 		if (!StringUtils.isNullOrEmpty(version.getDetails())) {
-			entity.setDetails(version.getVersion());
+			entity.setDetails(version.getDetails());
 		}
 		if (!StringUtils.isNullOrEmpty(version.getImageUrl())) {
 			entity.setImageUrl(version.getImageUrl());

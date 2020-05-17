@@ -29,6 +29,7 @@ public class MenuServiceImpl implements MenuService {
 	private MenuRelationRepository menuRelationRepository;
 
 	@Override
+	@Transactional
 	public MenuDto create(MenuDto menu) {
 		MenuEntity entity = new MenuEntity();
 		BeanUtils.copyProperties(menu, entity);
@@ -74,6 +75,7 @@ public class MenuServiceImpl implements MenuService {
 	}
 
 	@Override
+	@Transactional
 	public MenuDto save(MenuDto menu) {
 		MenuEntity entity = menuRepository.findById(menu.getId());
 		if (entity == null) {

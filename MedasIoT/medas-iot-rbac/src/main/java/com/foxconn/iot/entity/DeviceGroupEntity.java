@@ -33,7 +33,7 @@ public class DeviceGroupEntity {
 
 	@CreatedDate
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "create_on")
+	@Column(name = "create_on", updatable = false)
 	private Date createOn;
 
 	@Column(name = "status")

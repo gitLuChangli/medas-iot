@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.foxconn.iot.entity.DeviceTypeEntity;
 import com.foxconn.iot.entity.DeviceVersionEntity;
 
 public interface DeviceVersionRepository extends JpaRepository<DeviceVersionEntity, Long> {
@@ -19,4 +20,6 @@ public interface DeviceVersionRepository extends JpaRepository<DeviceVersionEnti
 	
 	@Query(value = "select a from DeviceVersionEntity a where a.deviceType.id=:type order by a.createOn desc")
 	List<DeviceVersionEntity> queryByDeviceType(@Param("type") long type);
+	
+	DeviceTypeEntity findDeviceTypeById(long id);
 }

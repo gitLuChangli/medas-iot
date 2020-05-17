@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -19,6 +20,10 @@ import javax.persistence.UniqueConstraint;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+/**
+ *  设备分类使用，不能修改设备名称、设备编号，详情可以修改，也不能禁用
+ *
+ */
 @Entity
 @Table(name = "tb_dev_type", uniqueConstraints = {
 		@UniqueConstraint(name = "uq_dev_type_model", columnNames = "model") })
@@ -42,11 +47,9 @@ public class DeviceTypeEntity {
 	@Column(name = "create_on", updatable = false)
 	private Date createOn;
 
-	@Column(name = "status")
-	private int status;
-
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "dev_type_id")
+	@OrderBy("createOn DESC")
 	private List<DeviceVersionEntity> versions;
 	
 	public long getId() {
@@ -87,14 +90,6 @@ public class DeviceTypeEntity {
 
 	public void setCreateOn(Date createOn) {
 		this.createOn = createOn;
-	}
-
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
 	}
 
 	public List<DeviceVersionEntity> getVersions() {

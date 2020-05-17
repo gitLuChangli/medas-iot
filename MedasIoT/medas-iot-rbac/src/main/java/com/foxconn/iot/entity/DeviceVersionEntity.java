@@ -2,9 +2,9 @@ package com.foxconn.iot.entity;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -14,9 +14,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "tb_dev_version")
+@EntityListeners(AuditingEntityListener.class)
 public class DeviceVersionEntity {
 
 	@Id
@@ -39,7 +41,7 @@ public class DeviceVersionEntity {
 	@Column(name = "create_on", updatable = false)
 	private Date createOn;
 
-	@ManyToOne(targetEntity = DeviceTypeEntity.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(targetEntity = DeviceTypeEntity.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "dev_type_id")
 	private DeviceTypeEntity deviceType;
 

@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.foxconn.iot.dto.DeviceTypeDto;
 import com.foxconn.iot.service.DeviceTypeService;
 import com.foxconn.iot.support.CommonResponse;
@@ -56,14 +55,8 @@ public class DeviceTypeController {
 	
 	@PutMapping(value = "/")
 	@CommonResponse
-	public void update(@Valid @JsonView(DeviceTypeDto.class) @RequestBody DeviceTypeDto type, BindingResult result) {
+	public void update(@Valid @RequestBody DeviceTypeDto type, BindingResult result) {
 		deviceTypeService.save(type);
-	}
-	
-	@PutMapping(value = "/{id:\\d+}/{status:^[01]$}")
-	@CommonResponse
-	public void disable(@PathVariable(value = "id") long id, @PathVariable(value = "status") int status) {
-		deviceTypeService.updateStatusById(status, id);
 	}
 	
 	@DeleteMapping(value = "/{id:\\d+}")
