@@ -27,7 +27,7 @@ public interface DeviceService {
 	
 	void updateCompany(long id, long companyId);
 	
-	void udpateGroup(long id, long companyId, long groupId);
+	void updateGroup(long id, long companyId, long groupId);
 	
 	void updateStatusById(int status, long id);
 	

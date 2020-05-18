@@ -193,7 +193,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Override
 	@Transactional
-	public void udpateGroup(long id, long companyId, long groupId) {
+	public void updateGroup(long id, long companyId, long groupId) {
 		DeviceGroupEntity group = deviceGroupRepository.findByIdAndCompany(groupId, companyId);
 		if (group.getStatus() == 0 )
 			throw new BizException("Device group disabled");

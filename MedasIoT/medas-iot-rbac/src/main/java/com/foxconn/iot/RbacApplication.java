@@ -18,7 +18,6 @@ public class RbacApplication {
 		return new BCryptPasswordEncoder();
 	}
 	
-	
 	/** -jar 传入参数依次是： workerId, datacenterId */
 	public static void main(String[] args) {
 		SpringApplication.run(RbacApplication.class, args);
