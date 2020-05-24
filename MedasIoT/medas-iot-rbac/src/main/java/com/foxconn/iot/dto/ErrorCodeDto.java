@@ -61,5 +61,4 @@ public class ErrorCodeDto {
 	public void setLevel(int level) {
 		this.level = level;
 	}
-	
 }

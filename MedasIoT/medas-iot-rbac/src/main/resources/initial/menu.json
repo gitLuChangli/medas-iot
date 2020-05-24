@@ -1,0 +1,97 @@
+[
+	{
+		"id": 1,
+		"name": "user",
+		"details": "用戶管理",
+		"icon": "el-icon-user-solid",
+		"url": "/user",
+		"status": 0
+	},
+	{
+		"id": 1001,
+		"name": "user_create",
+		"details": "创建用户",
+		"url": "/user/new",
+		"status": 0,
+		"ancestor": "1"
+	},
+	{
+		"id": 1002,
+		"name": "user_list",
+		"details": "用户清单",
+		"url": "/user/list",
+		"status": 0,
+		"ancestor": "1"
+	},
+	{
+		"id": 1003,
+		"name": "user_disabled_list",
+		"details": "禁用清单",
+		"url": "/user/disabled",
+		"status": 0,
+		"ancestor": "1"
+	},
+	{
+		"id": 2,
+		"name": "company",
+		"details": "部门管理",
+		"icon": "el-icon-office-building",
+		"status": 0
+	},
+	{
+		"id": 2001,
+		"name": "company_create",
+		"details": "创建部门",
+		"url": "/company/new",
+		"status": 0,
+		"ancestor": "2"
+	},
+	{
+		"id": 2002,
+		"name": "company_list",
+		"details": "部门清单",
+		"url": "/company/list",
+		"status": 0,
+		"ancestor": "2"
+	},
+	{
+		"id": 2003,
+		"name": "company_disabled_list",
+		"details": "禁用清单",
+		"url": "/company/disabled",
+		"status": 0,
+		"ancestor": "2"
+	},
+	{
+		"id": 3,
+		"name": "role",
+		"details": "角色管理",
+		"url": "/role",
+		"icon": "iconfont-role",
+		"status": 0
+	},
+	{
+		"id": 3001,
+		"name": "role_list",
+		"details": "角色清单",
+		"url": "/role/list",
+		"status": 0,
+		"ancestor": "3"
+	},
+	{
+		"id": 4,
+		"name": "permission",
+		"details": "权限管理",
+		"url": "/permission",
+		"icon": "iconfont-authority",
+		"status": 0
+	},
+	{
+		"id": 4001,
+		"name": "permission-list",
+		"details": "权限清单",
+		"url": "/permission/list",
+		"status": 0,
+		"ancestor": "4"
+	}
+]
