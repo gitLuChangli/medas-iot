@@ -19,7 +19,7 @@ public class RoleDto {
 	public interface RoleSave extends RoleCreate {}
 
 	@JsonView(RoleSave.class)
-	private int id;
+	private long id;
 
 	@JsonView(RoleCreate.class)
 	@NotBlank(message = "角色名稱不能為空")
@@ -37,11 +37,11 @@ public class RoleDto {
 	@JsonView(RoleCreate.class)
 	private String permissions;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

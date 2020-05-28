@@ -20,10 +20,10 @@ public class MenuRelationEntity {
 	private int id;
 
 	@Column(name = "ancestor")
-	private int ancestor;
+	private long ancestor;
 
 	@Column(name = "descendant")
-	private int descendant;
+	private long descendant;
 
 	@Column(name = "depth")
 	private int depth;
@@ -36,19 +36,19 @@ public class MenuRelationEntity {
 		this.id = id;
 	}
 
-	public int getAncestor() {
+	public long getAncestor() {
 		return ancestor;
 	}
 
-	public void setAncestor(int ancestor) {
+	public void setAncestor(long ancestor) {
 		this.ancestor = ancestor;
 	}
 
-	public int getDescendant() {
+	public long getDescendant() {
 		return descendant;
 	}
 
-	public void setDescendant(int descendant) {
+	public void setDescendant(long descendant) {
 		this.descendant = descendant;
 	}
 

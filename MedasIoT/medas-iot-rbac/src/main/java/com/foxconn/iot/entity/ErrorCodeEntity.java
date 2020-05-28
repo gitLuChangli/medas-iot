@@ -18,7 +18,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Table(name = "tb_error_code", uniqueConstraints = { @UniqueConstraint(name = "uq_error_code", columnNames = "code") })
+@Table(name = "tb_error_code", uniqueConstraints = { @UniqueConstraint(name = "uq_error_code", columnNames = "error") })
 @EntityListeners(AuditingEntityListener.class)
 public class ErrorCodeEntity {
 
@@ -46,6 +46,9 @@ public class ErrorCodeEntity {
 	 */
 	@Column(name = "level")
 	private int level;
+	
+	@Column(name = "status")
+	private int status;
 
 	public long getId() {
 		return id;
@@ -93,5 +96,13 @@ public class ErrorCodeEntity {
 
 	public void setLevel(int level) {
 		this.level = level;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 }

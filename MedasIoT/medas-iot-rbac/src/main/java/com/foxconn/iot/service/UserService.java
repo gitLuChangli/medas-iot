@@ -12,15 +12,15 @@ public interface UserService {
 	
 	void save(UserDto user);
 	
-	UserDetailDto findById(int id);
+	UserDetailDto findById(long id);
 	
 	UserDto findByNO(String no);
 	
-	void updateStatusById(int status, int id);
+	void updateStatusById(int status, long id);
 	
-	void deleteById(int id);
+	void deleteById(long id);
 	
 	Page<UserDetailDto> queryByCompany(long companyid, Pageable pageable);
 	
-	void updatePwdById(String pwd, int id);
+	void updatePwdById(String pwd, long id);
 }

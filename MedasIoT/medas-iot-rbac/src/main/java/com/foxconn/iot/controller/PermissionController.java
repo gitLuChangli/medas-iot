@@ -34,7 +34,7 @@ public class PermissionController {
 
 	@GetMapping(value = "/{id:\\d+}")
 	@CommonResponse
-	public PermissionDto query(@PathVariable(value = "id") int id) {
+	public PermissionDto query(@PathVariable(value = "id") long id) {
 		return permissionService.findById(id);
 	}
 
@@ -47,13 +47,13 @@ public class PermissionController {
 
 	@PutMapping(value = "/disable/{id:\\d+}/{status:^[01]$}")
 	@CommonResponse
-	public void disable(@PathVariable(value = "id") int id, @PathVariable(value = "status") int status) {
+	public void disable(@PathVariable(value = "id") long id, @PathVariable(value = "status") int status) {
 		permissionService.updateStatusById(status, id);
 	}
 	
 	@DeleteMapping(value = "/{id:\\d+}")
 	@CommonResponse
-	public void delete(@PathVariable(value = "id") int id) {
+	public void delete(@PathVariable(value = "id") long id) {
 		permissionService.deleteById(id);
 	}
 }

@@ -82,8 +82,7 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
 			}
 		}
 
-		long id = Snowflaker.getId();
-		entity.setId(id);
+		entity.setId(Snowflaker.getId());
 		deviceGroupRepository.save(entity);
 		deviceGroupRelationRepository.saveAll(relations);
 	}

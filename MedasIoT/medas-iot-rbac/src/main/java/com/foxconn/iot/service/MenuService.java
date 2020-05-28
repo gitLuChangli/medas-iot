@@ -6,17 +6,17 @@ import com.foxconn.iot.dto.MenuDto;
 
 public interface MenuService {
 	
-	MenuDto create(MenuDto menu);
+	void create(MenuDto menu);
 	
-	MenuDto save(MenuDto menu);
+	void save(MenuDto menu);
 	
-	MenuDto findById(int id);
+	MenuDto findById(long id);
 	
-	void updateStatusById(int status, int id);
+	void updateStatusById(int status, long id);
 	
-	void deleteById(int id);
+	void deleteById(long id);
 	
 	List<MenuDto> queryDescendants();
 	
-	List<MenuDto> queryDescendantsByAncestor(int ancestor);
+	List<MenuDto> queryDescendantsByAncestor(long ancestor);
 }

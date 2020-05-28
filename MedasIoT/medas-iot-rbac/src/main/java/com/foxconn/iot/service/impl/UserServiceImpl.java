@@ -23,6 +23,7 @@ import com.foxconn.iot.repository.CompanyRepository;
 import com.foxconn.iot.repository.RoleRepository;
 import com.foxconn.iot.repository.UserRepository;
 import com.foxconn.iot.service.UserService;
+import com.foxconn.iot.support.Snowflaker;
 import com.mysql.cj.util.StringUtils;
 
 @Service
@@ -52,10 +53,10 @@ public class UserServiceImpl implements UserService {
 		entity.setCompany(company);
 		if (!StringUtils.isNullOrEmpty(user.getRoles())) {
 			String[] items = user.getRoles().split(",");
-			List<Integer> ids = new ArrayList<>();
+			List<Long> ids = new ArrayList<>();
 			for (String item : items) {
 				if (StringUtils.isStrictlyNumeric(item)) {
-					ids.add(Integer.parseInt(item));
+					ids.add(Long.parseLong(item));
 				}
 			}
 			List<RoleEntity> roles = roleRepository.queryByIds(ids);
@@ -65,6 +66,7 @@ public class UserServiceImpl implements UserService {
 			entity.setPwd("password1!");
 		}
 		entity.setPwd(encoder.encode(entity.getPwd()));
+		entity.setId(Snowflaker.getId());
 		userRepository.save(entity);
 	}
 
@@ -97,10 +99,10 @@ public class UserServiceImpl implements UserService {
 		entity.setCompany(company);
 		if (!StringUtils.isNullOrEmpty(user.getRoles())) {
 			String[] items = user.getRoles().split(",");
-			List<Integer> ids = new ArrayList<>();
+			List<Long> ids = new ArrayList<>();
 			for (String item : items) {
 				if (StringUtils.isStrictlyNumeric(item)) {
-					ids.add(Integer.parseInt(item));
+					ids.add(Long.parseLong(item));
 				}
 			}
 			List<RoleEntity> roles = roleRepository.queryByIds(ids);
@@ -110,7 +112,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDetailDto findById(int id) {
+	public UserDetailDto findById(long id) {
 		UserEntity entity = userRepository.findById(id);
 		if (entity != null) {
 			UserDetailDto dto = new UserDetailDto();
@@ -133,13 +135,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public void updateStatusById(int status, int id) {
+	public void updateStatusById(int status, long id) {
 		userRepository.updateStatusById(status, id);
 	}
 
 	@Override
 	@Transactional
-	public void deleteById(int id) {
+	public void deleteById(long id) {
 		userRepository.deleteById(id);
 	}
 
@@ -160,7 +162,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public void updatePwdById(String pwd, int id) {
+	public void updatePwdById(String pwd, long id) {
 		userRepository.updatePwdById(encoder.encode(pwd), id);
 	}
 }

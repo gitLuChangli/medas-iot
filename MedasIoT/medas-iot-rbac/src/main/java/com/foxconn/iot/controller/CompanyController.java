@@ -54,7 +54,7 @@ public class CompanyController {
 
 	@CommonResponse
 	@PutMapping(value = "/roles/{id:\\d+}")
-	public void updateRoles(@PathVariable(value = "id") long id, @RequestBody List<Integer> roles) {
+	public void updateRoles(@PathVariable(value = "id") long id, @RequestBody List<Long> roles) {
 		companyService.updateRolesById(roles, id);
 	}
 

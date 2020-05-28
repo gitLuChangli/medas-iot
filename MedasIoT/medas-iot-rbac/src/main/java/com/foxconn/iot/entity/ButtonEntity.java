@@ -7,51 +7,33 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
 
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Table(name = "tb_menu", uniqueConstraints = { @UniqueConstraint(name = "uq_menu_name", columnNames = "name") })
+@Table(name="tb_button")
 @EntityListeners(AuditingEntityListener.class)
-public class MenuEntity {
-
+public class ButtonEntity {
+	
 	@Id
 	private long id;
-
-	/**
-	 * 菜单名称
-	 */
-	@Column(name = "name", nullable = false, length = 255)
+	
+	@Column(name = "name", nullable = false, length = 45)
 	private String name;
-
-	/**
-	 * 详情
-	 */
+	
 	@Column(name = "details", length = 255)
 	private String details;
-
-	/**
-	 * 图标
-	 */
-	@Column(name = "icon", length = 100)
+	
+	@Column(name = "icon", length = 45)
 	private String icon;
-
-	/**
-	 * 地址
-	 */
+	
 	@Column(name = "url", length = 255)
 	private String url;
-
-	@CreatedDate
+	
 	@Column(name = "create_on", updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
 	private Date createOn;
-
-	@Column(name = "status")
+	
+	@Column(name="status")
 	private int status;
 
 	public long getId() {
@@ -109,4 +91,5 @@ public class MenuEntity {
 	public void setStatus(int status) {
 		this.status = status;
 	}
+	
 }

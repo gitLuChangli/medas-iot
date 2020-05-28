@@ -10,16 +10,16 @@ import org.springframework.data.repository.query.Param;
 import com.foxconn.iot.entity.MenuEntity;
 import com.foxconn.iot.entity.MenuRelationVo;
 
-public interface MenuRepository extends JpaRepository<MenuEntity, Integer> {
+public interface MenuRepository extends JpaRepository<MenuEntity, Long> {
 
-	MenuEntity findById(int id);
+	MenuEntity findById(long id);
 
 	@Modifying
 	@Query(value = "update MenuEntity a set a.status=:status where a.id=:id")
-	void updateStatusById(@Param("status") int status, @Param("id") int id);
+	void updateStatusById(@Param("status") int status, @Param("id") long id);
 
 	@Query(value = "select a from MenuEntity a where a.id in(:ids)")
-	List<MenuEntity> queryByIds(@Param("ids") List<Integer> ids);
+	List<MenuEntity> queryByIds(@Param("ids") List<Long> ids);
 
 	@Query(value = "select new com.foxconn.iot.entity.MenuRelationVo(a.id, a.name, a.details, a.icon, "
 			+ "a.url, a.createOn, a.status, b.ancestor, b.depth)"
@@ -29,5 +29,5 @@ public interface MenuRepository extends JpaRepository<MenuEntity, Integer> {
 	@Query(value = "select new com.foxconn.iot.entity.MenuRelationVo(a.id, a.name, a.details, a.icon, "
 			+ "a.url, a.createOn, a.status, b.ancestor, b.depth)"
 			+ "from MenuEntity a left join MenuRelationEntity b on a.id=b.descendant where a.id in (select b.descendant from b where b.ancestor=:ancestor) order by b.depth, a.id asc")
-	List<MenuRelationVo> queryDescendantsByAncestor(@Param("ancestor") int ancestor);
+	List<MenuRelationVo> queryDescendantsByAncestor(@Param("ancestor") long ancestor);
 }

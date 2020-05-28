@@ -8,9 +8,9 @@ public interface PermissionService {
 	
 	void save(PermissionDto permission);
 	
-	PermissionDto findById(int id);
+	PermissionDto findById(long id);
 	
-	void updateStatusById(int status, int id);
+	void updateStatusById(int status, long id);
 	
-	void deleteById(int id);
+	void deleteById(long id);
 }

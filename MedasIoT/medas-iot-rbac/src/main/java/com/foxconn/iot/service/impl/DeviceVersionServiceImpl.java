@@ -35,8 +35,7 @@ public class DeviceVersionServiceImpl implements DeviceVersionService {
 	public void create(DeviceVersionDto version) {
 		DeviceVersionEntity entity = new DeviceVersionEntity();
 		BeanUtils.copyProperties(version, entity);
-		long id = Snowflaker.getId();
-		entity.setId(id);
+		entity.setId(Snowflaker.getId());
 		if (!StringUtils.isStrictlyNumeric(version.getDeviceType())) {
 			throw new BizException("Invalid device type");
 		}

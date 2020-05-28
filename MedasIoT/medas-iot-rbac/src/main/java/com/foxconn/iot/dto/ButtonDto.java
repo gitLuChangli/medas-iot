@@ -9,42 +9,42 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonView;
 
-public class MenuDto {
+public class ButtonDto {
 
-	public interface MenuBasic {}
+	public interface ButtonBasic {}
 	
-	public interface MenuCreate extends MenuBasic {}
+	public interface ButtonCreate extends ButtonBasic {}
 	
-	public interface MenuSave extends MenuCreate {}
+	public interface ButtonSave extends ButtonCreate {}
 	
-	@JsonView(MenuSave.class)
+	@JsonView(ButtonSave.class)
 	private long id;
 
 	@NotBlank(message = "菜單名稱不能為空")
-	@JsonView(MenuBasic.class)
+	@JsonView(ButtonBasic.class)
 	private String name;
 
-	@JsonView(MenuBasic.class)
+	@JsonView(ButtonBasic.class)
 	private String details;
 
-	@JsonView(MenuBasic.class)
+	@JsonView(ButtonBasic.class)
 	private String icon;
 
-	@JsonView(MenuBasic.class)
+	@JsonView(ButtonBasic.class)
 	private String url;
 
-	@JsonView(MenuBasic.class)
+	@JsonView(ButtonBasic.class)
 	private Date createOn;
 
-	@JsonView(MenuBasic.class)
+	@JsonView(ButtonBasic.class)
 	private int status;
 
-	@JsonView(MenuCreate.class)
+	@JsonView(ButtonCreate.class)
 	@JsonInclude(value = Include.NON_NULL)
 	private String ancestor;
 
 	@JsonInclude(value = Include.NON_NULL)
-	private List<MenuDto> descendants;
+	private List<ButtonDto> descendants;
 
 	public long getId() {
 		return id;
@@ -110,11 +110,11 @@ public class MenuDto {
 		this.ancestor = ancestor;
 	}
 
-	public List<MenuDto> getDescendants() {
+	public List<ButtonDto> getDescendants() {
 		return descendants;
 	}
 
-	public void setDescendants(List<MenuDto> descendants) {
+	public void setDescendants(List<ButtonDto> descendants) {
 		this.descendants = descendants;
 	}
 

@@ -2,7 +2,7 @@ package com.foxconn.iot.entity;
 
 import java.util.Date;
 
-public class MenuRelationVo {
+public class ButtonRelationVo {
 	
 	private long id;
 	
@@ -23,11 +23,11 @@ public class MenuRelationVo {
 	private int depth;
 	
 	
-	public MenuRelationVo() {
+	public ButtonRelationVo() {
 		super();
 	}
 
-	public MenuRelationVo(long id, String name, String details, String icon, String url, Date createOn, int status,
+	public ButtonRelationVo(long id, String name, String details, String icon, String url, Date createOn, int status,
 			long ancestor, int depth) {
 		super();
 		this.id = id;

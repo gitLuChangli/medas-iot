@@ -34,8 +34,7 @@ public class ErrorCodeServiceImpl implements ErrorCodeService {
 	public void adminCreate(ErrorCodeDto error) {
 		ErrorCodeEntity entity = new ErrorCodeEntity();
 		BeanUtils.copyProperties(error, entity);
-		long id = Snowflaker.getId();
-		entity.setId(id);
+		entity.setId(Snowflaker.getId());
 		entity.setLevel(1);
 		errorCodeRepository.save(entity);
 	}

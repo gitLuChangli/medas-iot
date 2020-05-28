@@ -10,60 +10,60 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.foxconn.iot.dto.MenuDto;
-import com.foxconn.iot.entity.MenuEntity;
-import com.foxconn.iot.entity.MenuRelationEntity;
-import com.foxconn.iot.entity.MenuRelationVo;
+import com.foxconn.iot.dto.ButtonDto;
+import com.foxconn.iot.entity.ButtonEntity;
+import com.foxconn.iot.entity.ButtonRelationEntity;
+import com.foxconn.iot.entity.ButtonRelationVo;
 import com.foxconn.iot.exception.BizException;
-import com.foxconn.iot.repository.MenuRelationRepository;
-import com.foxconn.iot.repository.MenuRepository;
-import com.foxconn.iot.service.MenuService;
+import com.foxconn.iot.repository.ButtonRelationRepository;
+import com.foxconn.iot.repository.ButtonRepository;
+import com.foxconn.iot.service.ButtonService;
 import com.foxconn.iot.support.Snowflaker;
 import com.mysql.cj.util.StringUtils;
 
 @Service
-public class MenuServiceImpl implements MenuService {
+public class ButtonServiceImpl implements ButtonService {
 
 	@Autowired
-	private MenuRepository menuRepository;
+	private ButtonRepository buttonRepository;
 	@Autowired
-	private MenuRelationRepository menuRelationRepository;
+	private ButtonRelationRepository buttonRelationRepository;
 
 	@Override
 	@Transactional
-	public void create(MenuDto menu) {
-		MenuEntity entity = new MenuEntity();
-		BeanUtils.copyProperties(menu, entity);
+	public void create(ButtonDto button) {
+		ButtonEntity entity = new ButtonEntity();
+		BeanUtils.copyProperties(button, entity);
 		entity.setId(Snowflaker.getId());
-		menuRepository.save(entity);
+		buttonRepository.save(entity);
 
-		List<MenuRelationEntity> relations = new ArrayList<>();
+		List<ButtonRelationEntity> relations = new ArrayList<>();
 
-		MenuRelationEntity self = new MenuRelationEntity();
+		ButtonRelationEntity self = new ButtonRelationEntity();
 		self.setAncestor(entity.getId());
 		self.setDescendant(entity.getId());
 		self.setDepth(0);
 		relations.add(self);
 
-		if (!StringUtils.isNullOrEmpty(menu.getAncestor())) {
-			String[] ancestors = menu.getAncestor().split(",");
-			String descendant = menu.getAncestor().substring(menu.getAncestor().lastIndexOf(",") + 1);
+		if (!StringUtils.isNullOrEmpty(button.getAncestor())) {
+			String[] ancestors = button.getAncestor().split(",");
+			String descendant = button.getAncestor().substring(button.getAncestor().lastIndexOf(",") + 1);
 			if (ancestors.length > 0 && StringUtils.isStrictlyNumeric(descendant)) {
 				int descendant_ = Integer.parseInt(descendant);
-				List<Long> ancestors_ = menuRelationRepository.queryAncestorByDescendant(descendant_);
+				List<Long> ancestors_ = buttonRelationRepository.queryAncestorByDescendant(descendant_);
 				int length = ancestors_.size();
 
 				if (length != ancestors.length) {
-					throw new BizException("Invalid menu relations");
+					throw new BizException("Invalid button relations");
 				}
 
 				for (int i = 0; i < length; i++) {
 
 					if (!(ancestors_.get(i) + "").equals(ancestors[i])) {
-						throw new BizException("Invalid menu relations");
+						throw new BizException("Invalid button relations");
 					}
 
-					MenuRelationEntity relation = new MenuRelationEntity();
+					ButtonRelationEntity relation = new ButtonRelationEntity();
 					relation.setAncestor(ancestors_.get(i));
 					relation.setDescendant(entity.getId());
 					relation.setDepth(length - i);
@@ -71,40 +71,40 @@ public class MenuServiceImpl implements MenuService {
 				}
 			}
 		}
-		menuRelationRepository.saveAll(relations);
+		buttonRelationRepository.saveAll(relations);
 	}
 
 	@Override
 	@Transactional
-	public void save(MenuDto menu) {
-		MenuEntity entity = menuRepository.findById(menu.getId());
+	public void save(ButtonDto button) {
+		ButtonEntity entity = buttonRepository.findById(button.getId());
 		if (entity == null) {
-			throw new BizException("Invalid menu");
+			throw new BizException("Invalid button");
 		}
 
-		if (!StringUtils.isNullOrEmpty(menu.getName())) {
-			entity.setName(menu.getName());
+		if (!StringUtils.isNullOrEmpty(button.getName())) {
+			entity.setName(button.getName());
 		}
-		if (!StringUtils.isNullOrEmpty(menu.getIcon())) {
-			entity.setIcon(menu.getIcon());
+		if (!StringUtils.isNullOrEmpty(button.getIcon())) {
+			entity.setIcon(button.getIcon());
 		}
-		if (!StringUtils.isNullOrEmpty(menu.getDetails())) {
-			entity.setDetails(menu.getDetails());
+		if (!StringUtils.isNullOrEmpty(button.getDetails())) {
+			entity.setDetails(button.getDetails());
 		}
-		if (!StringUtils.isNullOrEmpty(menu.getUrl())) {
-			entity.setDetails(menu.getUrl());
+		if (!StringUtils.isNullOrEmpty(button.getUrl())) {
+			entity.setDetails(button.getUrl());
 		}
-		entity.setStatus(menu.getStatus());
-		menuRepository.save(entity);
-		if (!StringUtils.isNullOrEmpty(menu.getAncestor())) {
+		entity.setStatus(button.getStatus());
+		buttonRepository.save(entity);
+		if (!StringUtils.isNullOrEmpty(button.getAncestor())) {
 			/** 当前菜单的层级关系 */
-			List<Long> ancestorsOld = menuRelationRepository.queryAncestorByDescendant(entity.getId());
-			String descendant = menu.getAncestor().substring(menu.getAncestor().lastIndexOf(",") + 1);
+			List<Long> ancestorsOld = buttonRelationRepository.queryAncestorByDescendant(entity.getId());
+			String descendant = button.getAncestor().substring(button.getAncestor().lastIndexOf(",") + 1);
 			if (StringUtils.isStrictlyNumeric(descendant)) {
-				String[] ancestors = menu.getAncestor().split(",");
+				String[] ancestors = button.getAncestor().split(",");
 				int descendant_ = Integer.parseInt(descendant);
 				/** 传入菜单层级查询结果 */
-				List<Long> ancestors_ = menuRelationRepository.queryAncestorByDescendant(descendant_);
+				List<Long> ancestors_ = buttonRelationRepository.queryAncestorByDescendant(descendant_);
 
 				/** 与现有层级相比较，如果不修改部门层级关系 */
 				ancestorsOld.removeAll(ancestors_);
@@ -113,15 +113,15 @@ public class MenuServiceImpl implements MenuService {
 				} else {
 
 					int length = ancestors_.size();
-					List<MenuRelationEntity> relations = new ArrayList<>();
+					List<ButtonRelationEntity> relations = new ArrayList<>();
 
 					for (int i = 0; i < length; i++) {
 
 						if (!(ancestors_.get(i) + "").equals(ancestors[i])) {
-							throw new BizException("Invalid menu relations");
+							throw new BizException("Invalid button relations");
 						}
 
-						MenuRelationEntity relation = new MenuRelationEntity();
+						ButtonRelationEntity relation = new ButtonRelationEntity();
 						relation.setAncestor(ancestors_.get(i));
 						relation.setDescendant(entity.getId());
 						relation.setDepth(length - i);
@@ -129,24 +129,24 @@ public class MenuServiceImpl implements MenuService {
 					}
 
 					/** 删除旧的层级关系 */
-					menuRelationRepository.deleteByDescendant(entity.getId());
+					buttonRelationRepository.deleteByDescendant(entity.getId());
 
-					MenuRelationEntity self = new MenuRelationEntity();
+					ButtonRelationEntity self = new ButtonRelationEntity();
 					self.setAncestor(entity.getId());
 					self.setDescendant(entity.getId());
 					self.setDepth(0);
 					relations.add(self);
-					menuRelationRepository.saveAll(relations);
+					buttonRelationRepository.saveAll(relations);
 				}
 			}
 		}
 	}
 
 	@Override
-	public MenuDto findById(long id) {
-		MenuEntity entity = menuRepository.findById(id);
+	public ButtonDto findById(long id) {
+		ButtonEntity entity = buttonRepository.findById(id);
 		if (entity != null) {
-			MenuDto dto = new MenuDto();
+			ButtonDto dto = new ButtonDto();
 			BeanUtils.copyProperties(entity, dto);
 			return dto;
 		}
@@ -156,18 +156,18 @@ public class MenuServiceImpl implements MenuService {
 	@Override
 	@Transactional
 	public void updateStatusById(int status, long id) {
-		menuRepository.updateStatusById(status, id);
+		buttonRepository.updateStatusById(status, id);
 	}
 
 	@Override
 	@Transactional
 	public void deleteById(long id) {
-		menuRepository.deleteById(id);
+		buttonRepository.deleteById(id);
 	}
 
 	/** 在插入部门信息时，部门主键一定要满足正向增加 */
-	private List<MenuDto> sort(List<MenuRelationVo> mrs, boolean valid) {
-		List<MenuDto> dtos = new ArrayList<>();
+	private List<ButtonDto> sort(List<ButtonRelationVo> mrs, boolean valid) {
+		List<ButtonDto> dtos = new ArrayList<>();
 
 		/** 缓存自身的序号 */
 		List<Long> indexes = new LinkedList<>();
@@ -175,12 +175,12 @@ public class MenuServiceImpl implements MenuService {
 		List<Boolean> rootIndexes = new LinkedList<>();
 		/** 时候实锤为字节点 */
 		List<Boolean> realDescendants = new LinkedList<>();
-		List<MenuDto> selfs = new ArrayList<>();
-		for (MenuRelationVo mr : mrs) {
+		List<ButtonDto> selfs = new ArrayList<>();
+		for (ButtonRelationVo mr : mrs) {
 			int descendant = indexes.indexOf(mr.getId());
 			/** 自身放入缓存 depth = 0 */
 			if (descendant == -1) {
-				MenuDto dto = new MenuDto();
+				ButtonDto dto = new ButtonDto();
 				BeanUtils.copyProperties(mr, dto);
 				selfs.add(dto);
 				indexes.add(mr.getId());
@@ -199,7 +199,7 @@ public class MenuServiceImpl implements MenuService {
 				int ancestor = indexes.indexOf(mr.getAncestor());
 				if (ancestor > -1) {
 					if (selfs.get(ancestor).getDescendants() == null) {
-						List<MenuDto> dtos_ = new ArrayList<>();
+						List<ButtonDto> dtos_ = new ArrayList<>();
 						dtos_.add(selfs.get(descendant));
 						selfs.get(ancestor).setDescendants(dtos_);
 					} else {
@@ -220,14 +220,14 @@ public class MenuServiceImpl implements MenuService {
 	}
 
 	@Override
-	public List<MenuDto> queryDescendants() {
-		List<MenuRelationVo> relations = menuRepository.queryDescendants();
+	public List<ButtonDto> queryDescendants() {
+		List<ButtonRelationVo> relations = buttonRepository.queryDescendants();
 		return sort(relations, true);
 	}
 
 	@Override
-	public List<MenuDto> queryDescendantsByAncestor(long ancestor) {
-		List<MenuRelationVo> relations = menuRepository.queryDescendantsByAncestor(ancestor);
+	public List<ButtonDto> queryDescendantsByAncestor(long ancestor) {
+		List<ButtonRelationVo> relations = buttonRepository.queryDescendantsByAncestor(ancestor);
 		return sort(relations, true);
 	}
 

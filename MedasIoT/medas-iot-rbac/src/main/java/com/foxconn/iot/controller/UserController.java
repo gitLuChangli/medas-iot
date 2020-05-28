@@ -39,7 +39,7 @@ public class UserController {
 
 	@GetMapping(value = "/{id:\\d+}")
 	@CommonResponse
-	public UserDetailDto query(@PathVariable(value = "id") int id) {
+	public UserDetailDto query(@PathVariable(value = "id") long id) {
 		return userService.findById(id);
 	}
 
@@ -58,13 +58,13 @@ public class UserController {
 
 	@PutMapping(value = "/disable/{id:\\d+}/{status:^[01]$}")
 	@CommonResponse
-	public void disable(@PathVariable(value = "id") int id, @PathVariable(value = "status") int status) {
+	public void disable(@PathVariable(value = "id") long id, @PathVariable(value = "status") int status) {
 		userService.updateStatusById(status, id);
 	}
 
 	@DeleteMapping(value = "/{id:\\d+}")
 	@CommonResponse
-	public void delete(@PathVariable(value = "id") int id) {
+	public void delete(@PathVariable(value = "id") long id) {
 		userService.deleteById(id);
 	}
 
@@ -78,13 +78,13 @@ public class UserController {
 	@PutMapping(value = "/change_pwd")
 	@CommonResponse
 	public void changePwd(HttpSession session, @RequestParam(value = "pwd", required = true) String newpwd) {
-		int id = (int) session.getAttribute("user_id");
+		long id = (long) session.getAttribute("user_id");
 		userService.updatePwdById(newpwd, id);
 	}
 	
 	@PutMapping(value = "/change_pwd/{id:\\d}")
 	@CommonResponse
-	public void adminChangePwd(@PathVariable(value = "id") int id, @RequestParam(value = "pwd") String pwd) {
+	public void adminChangePwd(@PathVariable(value = "id") long id, @RequestParam(value = "pwd") String pwd) {
 		userService.updatePwdById(pwd, id);
 	}
 }

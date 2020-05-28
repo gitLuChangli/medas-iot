@@ -18,7 +18,7 @@ public class PermissionDto {
 	public interface PermissionSave extends PermissionCreate {}
 	
 	@JsonView(PermissionSave.class)
-	private int id;
+	private long id;
 	
 	@JsonView(PermissionCreate.class)
 	@NotBlank(message = "權限名稱不能為空")
@@ -39,12 +39,19 @@ public class PermissionDto {
 	
 	@JsonInclude(value = Include.NON_NULL)
 	private List<MenuDto> menuList;
+	
+	@JsonView(PermissionCreate.class)
+	@JsonInclude(value = Include.NON_NULL)
+	private String buttons;
+	
+	@JsonInclude(value = Include.NON_NULL)
+	private List<ButtonDto> buttonList;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -95,5 +102,20 @@ public class PermissionDto {
 	public void setMenuList(List<MenuDto> menuList) {
 		this.menuList = menuList;
 	}
-	
+
+	public String getButtons() {
+		return buttons;
+	}
+
+	public void setButtons(String buttons) {
+		this.buttons = buttons;
+	}
+
+	public List<ButtonDto> getButtonList() {
+		return buttonList;
+	}
+
+	public void setButtonList(List<ButtonDto> buttonList) {
+		this.buttonList = buttonList;
+	}
 }

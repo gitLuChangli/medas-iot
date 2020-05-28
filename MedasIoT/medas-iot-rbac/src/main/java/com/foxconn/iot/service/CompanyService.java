@@ -16,7 +16,7 @@ public interface CompanyService {
 	
 	void delelteById(long id);
 	
-	void updateRolesById(List<Integer> roles, long id); 
+	void updateRolesById(List<Long> roles, long id); 
 	
 	List<CompanyDto> queryDescendants();
 	

@@ -35,7 +35,7 @@ public class MenuController {
 
 	@GetMapping(value = "/{id:\\d+}")
 	@CommonResponse
-	public MenuDto query(@PathVariable(value = "id") int id) {
+	public MenuDto query(@PathVariable(value = "id") long id) {
 		return menuService.findById(id);
 	}
 
@@ -47,13 +47,13 @@ public class MenuController {
 
 	@PutMapping(value = "/disable/{id:\\d+}/{status:^[01]$}")
 	@CommonResponse
-	public void disable(@PathVariable(value = "id") int id, @PathVariable(value = "status") int status) {
+	public void disable(@PathVariable(value = "id") long id, @PathVariable(value = "status") int status) {
 		menuService.updateStatusById(status, id);
 	}
 
 	@DeleteMapping(value = "/{id:\\d+}")
 	@CommonResponse
-	public void delete(@PathVariable(value = "id") int id) {
+	public void delete(@PathVariable(value = "id") long id) {
 		menuService.deleteById(id);
 	}
 
@@ -65,7 +65,7 @@ public class MenuController {
 
 	@GetMapping(value = "/ancestor/{id:\\d+}")
 	@CommonResponse
-	public List<MenuDto> queryDescendantsByAncestor(@PathVariable(value = "id") int id) {
+	public List<MenuDto> queryDescendantsByAncestor(@PathVariable(value = "id") long id) {
 		return menuService.queryDescendantsByAncestor(id);
 	}
 }

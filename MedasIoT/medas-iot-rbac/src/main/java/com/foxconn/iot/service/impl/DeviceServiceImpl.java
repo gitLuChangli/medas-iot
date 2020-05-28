@@ -67,8 +67,7 @@ public class DeviceServiceImpl implements DeviceService {
 			DeviceEntity entity = new DeviceEntity();
 			BeanUtils.copyProperties(device, entity);
 			
-			long id = Snowflaker.getId();
-			entity.setId(id);
+			entity.setId(Snowflaker.getId());
 			entity.setSn(sn);
 			entity.setModel(type.getModel());
 			entity.setName(type.getName());

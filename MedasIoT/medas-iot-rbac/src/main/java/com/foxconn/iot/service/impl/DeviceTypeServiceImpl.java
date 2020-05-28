@@ -31,9 +31,8 @@ public class DeviceTypeServiceImpl implements DeviceTypeService {
 	@Override
 	public void create(DeviceTypeDto type) {
 		DeviceTypeEntity entity = new DeviceTypeEntity();
-		long id = Snowflaker.getId();
 		BeanUtils.copyProperties(type, entity);
-		entity.setId(id);
+		entity.setId(Snowflaker.getId());
 		deviceTypeRepository.save(entity);
 	}
 	

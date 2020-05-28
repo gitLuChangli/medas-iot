@@ -200,7 +200,7 @@ public class CompanyServiceImpl implements CompanyService {
 
 	@Override
 	@Transactional
-	public void updateRolesById(List<Integer> roles, long id) {
+	public void updateRolesById(List<Long> roles, long id) {
 		List<RoleEntity> entities = roleRepository.queryByIds(roles);
 		companyRepository.updateRolesById(entities, id);
 	}

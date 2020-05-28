@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.foxconn.iot.entity.DeviceGroupRelationEntity;
 
-public interface DeviceGroupRelationRepository extends JpaRepository<DeviceGroupRelationEntity, Long> {
+public interface DeviceGroupRelationRepository extends JpaRepository<DeviceGroupRelationEntity, Integer> {
 	
 	@Query(value = "select a.ancestor from DeviceGroupRelationEntity a where a.descendant=:descendant order by a.depth desc")
 	List<Long> queryAncestorByDescendant(@Param("descendant") long descendant);

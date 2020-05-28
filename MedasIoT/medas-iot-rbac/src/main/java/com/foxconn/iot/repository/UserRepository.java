@@ -9,9 +9,9 @@ import org.springframework.data.repository.query.Param;
 
 import com.foxconn.iot.entity.UserEntity;
 
-public interface UserRepository extends JpaRepository<UserEntity, Integer> {
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
-	UserEntity findById(int id);
+	UserEntity findById(long id);
 
 	UserEntity findByNo(String no);
 
@@ -20,9 +20,9 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
 	@Modifying
 	@Query(value = "update UserEntity a set a.status=:status where a.id=:id")
-	void updateStatusById(@Param("status") int status, @Param("id") int id);
+	void updateStatusById(@Param("status") int status, @Param("id") long id);
 	
 	@Modifying
 	@Query(value = "update UserEntity a set a.pwd=:pwd where a.id=:id")
-	void updatePwdById(@Param("pwd") String pwd, @Param("id") int id);
+	void updatePwdById(@Param("pwd") String pwd, @Param("id") long id);
 }

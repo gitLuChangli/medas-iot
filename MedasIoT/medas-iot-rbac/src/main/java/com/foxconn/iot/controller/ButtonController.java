@@ -16,51 +16,56 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.foxconn.iot.dto.PermissionDto;
-import com.foxconn.iot.dto.RoleDto;
-import com.foxconn.iot.service.RoleService;
+import com.foxconn.iot.dto.ButtonDto;
+import com.foxconn.iot.service.ButtonService;
 import com.foxconn.iot.support.CommonResponse;
 
 @RestController
-@RequestMapping(value = "/role")
-public class RoleController {
+@RequestMapping(value = "/button")
+public class ButtonController {
 
 	@Autowired
-	private RoleService roleService;
+	private ButtonService buttonService;
 
 	@PostMapping(value = "/")
 	@CommonResponse
-	public void create(@Valid @JsonView(RoleDto.RoleCreate.class) @RequestBody RoleDto role, BindingResult result) {
-		roleService.create(role);
+	public void create(@Valid @JsonView(ButtonDto.ButtonCreate.class) @RequestBody ButtonDto menu, BindingResult result) {
+		buttonService.create(menu);
 	}
 
 	@GetMapping(value = "/{id:\\d+}")
 	@CommonResponse
-	public RoleDto query(@PathVariable(value = "id") long id) {
-		return roleService.findById(id);
+	public ButtonDto query(@PathVariable(value = "id") long id) {
+		return buttonService.findById(id);
 	}
 
 	@PutMapping(value = "/")
 	@CommonResponse
-	public void update(@Valid @JsonView(RoleDto.RoleSave.class) @RequestBody RoleDto role, BindingResult result) {
-		roleService.save(role);
+	public void update(@Valid @JsonView(ButtonDto.ButtonSave.class) @RequestBody ButtonDto menu, BindingResult result) {
+		buttonService.save(menu);
 	}
 
 	@PutMapping(value = "/disable/{id:\\d+}/{status:^[01]$}")
 	@CommonResponse
 	public void disable(@PathVariable(value = "id") long id, @PathVariable(value = "status") int status) {
-		roleService.updateStatusById(status, id);
+		buttonService.updateStatusById(status, id);
 	}
 
 	@DeleteMapping(value = "/{id:\\d+}")
 	@CommonResponse
 	public void delete(@PathVariable(value = "id") long id) {
-		roleService.deleteById(id);
+		buttonService.deleteById(id);
 	}
 
-	@GetMapping(value = "/permissions/{id:\\d+}")
+	@GetMapping(value = "/descendants")
 	@CommonResponse
-	public List<PermissionDto> queryPermissions(@PathVariable(value = "id") long id) {
-		return roleService.queryPermissionsById(id);
+	public List<ButtonDto> queryAllDescendants() {
+		return buttonService.queryDescendants();
+	}
+
+	@GetMapping(value = "/ancestor/{id:\\d+}")
+	@CommonResponse
+	public List<ButtonDto> queryDescendantsByAncestor(@PathVariable(value = "id") long id) {
+		return buttonService.queryDescendantsByAncestor(id);
 	}
 }

@@ -17,6 +17,7 @@ import com.foxconn.iot.exception.BizException;
 import com.foxconn.iot.repository.PermissionRepository;
 import com.foxconn.iot.repository.RoleRepository;
 import com.foxconn.iot.service.RoleService;
+import com.foxconn.iot.support.Snowflaker;
 import com.mysql.cj.util.StringUtils;
 
 @Service
@@ -33,16 +34,17 @@ public class RoleServiceImpl implements RoleService {
 		BeanUtils.copyProperties(role, entity);
 		if (!StringUtils.isNullOrEmpty(role.getPermissions())) {
 			String[] items = role.getPermissions().split(",'");
-			List<Integer> ids = new ArrayList<>();
+			List<Long> ids = new ArrayList<>();
 			for (String item : items) {
 				if (StringUtils.isStrictlyNumeric(item)) {
-					ids.add(Integer.parseInt(item));
+					ids.add(Long.parseLong(item));
 				}
 			}
 
 			List<PermissionEntity> permissions = permissionRepository.findByIdIn(ids);
 			entity.setPermissions(permissions);
 		}
+		entity.setId(Snowflaker.getId());
 		roleRepository.save(entity);
 	}
 
@@ -58,10 +60,10 @@ public class RoleServiceImpl implements RoleService {
 
 		if (!StringUtils.isNullOrEmpty(role.getPermissions())) {
 			String[] items = role.getPermissions().split(",'");
-			List<Integer> ids = new ArrayList<>();
+			List<Long> ids = new ArrayList<>();
 			for (String item : items) {
 				if (StringUtils.isStrictlyNumeric(item)) {
-					ids.add(Integer.parseInt(item));
+					ids.add(Long.parseLong(item));
 				}
 			}
 
@@ -72,7 +74,7 @@ public class RoleServiceImpl implements RoleService {
 	}
 	
 	@Override
-	public RoleDto findById(int id) {
+	public RoleDto findById(long id) {
 		RoleEntity entity = roleRepository.findById(id);
 		if (entity != null) {
 			RoleDto dto = new RoleDto();
@@ -84,18 +86,18 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	@Transactional
-	public void updateStatusById(int status, int id) {
+	public void updateStatusById(int status, long id) {
 		roleRepository.updateStatusById(status, id);
 	}
 
 	@Override
 	@Transactional
-	public void deleteById(int id) {
+	public void deleteById(long id) {
 		roleRepository.deleteById(id);
 	}
 
 	@Override
-	public List<PermissionDto> queryPermissionsById(int id) {
+	public List<PermissionDto> queryPermissionsById(long id) {
 		List<PermissionEntity> permissions = roleRepository.queryPermissionsById(id);
 		List<PermissionDto> dtos = new ArrayList<>();
 		for (PermissionEntity permission : permissions) {

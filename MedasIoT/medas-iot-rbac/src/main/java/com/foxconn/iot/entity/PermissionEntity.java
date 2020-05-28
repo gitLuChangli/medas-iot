@@ -7,8 +7,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -28,8 +26,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class PermissionEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private long id;
 
 	/**
 	 * 权限名称
@@ -56,12 +53,18 @@ public class PermissionEntity {
 			@JoinColumn(name = "permission_id", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "menu_id", referencedColumnName = "id") })
 	private List<MenuEntity> menus;
+	
+	@ManyToMany(targetEntity = ButtonEntity.class, fetch = FetchType.LAZY)
+	@JoinTable(name = "tb_permission_button", joinColumns = {
+			@JoinColumn(name="permission_id", referencedColumnName = "id")}, inverseJoinColumns = {
+					@JoinColumn(name="button_id", referencedColumnName = "id")})
+	private List<ButtonEntity> buttons;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -103,6 +106,14 @@ public class PermissionEntity {
 
 	public void setMenus(List<MenuEntity> menus) {
 		this.menus = menus;
+	}
+
+	public List<ButtonEntity> getButtons() {
+		return buttons;
+	}
+
+	public void setButtons(List<ButtonEntity> buttons) {
+		this.buttons = buttons;
 	}
 
 }

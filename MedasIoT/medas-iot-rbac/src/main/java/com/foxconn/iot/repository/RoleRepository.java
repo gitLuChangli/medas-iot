@@ -10,17 +10,17 @@ import org.springframework.data.repository.query.Param;
 import com.foxconn.iot.entity.PermissionEntity;
 import com.foxconn.iot.entity.RoleEntity;
 
-public interface RoleRepository extends JpaRepository<RoleEntity, Integer> {
+public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
 
-	RoleEntity findById(int id);
+	RoleEntity findById(long id);
 	
 	@Query(value = "select a from RoleEntity a where a.id in (:ids)")
-	List<RoleEntity> queryByIds(@Param("ids") List<Integer> ids);
+	List<RoleEntity> queryByIds(@Param("ids") List<Long> ids);
 	
 	@Modifying
 	@Query(value = "update RoleEntity a set a.status=:status where a.id=:id")
-	void updateStatusById(@Param("status") int status, @Param("id") int id);
+	void updateStatusById(@Param("status") int status, @Param("id") long id);
 	
 	@Query(value = "select a.permissions from RoleEntity a where a.id=:id")
-	List<PermissionEntity> queryPermissionsById(@Param("id") int id);
+	List<PermissionEntity> queryPermissionsById(@Param("id") long id);
 }

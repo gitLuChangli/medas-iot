@@ -11,11 +11,11 @@ public interface RoleService {
 
 	void save(RoleDto role);
 	
-	RoleDto findById(int id);
+	RoleDto findById(long id);
 
-	void updateStatusById(int status, int id);
+	void updateStatusById(int status, long id);
 
-	void deleteById(int id);
+	void deleteById(long id);
 
-	List<PermissionDto> queryPermissionsById(int id);
+	List<PermissionDto> queryPermissionsById(long id);
 }
