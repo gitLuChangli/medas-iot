@@ -21,7 +21,7 @@ import com.foxconn.iot.service.ButtonService;
 import com.foxconn.iot.support.CommonResponse;
 
 @RestController
-@RequestMapping(value = "/button")
+@RequestMapping(value = "/api/button")
 public class ButtonController {
 
 	@Autowired

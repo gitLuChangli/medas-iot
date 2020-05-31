@@ -23,7 +23,7 @@ import com.foxconn.iot.service.DeviceVersionService;
 import com.foxconn.iot.support.CommonResponse;
 
 @RestController
-@RequestMapping(value = "/device/version")
+@RequestMapping(value = "/api/device/version")
 public class DeviceVersionController {
 
 	@Autowired

@@ -19,7 +19,7 @@ import com.foxconn.iot.service.PermissionService;
 import com.foxconn.iot.support.CommonResponse;
 
 @RestController
-@RequestMapping(value = "/permission")
+@RequestMapping(value = "/api/permission")
 public class PermissionController {
 
 	@Autowired

@@ -22,7 +22,7 @@ import com.foxconn.iot.service.RoleService;
 import com.foxconn.iot.support.CommonResponse;
 
 @RestController
-@RequestMapping(value = "/role")
+@RequestMapping(value = "/api/role")
 public class RoleController {
 
 	@Autowired

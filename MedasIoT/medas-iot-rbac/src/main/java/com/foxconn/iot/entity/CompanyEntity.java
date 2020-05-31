@@ -95,6 +95,10 @@ public class CompanyEntity {
 	@Column(name = "create_on", length = 20, updatable = false)
 	private Date createOn;
 
+	
+	/**
+	 * TODO: 此处要重新评估，看样子设定号的角色，此处加上关系用处不大
+	 */
 	/**
 	 * 分组角色
 	 */

@@ -23,7 +23,7 @@ import com.foxconn.iot.service.DeviceTypeService;
 import com.foxconn.iot.support.CommonResponse;
 
 @RestController
-@RequestMapping(value = "/device/type")
+@RequestMapping(value = "/api/device/type")
 public class DeviceTypeController {
 	
 	@Autowired

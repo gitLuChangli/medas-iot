@@ -22,7 +22,7 @@ import com.foxconn.iot.service.ErrorCodeService;
 import com.foxconn.iot.support.CommonResponse;
 
 @RestController
-@RequestMapping(value = "/error/code")
+@RequestMapping(value = "/api/error/code")
 public class ErrorCodeController {
 
 	@Autowired

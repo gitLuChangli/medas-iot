@@ -17,7 +17,7 @@ import com.foxconn.iot.service.DeviceService;
 import com.foxconn.iot.support.CommonResponse;
 
 @RestController
-@RequestMapping(value = "/device")
+@RequestMapping(value = "/api/device")
 public class DeviceController {
 
 	@Autowired

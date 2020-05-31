@@ -21,7 +21,7 @@ import com.foxconn.iot.service.MenuService;
 import com.foxconn.iot.support.CommonResponse;
 
 @RestController
-@RequestMapping(value = "/menu")
+@RequestMapping(value = "/api/menu")
 public class MenuController {
 
 	@Autowired

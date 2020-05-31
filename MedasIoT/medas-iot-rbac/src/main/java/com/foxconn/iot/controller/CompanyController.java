@@ -21,7 +21,7 @@ import com.foxconn.iot.service.CompanyService;
 import com.foxconn.iot.support.CommonResponse;
 
 @RestController
-@RequestMapping(value = "/company")
+@RequestMapping(value = "/api/company")
 public class CompanyController {
 
 	@Autowired

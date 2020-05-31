@@ -25,7 +25,7 @@ import com.foxconn.iot.service.UserService;
 import com.foxconn.iot.support.CommonResponse;
 
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/api/user")
 public class UserController {
 
 	@Autowired
