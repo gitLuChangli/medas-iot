@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.foxconn.iot.dto.CompanyDto;
 import com.foxconn.iot.service.CompanyService;
 import com.foxconn.iot.support.CommonResponse;
@@ -29,7 +28,7 @@ public class CompanyController {
 
 	@CommonResponse
 	@PostMapping(value = "/")
-	public void create(@Valid @JsonView(CompanyDto.CompanyCreate.class) @RequestBody CompanyDto company,
+	public void create(@Valid @RequestBody CompanyDto company,
 			BindingResult result) {
 		companyService.crate(company);
 	}
@@ -42,7 +41,7 @@ public class CompanyController {
 
 	@CommonResponse
 	@PutMapping(value = "/")
-	public void update(@Valid @JsonView(CompanyDto.CompanyCreate.class) @RequestBody CompanyDto company) {
+	public void update(@Valid @RequestBody CompanyDto company) {
 		companyService.save(company);
 	}
 

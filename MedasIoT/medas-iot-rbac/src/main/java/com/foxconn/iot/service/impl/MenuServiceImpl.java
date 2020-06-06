@@ -45,24 +45,19 @@ public class MenuServiceImpl implements MenuService {
 		self.setDepth(0);
 		relations.add(self);
 
-		if (!StringUtils.isNullOrEmpty(menu.getAncestor())) {
-			String[] ancestors = menu.getAncestor().split(",");
-			String descendant = menu.getAncestor().substring(menu.getAncestor().lastIndexOf(",") + 1);
-			if (ancestors.length > 0 && StringUtils.isStrictlyNumeric(descendant)) {
-				int descendant_ = Integer.parseInt(descendant);
+		if (menu.getAncestor() != null && menu.getAncestor().length > 0) {
+			int length = menu.getAncestor().length;
+			String descendant = menu.getAncestor()[length - 1];
+			if (StringUtils.isStrictlyNumeric(descendant)) {
+				long descendant_ = Long.parseLong(descendant);
 				List<Long> ancestors_ = menuRelationRepository.queryAncestorByDescendant(descendant_);
-				int length = ancestors_.size();
-
-				if (length != ancestors.length) {
+				if (ancestors_.size() != length) {
 					throw new BizException("Invalid menu relations");
 				}
-
 				for (int i = 0; i < length; i++) {
-
-					if (!(ancestors_.get(i) + "").equals(ancestors[i])) {
+					if (!(ancestors_.get(i) + "").equals(menu.getAncestor()[i])) {
 						throw new BizException("Invalid menu relations");
 					}
-
 					MenuRelationEntity relation = new MenuRelationEntity();
 					relation.setAncestor(ancestors_.get(i));
 					relation.setDescendant(entity.getId());
@@ -70,7 +65,7 @@ public class MenuServiceImpl implements MenuService {
 					relations.add(relation);
 				}
 			}
-		}
+		}		
 		menuRelationRepository.saveAll(relations);
 	}
 
@@ -80,10 +75,6 @@ public class MenuServiceImpl implements MenuService {
 		MenuEntity entity = menuRepository.findById(menu.getId());
 		if (entity == null) {
 			throw new BizException("Invalid menu");
-		}
-
-		if (!StringUtils.isNullOrEmpty(menu.getName())) {
-			entity.setName(menu.getName());
 		}
 		if (!StringUtils.isNullOrEmpty(menu.getIcon())) {
 			entity.setIcon(menu.getIcon());
@@ -96,13 +87,14 @@ public class MenuServiceImpl implements MenuService {
 		}
 		entity.setStatus(menu.getStatus());
 		menuRepository.save(entity);
-		if (!StringUtils.isNullOrEmpty(menu.getAncestor())) {
+		
+		if (menu.getAncestor() != null && menu.getAncestor().length > 0) {
 			/** 当前菜单的层级关系 */
 			List<Long> ancestorsOld = menuRelationRepository.queryAncestorByDescendant(entity.getId());
-			String descendant = menu.getAncestor().substring(menu.getAncestor().lastIndexOf(",") + 1);
+			int length = menu.getAncestor().length;
+			String descendant = menu.getAncestor()[length - 1];
 			if (StringUtils.isStrictlyNumeric(descendant)) {
-				String[] ancestors = menu.getAncestor().split(",");
-				int descendant_ = Integer.parseInt(descendant);
+				long descendant_ = Long.parseLong(descendant);
 				/** 传入菜单层级查询结果 */
 				List<Long> ancestors_ = menuRelationRepository.queryAncestorByDescendant(descendant_);
 
@@ -111,16 +103,11 @@ public class MenuServiceImpl implements MenuService {
 				if (ancestorsOld.size() == 1 && ancestorsOld.get(0) == entity.getId()) {
 					/** 不需要修改层级关系 */
 				} else {
-
-					int length = ancestors_.size();
 					List<MenuRelationEntity> relations = new ArrayList<>();
-
 					for (int i = 0; i < length; i++) {
-
-						if (!(ancestors_.get(i) + "").equals(ancestors[i])) {
+						if (!(ancestors_.get(i) + "").equals(menu.getAncestor()[i])) {
 							throw new BizException("Invalid menu relations");
 						}
-
 						MenuRelationEntity relation = new MenuRelationEntity();
 						relation.setAncestor(ancestors_.get(i));
 						relation.setDescendant(entity.getId());
@@ -139,7 +126,7 @@ public class MenuServiceImpl implements MenuService {
 					menuRelationRepository.saveAll(relations);
 				}
 			}
-		}
+		}		
 	}
 
 	@Override

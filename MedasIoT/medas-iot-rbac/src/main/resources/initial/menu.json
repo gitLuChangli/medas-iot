@@ -2,7 +2,7 @@
 	{
 		"id": 1,
 		"name": "user",
-		"details": "用戶管理",
+		"details": "鐢ㄦ埛绠＄悊",
 		"icon": "el-icon-user-solid",
 		"url": "/user",
 		"status": 0
@@ -10,7 +10,7 @@
 	{
 		"id": 1001,
 		"name": "user_create",
-		"details": "创建用户",
+		"details": "鍒涘缓鐢ㄦ埛",
 		"url": "/user/new",
 		"status": 0,
 		"ancestor": "1"
@@ -18,7 +18,7 @@
 	{
 		"id": 1002,
 		"name": "user_list",
-		"details": "用户清单",
+		"details": "鐢ㄦ埛鍒楄〃",
 		"url": "/user/list",
 		"status": 0,
 		"ancestor": "1"
@@ -26,7 +26,7 @@
 	{
 		"id": 1003,
 		"name": "user_disabled_list",
-		"details": "禁用清单",
+		"details": "绂佺敤鍒楄〃",
 		"url": "/user/disabled",
 		"status": 0,
 		"ancestor": "1"
@@ -34,14 +34,14 @@
 	{
 		"id": 2,
 		"name": "company",
-		"details": "部门管理",
+		"details": "閮ㄩ棬绠＄悊",
 		"icon": "el-icon-office-building",
 		"status": 0
 	},
 	{
 		"id": 2001,
 		"name": "company_create",
-		"details": "创建部门",
+		"details": "鍒涘缓閮ㄩ棬",
 		"url": "/company/new",
 		"status": 0,
 		"ancestor": "2"
@@ -49,7 +49,7 @@
 	{
 		"id": 2002,
 		"name": "company_list",
-		"details": "部门清单",
+		"details": "閮ㄩ棬鍒楄〃",
 		"url": "/company/list",
 		"status": 0,
 		"ancestor": "2"
@@ -57,7 +57,7 @@
 	{
 		"id": 2003,
 		"name": "company_disabled_list",
-		"details": "禁用清单",
+		"details": "绂佺敤鍒楄〃",
 		"url": "/company/disabled",
 		"status": 0,
 		"ancestor": "2"
@@ -65,7 +65,7 @@
 	{
 		"id": 3,
 		"name": "role",
-		"details": "角色管理",
+		"details": "瑙掕壊绠＄悊",
 		"url": "/role",
 		"icon": "iconfont-role",
 		"status": 0
@@ -73,7 +73,7 @@
 	{
 		"id": 3001,
 		"name": "role_list",
-		"details": "角色清单",
+		"details": "瑙掕壊鍒楄〃",
 		"url": "/role/list",
 		"status": 0,
 		"ancestor": "3"
@@ -81,7 +81,7 @@
 	{
 		"id": 4,
 		"name": "permission",
-		"details": "权限管理",
+		"details": "鏉冮檺绠＄悊",
 		"url": "/permission",
 		"icon": "iconfont-authority",
 		"status": 0
@@ -89,9 +89,48 @@
 	{
 		"id": 4001,
 		"name": "permission-list",
-		"details": "权限清单",
+		"details": "鏉冮檺鍒楄〃",
 		"url": "/permission/list",
 		"status": 0,
 		"ancestor": "4"
+	},
+	{
+		"id": 4002,
+		"name": "permission-disabled_list",
+		"details": "绂佺敤鍒楄〃",
+		"status": 0,
+		"ancestor": 4
+	},
+	{
+		"id": 5,
+		"name": "device",
+		"details": "璁惧绠＄悊",
+		"url": "/device",
+		"icon": "iconfont-authority",
+		"status": 0
+	},
+	{
+		"id": 5001,
+		"name": "device-group",
+		"details": "缇ょ粍绠＄悊",
+		"url": "/device/group",
+		"status": 0,
+		"ancestor": "5"
+	},
+	{
+		"id": 5002,
+		"name": "device-entry",
+		"details": "褰曞叆璁惧",
+		"url": "/device/entry",
+		"status": 0,
+		"ancestor": "5"
+	},
+	{
+		"id": 5003,
+		"name": "device-list",
+		"details": "璁惧鍒楄〃",
+		"url": "/device/list",
+		"status": 0,
+		"ancestor": 5
 	}
 ]

@@ -53,6 +53,9 @@ public class MenuEntity {
 
 	@Column(name = "status")
 	private int status;
+	
+	@Column(name = "idx")
+	private int index;
 
 	public long getId() {
 		return id;
@@ -108,5 +111,13 @@ public class MenuEntity {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 }

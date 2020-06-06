@@ -57,33 +57,32 @@ public class CompanyServiceImpl implements CompanyService {
 		/** 保存部门层级关系 */
 		List<CompanyRelationEntity> relations = new ArrayList<>();
 		if (!StringUtils.isNullOrEmpty(company.getAncestor())) {
-			String[] ancestors = company.getAncestor().split(",");
-			String descendant = company.getAncestor().substring(company.getAncestor().lastIndexOf(",") + 1);			
-			if (ancestors.length > 0 && StringUtils.isStrictlyNumeric(descendant)) {
-				long descendant_ = Long.parseLong(descendant);
+			String[] ancestors = company.getAncestor().split(",");			
+			String descendant = ancestors[ancestors.length - 1];
+			if (!StringUtils.isStrictlyNumeric(descendant)) {
+				throw new BizException("invalid company relations");
+			}
+			long descendant_ = Long.parseLong(descendant);
+			
+			List<Long> ancestors_ = companyRelationRepository.queryAncestorByDescendant(descendant_);
+			int length = ancestors_.size();
+			
+			if (length != ancestors.length) {
+				throw new BizException("Invalid company relations");
+			}
+			
+			for (int i = 0; i < length; i++) {
 				
-				List<Long> ancestors_ = companyRelationRepository.queryAncestorByDescendant(descendant_);
-				int length = ancestors_.size();
-				
-				if (length != ancestors.length) {
+				if (!(ancestors_.get(i) + "").equals(ancestors[i])) {
 					throw new BizException("Invalid company relations");
 				}
 				
-				for (int i = 0; i < length; i++) {
-					
-					if (!(ancestors_.get(i) + "").equals(ancestors[i])) {
-						throw new BizException("Invalid company relations");
-					}
-					
-					CompanyRelationEntity relation = new CompanyRelationEntity();
-					relation.setAncestor(ancestors_.get(i));
-					relation.setDescendant(entity.getId());
-					relation.setDepth(length - i);
-					relations.add(relation);
-				}
-			} else {
-				self.setRoot(1);
-			}
+				CompanyRelationEntity relation = new CompanyRelationEntity();
+				relation.setAncestor(ancestors_.get(i));
+				relation.setDescendant(entity.getId());
+				relation.setDepth(length - i);
+				relations.add(relation);
+			}				
 		} else {
 			self.setRoot(1);
 		}
@@ -108,14 +107,17 @@ public class CompanyServiceImpl implements CompanyService {
 		if (!StringUtils.isNullOrEmpty(company.getDetails())) {
 			entity.setDetails(company.getDetails());
 		}
-		if (!StringUtils.isNullOrEmpty(company.getRegion()) && !StringUtils.isNullOrEmpty(company.getProvince())
-				&& !StringUtils.isNullOrEmpty(company.getCity()) && !StringUtils.isNullOrEmpty(company.getCounty())
-				&& !StringUtils.isNullOrEmpty(company.getArea()) && !StringUtils.isNullOrEmpty(company.getAddress())) {
+		if (!StringUtils.isNullOrEmpty(company.getRegion())) {
 			entity.setRegion(company.getRegion());
+		}
+		if (!StringUtils.isNullOrEmpty(company.getArea())) {
+			entity.setArea(company.getArea());
+		}
+		if (!StringUtils.isNullOrEmpty(company.getProvince()) && !StringUtils.isNullOrEmpty(company.getCity()) && 
+				!StringUtils.isNullOrEmpty(company.getCounty()) && !StringUtils.isNullOrEmpty(company.getAddress())) {
 			entity.setProvince(company.getProvince());
 			entity.setCity(company.getCity());
 			entity.setCounty(company.getCounty());
-			entity.setArea(company.getArea());
 			entity.setAddress(company.getAddress());
 		}
 		companyRepository.save(entity);
@@ -124,49 +126,53 @@ public class CompanyServiceImpl implements CompanyService {
 		/** 修改部门的层级关系 */
 		if (!StringUtils.isNullOrEmpty(company.getAncestor())) {
 			
+			String[] ancestors = company.getAncestor().split(",");			
+			String descendant = ancestors[ancestors.length - 1];
+			if (!StringUtils.isStrictlyNumeric(descendant)) {
+				throw new BizException("invalid company relations");
+			}
+			long descendant_ = Long.parseLong(descendant);
+			
+			
 			/** 当前部门的层级关系 */
 			List<Long> ancestorsOld = companyRelationRepository.queryAncestorByDescendant(entity.getId());
 			
-			String descendant = company.getAncestor().substring(company.getAncestor().lastIndexOf(",") + 1);
-			if (StringUtils.isStrictlyNumeric(descendant)) {
-				String[] ancestors = company.getAncestor().split(",");
-				long descendant_ = Long.parseLong(descendant);
-				/** 传入部门层级查询结果 */
-				List<Long> ancestors_ = companyRelationRepository.queryAncestorByDescendant(descendant_);
+
+			/** 传入部门层级查询结果 */
+			List<Long> ancestors_ = companyRelationRepository.queryAncestorByDescendant(descendant_);
 				
 				
-				/** 与现有层级相比较，如果不修改部门层级关系 */
-				ancestorsOld.removeAll(ancestors_);
-				if (ancestorsOld.size() == 1 && ancestorsOld.get(0) == entity.getId()) {
-					/** 不需要修改层级关系 */
-				} else {
+			/** 与现有层级相比较，如果不修改部门层级关系 */
+			ancestorsOld.removeAll(ancestors_);
+			if (ancestorsOld.size() == 1 && ancestorsOld.get(0) == entity.getId()) {
+				/** 不需要修改层级关系 */
+			} else {
+				
+				int length = ancestors_.size();
+				List<CompanyRelationEntity> relations = new ArrayList<>();
+				
+				for (int i = 0; i < length; i++) {
 					
-					int length = ancestors_.size();
-					List<CompanyRelationEntity> relations = new ArrayList<>();
-					
-					for (int i = 0; i < length; i++) {
-						
-						if (!(ancestors_.get(i) + "").equals(ancestors[i])) {
-							throw new BizException("Invalid company relations");
-						}
-						
-						CompanyRelationEntity relation = new CompanyRelationEntity();
-						relation.setAncestor(ancestors_.get(i));
-						relation.setDescendant(entity.getId());
-						relation.setDepth(length - i);
-						relations.add(relation);
+					if (!(ancestors_.get(i) + "").equals(ancestors[i])) {
+						throw new BizException("Invalid company relations");
 					}
 					
-					/** 删除旧的层级关系 */
-					companyRelationRepository.deleteByDescendant(entity.getId());
-					
-					CompanyRelationEntity self = new CompanyRelationEntity();
-					self.setAncestor(entity.getId());
-					self.setDescendant(entity.getId());
-					self.setDepth(0);
-					relations.add(self);
-					companyRelationRepository.saveAll(relations);
+					CompanyRelationEntity relation = new CompanyRelationEntity();
+					relation.setAncestor(ancestors_.get(i));
+					relation.setDescendant(entity.getId());
+					relation.setDepth(length - i);
+					relations.add(relation);
 				}
+				
+				/** 删除旧的层级关系 */
+				companyRelationRepository.deleteByDescendant(entity.getId());
+				
+				CompanyRelationEntity self = new CompanyRelationEntity();
+				self.setAncestor(entity.getId());
+				self.setDescendant(entity.getId());
+				self.setDepth(0);
+				relations.add(self);
+				companyRelationRepository.saveAll(relations);
 			}
 		}
 		

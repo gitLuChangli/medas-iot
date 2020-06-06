@@ -1,5 +1,7 @@
 package com.foxconn.iot.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,7 +22,11 @@ public interface UserService {
 	
 	void deleteById(long id);
 	
-	Page<UserDetailDto> queryByCompany(long companyid, Pageable pageable);
+	Page<UserDetailDto> findByStatus(int status, Pageable pageable);
+	
+	Page<UserDetailDto> queryByCompanyAndStatus(long companyid, int status, Pageable pageable);
 	
 	void updatePwdById(String pwd, long id);
+	
+	List<Long> queryCompanyRelations(long userid);
 }

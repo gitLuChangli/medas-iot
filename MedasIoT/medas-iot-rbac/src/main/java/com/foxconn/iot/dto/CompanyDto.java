@@ -9,20 +9,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonView;
 
 public class CompanyDto {
 
-	public interface CompanyCreate {}
-	
 	@JsonFormat(shape = Shape.STRING)
 	private long id;
 
-	@JsonView(CompanyCreate.class)
 	@NotBlank(message = "費用代碼不能為空")
 	private String code;
 
-	@JsonView(CompanyCreate.class)
 	@NotBlank(message = "部門名稱不能為空")
 	private String name;
 
@@ -48,7 +43,6 @@ public class CompanyDto {
 	/**
 	 * 所属部门，多层级用逗号隔开
 	 */
-	@JsonView(CompanyCreate.class)
 	@JsonInclude(value = Include.NON_NULL)
 	private String ancestor;
 	

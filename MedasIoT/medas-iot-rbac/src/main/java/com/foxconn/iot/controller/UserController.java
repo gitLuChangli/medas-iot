@@ -1,5 +1,8 @@
 package com.foxconn.iot.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -68,11 +71,31 @@ public class UserController {
 		userService.deleteById(id);
 	}
 
-	@GetMapping(value = "/company/{id:\\d+}")
+	/**
+	 * 根据状态查询用户
+	 * @param status
+	 * @param pageable
+	 * @return
+	 */
+	@GetMapping(value="/status/{status:^[01]$}")
 	@CommonResponse
-	public Page<UserDetailDto> queryByCommpany(@PathVariable(value = "id") long companyid,
+	public Page<UserDetailDto> query(@PathVariable(value = "status") int status, @PageableDefault Pageable pageable) {
+		return userService.findByStatus(status, pageable);
+	}
+	
+	/**
+	 * 根据部门及状态编号查询用户
+	 * 
+	 * @param companyid
+	 * @param status
+	 * @param pageable
+	 * @return
+	 */
+	@GetMapping(value = "/company/{id:\\d+}/{status:^[01]$}")
+	@CommonResponse
+	public Page<UserDetailDto> queryByCommpany(@PathVariable(value = "id") long companyid, @PathVariable(value = "status") int status,
 			@PageableDefault(size = 15) Pageable pageable) {
-		return userService.queryByCompany(companyid, pageable);
+		return userService.queryByCompanyAndStatus(companyid, status, pageable);
 	}
 	
 	@PutMapping(value = "/change_pwd")
@@ -82,9 +105,32 @@ public class UserController {
 		userService.updatePwdById(newpwd, id);
 	}
 	
-	@PutMapping(value = "/change_pwd/{id:\\d}")
+	@PutMapping(value = "/change_pwd/{id:\\d+}")
 	@CommonResponse
 	public void adminChangePwd(@PathVariable(value = "id") long id, @RequestParam(value = "pwd") String pwd) {
 		userService.updatePwdById(pwd, id);
+	}
+	
+	@PutMapping(value = "/reset_pwd/{id:\\d+}")
+	@CommonResponse
+	public void adminResetPwdById(@PathVariable(value = "id") long id) {
+		userService.updatePwdById("password1!", id);
+	}
+	
+	/**
+	 * 查看用户所属部门之间的关系
+	 * 
+	 * @param userid
+	 * @return
+	 */
+	@GetMapping(value = "/company/relations/{id:\\d+}")
+	@CommonResponse
+	public List<String> queryCompanyRelations(@PathVariable(value = "id") long userid) {
+		List<Long> relations = userService.queryCompanyRelations(userid);
+		List<String> relations_ = new ArrayList<>();
+		for (Long relation : relations) {
+			relations_.add(relation.toString());
+		}
+		return relations_;
 	}
 }

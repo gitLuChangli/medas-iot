@@ -7,7 +7,8 @@ import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
 public class UserDetailDto {
 	
-	private int id;
+	@JsonFormat(shape = Shape.STRING)
+	private long id;
 	
 	private String no;
 	
@@ -30,11 +31,11 @@ public class UserDetailDto {
 	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date createOn;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

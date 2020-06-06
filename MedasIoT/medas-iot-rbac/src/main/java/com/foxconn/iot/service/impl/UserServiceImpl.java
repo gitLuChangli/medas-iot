@@ -13,12 +13,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.foxconn.iot.dto.UserDto;
 import com.foxconn.iot.dto.UserDetailDto;
+import com.foxconn.iot.dto.UserDto;
 import com.foxconn.iot.entity.CompanyEntity;
 import com.foxconn.iot.entity.RoleEntity;
 import com.foxconn.iot.entity.UserEntity;
 import com.foxconn.iot.exception.BizException;
+import com.foxconn.iot.repository.CompanyRelationRepository;
 import com.foxconn.iot.repository.CompanyRepository;
 import com.foxconn.iot.repository.RoleRepository;
 import com.foxconn.iot.repository.UserRepository;
@@ -34,6 +35,8 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private CompanyRepository companyRepository;
 	@Autowired
+	private CompanyRelationRepository companyRelationRepository;
+	@Autowired
 	private RoleRepository roleRepository;
 	@Autowired
 	private BCryptPasswordEncoder encoder;
@@ -42,13 +45,25 @@ public class UserServiceImpl implements UserService {
 	public void create(UserDto user) {
 		UserEntity entity = new UserEntity();
 		BeanUtils.copyProperties(user, entity);
-		if (!StringUtils.isStrictlyNumeric(user.getCompanyId())) {
-			throw new BizException("Invliad company");
+		
+		String descendant = user.getCompanyIds()[user.getCompanyIds().length - 1];
+		if (!StringUtils.isStrictlyNumeric(descendant)) {
+			throw new BizException("Invalid company relations");
 		}
-		long companyid = Long.parseLong(user.getCompanyId());
-		CompanyEntity company = companyRepository.findById(companyid);
+		long descendant_ = Long.parseLong(descendant);
+		List<Long> ancestors_ = companyRelationRepository.queryAncestorByDescendant(descendant_);
+		int length = ancestors_.size();
+		if (length == 0) {
+			throw new BizException("Invalid company relations");		
+		}
+		for (int i = 0; i < length; i++) {
+			if (!(ancestors_.get(i) + "").equals(user.getCompanyIds()[i])) {
+				throw new BizException("Invalid company relations");
+			}
+		}				
+		CompanyEntity company = companyRepository.findById(descendant_);
 		if (company == null) {
-			throw new BizException("Invalid company");
+			throw new BizException("Invalid company relations");
 		}
 		entity.setCompany(company);
 		if (!StringUtils.isNullOrEmpty(user.getRoles())) {
@@ -88,15 +103,29 @@ public class UserServiceImpl implements UserService {
 		entity.setExt(user.getExt());
 		entity.setAvatarUrl(user.getAvatarUrl());
 		entity.setStatus(user.getStatus());
-		if (!StringUtils.isStrictlyNumeric(user.getCompanyId())) {
-			throw new BizException("Invliad company");
+		
+		if (user.getCompanyIds() != null) {
+			String descendant = user.getCompanyIds()[user.getCompanyIds().length - 1];
+			if (!StringUtils.isStrictlyNumeric(descendant)) {
+				throw new BizException("Invalid company relations");
+			}
+			long descendant_ = Long.parseLong(descendant);
+			List<Long> ancestors_ = companyRelationRepository.queryAncestorByDescendant(descendant_);
+			int length = ancestors_.size();
+			if (length == 0) {
+				throw new BizException("Invalid company relations");		
+			}
+			for (int i = 0; i < length; i++) {
+				if (!(ancestors_.get(i) + "").equals(user.getCompanyIds()[i])) {
+					throw new BizException("Invalid company relations");
+				}
+			}				
+			CompanyEntity company = companyRepository.findById(descendant_);
+			if (company == null) {
+				throw new BizException("Invalid company relations");
+			}
+			entity.setCompany(company);
 		}
-		long companyid = Long.parseLong(user.getCompanyId());
-		CompanyEntity company = companyRepository.findById(companyid);
-		if (company == null) {
-			throw new BizException("Invalid company");
-		}
-		entity.setCompany(company);
 		if (!StringUtils.isNullOrEmpty(user.getRoles())) {
 			String[] items = user.getRoles().split(",");
 			List<Long> ids = new ArrayList<>();
@@ -144,10 +173,25 @@ public class UserServiceImpl implements UserService {
 	public void deleteById(long id) {
 		userRepository.deleteById(id);
 	}
+	
+	@Override
+	public Page<UserDetailDto> findByStatus(int status, Pageable pageable) {
+		Page<UserEntity> entities = userRepository.findByStatus(status, pageable);
+		if (entities.getTotalElements() > 0) {
+			List<UserDetailDto> dtos = new ArrayList<>();
+			for (UserEntity entity : entities.getContent()) {
+				UserDetailDto dto = new UserDetailDto();
+				BeanUtils.copyProperties(entity, dto);
+				dtos.add(dto);
+			}
+			return new PageImpl<>(dtos, pageable, entities.getTotalElements());
+		}
+		return null;
+	}
 
 	@Override
-	public Page<UserDetailDto> queryByCompany(long companyid, Pageable pageable) {
-		Page<UserEntity> entities = userRepository.queryByCompanyId(companyid, pageable);
+	public Page<UserDetailDto> queryByCompanyAndStatus(long companyid, int status, Pageable pageable) {
+		Page<UserEntity> entities = userRepository.queryByCompanyIdAndStatus(companyid, status, pageable);
 		if (entities.getTotalElements() > 0) {
 			List<UserDetailDto> dtos = new ArrayList<>();
 			for (UserEntity entity : entities.getContent()) {
@@ -164,5 +208,10 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public void updatePwdById(String pwd, long id) {
 		userRepository.updatePwdById(encoder.encode(pwd), id);
+	}
+	
+	@Override
+	public List<Long> queryCompanyRelations(long userid) {
+		return userRepository.queryCompanyRelations(userid);
 	}
 }

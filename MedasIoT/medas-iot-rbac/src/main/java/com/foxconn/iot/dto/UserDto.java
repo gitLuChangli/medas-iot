@@ -1,54 +1,60 @@
 package com.foxconn.iot.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class UserDto {
-	
-	public interface UserSave {}
-	
-	public interface UserCreate extends UserSave {}
-	
+
+	public interface UserSave {
+	}
+
+	public interface UserCreate extends UserSave {
+	}
+
 	@JsonView(UserSave.class)
 	@NotBlank(message = "工號不能為空")
 	private String no;
-	
+
 	@JsonView(UserSave.class)
 	@NotBlank(message = "姓名不能為空")
 	private String name;
-	
+
 	/**
 	 * 如果传入的密码为空时，设置成默认password1!
 	 */
 	@JsonView(UserCreate.class)
 	private String pwd;
-	
+
 	@JsonView(UserSave.class)
+	@NotBlank(message = "邮箱地址不能为空")
 	private String email;
-	
+
 	@JsonView(UserSave.class)
 	private String openId;
-	
+
 	@JsonView(UserSave.class)
 	private String icivetId;
-	
+
 	@JsonView(UserSave.class)
 	private String phone;
-	
+
 	@JsonView(UserSave.class)
 	private String ext;
-	
+
 	@JsonView(UserSave.class)
 	private String avatarUrl;
-	
+
 	@JsonView(UserSave.class)
 	private int status;
-	
-	@JsonView(UserSave.class)
-	@NotBlank(message = "部門不能為空")
-	private String companyId;
-	
+
+	@JsonView(UserCreate.class)
+	@NotNull(message = "部門關係不能為空")
+	@JsonDeserialize(as = String[].class)
+	private String[] companyIds;
+
 	@JsonView(UserSave.class)
 	private String roles;
 
@@ -132,12 +138,12 @@ public class UserDto {
 		this.status = status;
 	}
 
-	public String getCompanyId() {
-		return companyId;
+	public String[] getCompanyIds() {
+		return companyIds;
 	}
 
-	public void setCompanyId(String companyId) {
-		this.companyId = companyId;
+	public void setCompanyIds(String[] companyIds) {
+		this.companyIds = companyIds;
 	}
 
 	public String getRoles() {

@@ -5,9 +5,12 @@ import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class MenuDto {
 
@@ -18,6 +21,7 @@ public class MenuDto {
 	public interface MenuSave extends MenuCreate {}
 	
 	@JsonView(MenuSave.class)
+	@JsonFormat(shape = Shape.STRING)
 	private long id;
 
 	@NotBlank(message = "菜單名稱不能為空")
@@ -33,15 +37,20 @@ public class MenuDto {
 	@JsonView(MenuBasic.class)
 	private String url;
 
+	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	@JsonView(MenuBasic.class)
 	private Date createOn;
 
 	@JsonView(MenuBasic.class)
 	private int status;
+	
+	@JsonView(MenuBasic.class)
+	private int index;
 
 	@JsonView(MenuCreate.class)
 	@JsonInclude(value = Include.NON_NULL)
-	private String ancestor;
+	@JsonDeserialize(as = String[].class)
+	private String[] ancestor;
 
 	@JsonInclude(value = Include.NON_NULL)
 	private List<MenuDto> descendants;
@@ -102,11 +111,19 @@ public class MenuDto {
 		this.status = status;
 	}
 
-	public String getAncestor() {
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	public String[] getAncestor() {
 		return ancestor;
 	}
 
-	public void setAncestor(String ancestor) {
+	public void setAncestor(String[] ancestor) {
 		this.ancestor = ancestor;
 	}
 
