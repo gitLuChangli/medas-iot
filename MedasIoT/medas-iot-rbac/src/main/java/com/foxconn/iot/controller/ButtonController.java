@@ -1,5 +1,6 @@
 package com.foxconn.iot.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.druid.util.StringUtils;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.foxconn.iot.dto.ButtonDto;
 import com.foxconn.iot.service.ButtonService;
@@ -35,8 +38,8 @@ public class ButtonController {
 
 	@GetMapping(value = "/{id:\\d+}")
 	@CommonResponse
-	public ButtonDto query(@PathVariable(value = "id") long id) {
-		return buttonService.findById(id);
+	public List<ButtonDto> query(@PathVariable(value = "id") long id) {
+		return buttonService.queryDescendantsByAncestor(id);
 	}
 
 	@PutMapping(value = "/")
@@ -59,13 +62,22 @@ public class ButtonController {
 
 	@GetMapping(value = "/descendants")
 	@CommonResponse
-	public List<ButtonDto> queryAllDescendants() {
-		return buttonService.queryDescendants();
+	public List<ButtonDto> queryAllDescendants(@RequestParam(value = "all", required = false) String all) {
+		boolean valid = true;
+		if (!StringUtils.isEmpty(all) && "true".equalsIgnoreCase(all)) {
+			valid = false;
+		}
+		return buttonService.queryDescendants(valid);
 	}
 
-	@GetMapping(value = "/ancestor/{id:\\d+}")
+	@GetMapping(value = "/ancestors/{id:\\d+}")
 	@CommonResponse
-	public List<ButtonDto> queryDescendantsByAncestor(@PathVariable(value = "id") long id) {
-		return buttonService.queryDescendantsByAncestor(id);
+	public List<String> queryAncestorsByDescendant(@PathVariable(value = "id") long id) {
+		List<Long> ancestors = buttonService.queryAncestorsByDescendant(id);
+		List<String> ancestors_ = new ArrayList<>();
+		for (Long i : ancestors) {
+			ancestors_.add(i.toString());
+		}
+		return ancestors_;
 	}
 }

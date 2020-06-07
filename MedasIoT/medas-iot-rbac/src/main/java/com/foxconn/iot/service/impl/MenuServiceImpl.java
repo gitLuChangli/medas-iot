@@ -50,7 +50,7 @@ public class MenuServiceImpl implements MenuService {
 			String descendant = menu.getAncestor()[length - 1];
 			if (StringUtils.isStrictlyNumeric(descendant)) {
 				long descendant_ = Long.parseLong(descendant);
-				List<Long> ancestors_ = menuRelationRepository.queryAncestorByDescendant(descendant_);
+				List<Long> ancestors_ = menuRelationRepository.queryAncestorsByDescendant(descendant_);
 				if (ancestors_.size() != length) {
 					throw new BizException("Invalid menu relations");
 				}
@@ -83,24 +83,25 @@ public class MenuServiceImpl implements MenuService {
 			entity.setDetails(menu.getDetails());
 		}
 		if (!StringUtils.isNullOrEmpty(menu.getUrl())) {
-			entity.setDetails(menu.getUrl());
+			entity.setUrl(menu.getUrl());
 		}
 		entity.setStatus(menu.getStatus());
+		entity.setIndex(menu.getIndex());
 		menuRepository.save(entity);
 		
 		if (menu.getAncestor() != null && menu.getAncestor().length > 0) {
 			/** 当前菜单的层级关系 */
-			List<Long> ancestorsOld = menuRelationRepository.queryAncestorByDescendant(entity.getId());
+			List<Long> ancestorsOld = menuRelationRepository.queryAncestorsByDescendant(entity.getId());
 			int length = menu.getAncestor().length;
 			String descendant = menu.getAncestor()[length - 1];
 			if (StringUtils.isStrictlyNumeric(descendant)) {
 				long descendant_ = Long.parseLong(descendant);
 				/** 传入菜单层级查询结果 */
-				List<Long> ancestors_ = menuRelationRepository.queryAncestorByDescendant(descendant_);
+				List<Long> ancestors_ = menuRelationRepository.queryAncestorsByDescendant(descendant_);
 
 				/** 与现有层级相比较，如果不修改部门层级关系 */
 				ancestorsOld.removeAll(ancestors_);
-				if (ancestorsOld.size() == 1 && ancestorsOld.get(0) == entity.getId()) {
+				if (ancestorsOld.size() == 0) {
 					/** 不需要修改层级关系 */
 				} else {
 					List<MenuRelationEntity> relations = new ArrayList<>();
@@ -175,7 +176,7 @@ public class MenuServiceImpl implements MenuService {
 				if (valid) {
 					rootIndexes.add(mr.getStatus() == 0);
 				} else {
-					rootIndexes.add(false);
+					rootIndexes.add(true);
 				}
 				realDescendants.add(false);
 			} else {
@@ -205,17 +206,22 @@ public class MenuServiceImpl implements MenuService {
 		}
 		return dtos;
 	}
-
+	
 	@Override
-	public List<MenuDto> queryDescendants() {
+	public List<MenuDto> queryDescendants(boolean valid) {
 		List<MenuRelationVo> relations = menuRepository.queryDescendants();
-		return sort(relations, true);
+		return sort(relations, valid);
 	}
 
 	@Override
 	public List<MenuDto> queryDescendantsByAncestor(long ancestor) {
 		List<MenuRelationVo> relations = menuRepository.queryDescendantsByAncestor(ancestor);
 		return sort(relations, true);
+	}
+
+	@Override
+	public List<Long> queryAncestorsByDescendant(long descendant) {
+		return menuRelationRepository.queryAncestorsByDescendant(descendant);
 	}
 
 }

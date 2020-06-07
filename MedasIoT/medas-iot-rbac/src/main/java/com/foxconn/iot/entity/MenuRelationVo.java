@@ -14,6 +14,8 @@ public class MenuRelationVo {
 	
 	private String url;
 	
+	private int index;
+	
 	private Date createOn;
 	
 	private int status;
@@ -27,7 +29,7 @@ public class MenuRelationVo {
 		super();
 	}
 
-	public MenuRelationVo(long id, String name, String details, String icon, String url, Date createOn, int status,
+	public MenuRelationVo(long id, String name, String details, String icon, String url, int index, Date createOn, int status,
 			long ancestor, int depth) {
 		super();
 		this.id = id;
@@ -35,6 +37,7 @@ public class MenuRelationVo {
 		this.details = details;
 		this.icon = icon;
 		this.url = url;
+		this.index = index;
 		this.createOn = createOn;
 		this.status = status;
 		this.ancestor = ancestor;
@@ -79,6 +82,14 @@ public class MenuRelationVo {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	public Date getCreateOn() {

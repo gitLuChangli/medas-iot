@@ -12,7 +12,7 @@ import com.foxconn.iot.entity.MenuRelationEntity;
 public interface MenuRelationRepository extends JpaRepository<MenuRelationEntity, Integer> {
 
 	@Query(value = "select a.ancestor from MenuRelationEntity a where a.descendant=:descendant order by a.depth desc")
-	List<Long> queryAncestorByDescendant(@Param("descendant") long descendant);
+	List<Long> queryAncestorsByDescendant(@Param("descendant") long descendant);
 
 	@Query(value = "select a.descendant from MenuRelationEntity a where a.ancestor=:ancestor order by a.depth desc")
 	List<Long> queryDescendantByAncestor(@Param("ancestor") long ancestor);

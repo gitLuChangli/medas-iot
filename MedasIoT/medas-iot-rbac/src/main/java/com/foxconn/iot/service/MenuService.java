@@ -16,7 +16,9 @@ public interface MenuService {
 	
 	void deleteById(long id);
 	
-	List<MenuDto> queryDescendants();
+	List<MenuDto> queryDescendants(boolean valid);
 	
 	List<MenuDto> queryDescendantsByAncestor(long ancestor);
+	
+	List<Long> queryAncestorsByDescendant(long descendant);
 }

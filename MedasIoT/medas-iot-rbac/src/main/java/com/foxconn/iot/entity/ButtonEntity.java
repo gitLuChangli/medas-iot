@@ -7,11 +7,12 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Table(name="tb_button")
+@Table(name="tb_button", uniqueConstraints = {@UniqueConstraint(name="uq_button_name", columnNames = "name")})
 @EntityListeners(AuditingEntityListener.class)
 public class ButtonEntity {
 	
@@ -29,6 +30,9 @@ public class ButtonEntity {
 	
 	@Column(name = "url", length = 255)
 	private String url;
+	
+	@Column(name="method", length = 45)
+	private String method;
 	
 	@Column(name = "create_on", updatable = false)
 	private Date createOn;
@@ -74,6 +78,14 @@ public class ButtonEntity {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	
+	public String getMethod() {
+		return method;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
 	}
 
 	public Date getCreateOn() {

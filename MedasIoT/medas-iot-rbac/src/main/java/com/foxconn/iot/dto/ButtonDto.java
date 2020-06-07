@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -17,6 +19,7 @@ public class ButtonDto {
 	
 	public interface ButtonSave extends ButtonCreate {}
 	
+	@JsonFormat(shape = Shape.STRING)
 	@JsonView(ButtonSave.class)
 	private long id;
 
@@ -34,14 +37,18 @@ public class ButtonDto {
 	private String url;
 
 	@JsonView(ButtonBasic.class)
+	private String method;
+	
+	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonView(ButtonBasic.class)
 	private Date createOn;
 
 	@JsonView(ButtonBasic.class)
 	private int status;
 
-	@JsonView(ButtonCreate.class)
+	@JsonView(ButtonBasic.class)
 	@JsonInclude(value = Include.NON_NULL)
-	private String ancestor;
+	private String[] ancestor;
 
 	@JsonInclude(value = Include.NON_NULL)
 	private List<ButtonDto> descendants;
@@ -85,6 +92,14 @@ public class ButtonDto {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+	
+	public String getMethod() {
+		return method;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
+	}
 
 	public Date getCreateOn() {
 		return createOn;
@@ -102,11 +117,11 @@ public class ButtonDto {
 		this.status = status;
 	}
 
-	public String getAncestor() {
+	public String[] getAncestor() {
 		return ancestor;
 	}
 
-	public void setAncestor(String ancestor) {
+	public void setAncestor(String[] ancestor) {
 		this.ancestor = ancestor;
 	}
 

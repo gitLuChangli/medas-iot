@@ -14,6 +14,8 @@ public class ButtonRelationVo {
 	
 	private String url;
 	
+	private String method;
+	
 	private Date createOn;
 	
 	private int status;
@@ -27,7 +29,7 @@ public class ButtonRelationVo {
 		super();
 	}
 
-	public ButtonRelationVo(long id, String name, String details, String icon, String url, Date createOn, int status,
+	public ButtonRelationVo(long id, String name, String details, String icon, String url, String method, Date createOn, int status,
 			long ancestor, int depth) {
 		super();
 		this.id = id;
@@ -35,6 +37,7 @@ public class ButtonRelationVo {
 		this.details = details;
 		this.icon = icon;
 		this.url = url;
+		this.method = method;
 		this.createOn = createOn;
 		this.status = status;
 		this.ancestor = ancestor;
@@ -79,6 +82,14 @@ public class ButtonRelationVo {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	
+	public String getMethod() {
+		return method;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
 	}
 
 	public Date getCreateOn() {

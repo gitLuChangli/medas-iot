@@ -16,7 +16,9 @@ public interface ButtonService {
 	
 	void deleteById(long id);
 	
-	List<ButtonDto> queryDescendants();
+	List<ButtonDto> queryDescendants(boolean valid);
 	
 	List<ButtonDto> queryDescendantsByAncestor(long ancestor);
+	
+	List<Long> queryAncestorsByDescendant(long descendant);
 }

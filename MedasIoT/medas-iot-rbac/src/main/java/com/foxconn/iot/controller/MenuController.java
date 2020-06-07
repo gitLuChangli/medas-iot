@@ -1,5 +1,6 @@
 package com.foxconn.iot.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.druid.util.StringUtils;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.foxconn.iot.dto.MenuDto;
 import com.foxconn.iot.service.MenuService;
@@ -35,8 +38,8 @@ public class MenuController {
 
 	@GetMapping(value = "/{id:\\d+}")
 	@CommonResponse
-	public MenuDto query(@PathVariable(value = "id") long id) {
-		return menuService.findById(id);
+	public List<MenuDto> query(@PathVariable(value = "id") long id) {
+		return menuService.queryDescendantsByAncestor(id);
 	}
 
 	@PutMapping(value = "/")
@@ -59,13 +62,22 @@ public class MenuController {
 
 	@GetMapping(value = "/descendants")
 	@CommonResponse
-	public List<MenuDto> queryAllDescendants() {
-		return menuService.queryDescendants();
+	public List<MenuDto> queryAllDescendants(@RequestParam(value = "all", required = false) String all) {
+		boolean valid = true;
+		if (!StringUtils.isEmpty(all) && "true".equalsIgnoreCase(all)) {
+			valid = false;
+		}
+		return menuService.queryDescendants(valid);
 	}
 
-	@GetMapping(value = "/ancestor/{id:\\d+}")
+	@GetMapping(value = "/ancestors/{id:\\d+}")
 	@CommonResponse
-	public List<MenuDto> queryDescendantsByAncestor(@PathVariable(value = "id") long id) {
-		return menuService.queryDescendantsByAncestor(id);
+	public List<String> queryAncestorsByDescendant(@PathVariable(value = "id") long id) {
+		List<Long> ancestors = menuService.queryAncestorsByDescendant(id);
+		List<String> ancestors_ = new ArrayList<>();
+		for (Long i : ancestors) {
+			ancestors_.add(i.toString());
+		}
+		return ancestors_;
 	}
 }

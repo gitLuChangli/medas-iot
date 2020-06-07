@@ -55,6 +55,9 @@ public class MenuDto {
 	@JsonInclude(value = Include.NON_NULL)
 	private List<MenuDto> descendants;
 
+	@JsonInclude(value = Include.NON_EMPTY)
+	private String parent;
+	
 	public long getId() {
 		return id;
 	}
@@ -135,4 +138,11 @@ public class MenuDto {
 		this.descendants = descendants;
 	}
 
+	public String getParent() {
+		return parent;
+	}
+
+	public void setParent(String parent) {
+		this.parent = parent;
+	}
 }

@@ -45,24 +45,19 @@ public class ButtonServiceImpl implements ButtonService {
 		self.setDepth(0);
 		relations.add(self);
 
-		if (!StringUtils.isNullOrEmpty(button.getAncestor())) {
-			String[] ancestors = button.getAncestor().split(",");
-			String descendant = button.getAncestor().substring(button.getAncestor().lastIndexOf(",") + 1);
-			if (ancestors.length > 0 && StringUtils.isStrictlyNumeric(descendant)) {
-				int descendant_ = Integer.parseInt(descendant);
-				List<Long> ancestors_ = buttonRelationRepository.queryAncestorByDescendant(descendant_);
-				int length = ancestors_.size();
-
-				if (length != ancestors.length) {
+		if (button.getAncestor() != null && button.getAncestor().length > 0) {
+			int length = button.getAncestor().length;
+			String descendant = button.getAncestor()[length - 1];
+			if (StringUtils.isStrictlyNumeric(descendant)) {
+				long descendant_ = Long.parseLong(descendant);
+				List<Long> ancestors_ = buttonRelationRepository.queryAncestorsByDescendant(descendant_);
+				if (length != ancestors_.size()) {
 					throw new BizException("Invalid button relations");
 				}
-
 				for (int i = 0; i < length; i++) {
-
-					if (!(ancestors_.get(i) + "").equals(ancestors[i])) {
+					if (!(ancestors_.get(i) + "").equals(button.getAncestor()[i])) {
 						throw new BizException("Invalid button relations");
 					}
-
 					ButtonRelationEntity relation = new ButtonRelationEntity();
 					relation.setAncestor(ancestors_.get(i));
 					relation.setDescendant(entity.getId());
@@ -92,35 +87,33 @@ public class ButtonServiceImpl implements ButtonService {
 			entity.setDetails(button.getDetails());
 		}
 		if (!StringUtils.isNullOrEmpty(button.getUrl())) {
-			entity.setDetails(button.getUrl());
+			entity.setUrl(button.getUrl());
+		}
+		if (!StringUtils.isNullOrEmpty(button.getMethod())) {
+			entity.setMethod(button.getMethod());
 		}
 		entity.setStatus(button.getStatus());
 		buttonRepository.save(entity);
-		if (!StringUtils.isNullOrEmpty(button.getAncestor())) {
+		if (button.getAncestor() != null && button.getAncestor().length > 0) {
 			/** 当前菜单的层级关系 */
-			List<Long> ancestorsOld = buttonRelationRepository.queryAncestorByDescendant(entity.getId());
-			String descendant = button.getAncestor().substring(button.getAncestor().lastIndexOf(",") + 1);
+			List<Long> ancestorsOld = buttonRelationRepository.queryAncestorsByDescendant(entity.getId());
+			int length = button.getAncestor().length;
+			String descendant = button.getAncestor()[length - 1];
 			if (StringUtils.isStrictlyNumeric(descendant)) {
-				String[] ancestors = button.getAncestor().split(",");
-				int descendant_ = Integer.parseInt(descendant);
+				long descendant_ = Long.parseLong(descendant);
 				/** 传入菜单层级查询结果 */
-				List<Long> ancestors_ = buttonRelationRepository.queryAncestorByDescendant(descendant_);
+				List<Long> ancestors_ = buttonRelationRepository.queryAncestorsByDescendant(descendant_);
 
 				/** 与现有层级相比较，如果不修改部门层级关系 */
 				ancestorsOld.removeAll(ancestors_);
-				if (ancestorsOld.size() == 1 && ancestorsOld.get(0) == entity.getId()) {
+				if (ancestorsOld.size() == 0) {
 					/** 不需要修改层级关系 */
 				} else {
-
-					int length = ancestors_.size();
 					List<ButtonRelationEntity> relations = new ArrayList<>();
-
 					for (int i = 0; i < length; i++) {
-
-						if (!(ancestors_.get(i) + "").equals(ancestors[i])) {
+						if (!(ancestors_.get(i) + "").equals(button.getAncestor()[i])) {
 							throw new BizException("Invalid button relations");
 						}
-
 						ButtonRelationEntity relation = new ButtonRelationEntity();
 						relation.setAncestor(ancestors_.get(i));
 						relation.setDescendant(entity.getId());
@@ -188,7 +181,7 @@ public class ButtonServiceImpl implements ButtonService {
 				if (valid) {
 					rootIndexes.add(mr.getStatus() == 0);
 				} else {
-					rootIndexes.add(false);
+					rootIndexes.add(true);
 				}
 				realDescendants.add(false);
 			} else {
@@ -220,9 +213,9 @@ public class ButtonServiceImpl implements ButtonService {
 	}
 
 	@Override
-	public List<ButtonDto> queryDescendants() {
+	public List<ButtonDto> queryDescendants(boolean valid) {
 		List<ButtonRelationVo> relations = buttonRepository.queryDescendants();
-		return sort(relations, true);
+		return sort(relations, valid);
 	}
 
 	@Override
@@ -231,4 +224,8 @@ public class ButtonServiceImpl implements ButtonService {
 		return sort(relations, true);
 	}
 
+	@Override
+	public List<Long> queryAncestorsByDescendant(long descendant) {
+		return buttonRelationRepository.queryAncestorsByDescendant(descendant);
+	}
 }
