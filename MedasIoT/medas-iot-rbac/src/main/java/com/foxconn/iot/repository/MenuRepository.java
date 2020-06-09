@@ -1,6 +1,7 @@
 package com.foxconn.iot.repository;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -19,7 +20,7 @@ public interface MenuRepository extends JpaRepository<MenuEntity, Long> {
 	void updateStatusById(@Param("status") int status, @Param("id") long id);
 
 	@Query(value = "select a from MenuEntity a where a.id in(:ids)")
-	List<MenuEntity> queryByIds(@Param("ids") List<Long> ids);
+	Set<MenuEntity> queryByIds(@Param("ids") List<Long> ids);
 
 	@Query(value = "select new com.foxconn.iot.entity.MenuRelationVo(a.id, a.name, a.details, a.icon, "
 			+ "a.url, a.index, a.createOn, a.status, b.ancestor, b.depth)"

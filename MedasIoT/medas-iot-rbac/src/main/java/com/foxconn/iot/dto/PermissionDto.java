@@ -17,6 +17,7 @@ public class PermissionDto {
 	
 	public interface PermissionSave extends PermissionCreate {}
 	
+	@JsonFormat(shape = Shape.STRING)
 	@JsonView(PermissionSave.class)
 	private long id;
 	
@@ -35,14 +36,14 @@ public class PermissionDto {
 	
 	@JsonView(PermissionCreate.class)
 	@JsonInclude(value = Include.NON_NULL)
-	private String menus;
+	private List<String[]> menuIds;
 	
 	@JsonInclude(value = Include.NON_NULL)
 	private List<MenuDto> menuList;
 	
 	@JsonView(PermissionCreate.class)
 	@JsonInclude(value = Include.NON_NULL)
-	private String buttons;
+	private List<String[]> buttonIds;
 	
 	@JsonInclude(value = Include.NON_NULL)
 	private List<ButtonDto> buttonList;
@@ -87,12 +88,12 @@ public class PermissionDto {
 		this.createOn = createOn;
 	}
 
-	public String getMenus() {
-		return menus;
+	public List<String[]> getMenuIds() {
+		return menuIds;
 	}
 
-	public void setMenus(String menus) {
-		this.menus = menus;
+	public void setMenuIds(List<String[]> menuIds) {
+		this.menuIds = menuIds;
 	}
 
 	public List<MenuDto> getMenuList() {
@@ -103,12 +104,12 @@ public class PermissionDto {
 		this.menuList = menuList;
 	}
 
-	public String getButtons() {
-		return buttons;
+	public List<String[]> getButtonIds() {
+		return buttonIds;
 	}
 
-	public void setButtons(String buttons) {
-		this.buttons = buttons;
+	public void setButtonIds(List<String[]> buttonIds) {
+		this.buttonIds = buttonIds;
 	}
 
 	public List<ButtonDto> getButtonList() {

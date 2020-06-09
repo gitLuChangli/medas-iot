@@ -2,6 +2,7 @@ package com.foxconn.iot.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -37,24 +38,30 @@ public class PermissionServiceImpl implements PermissionService {
 	public void create(PermissionDto permission) {
 		PermissionEntity entity = new PermissionEntity();
 		BeanUtils.copyProperties(permission, entity);
-		if (!StringUtils.isNullOrEmpty(permission.getMenus())) {
-			String[] items = permission.getMenus().split(",");
+		if (permission.getMenuIds() != null) {
 			List<Long> ids = new ArrayList<>();
-			for (String item : items) {
-				if (StringUtils.isStrictlyNumeric(item)) {
-					ids.add(Long.parseLong(item));
+			for (String[] items : permission.getMenuIds()) {
+				if (items != null && items.length > 0) {
+					String descendant = items[items.length - 1];
+					if (StringUtils.isStrictlyNumeric(descendant)) {
+						ids.add(Long.parseLong(descendant));
+					}
 				}
 			}
-
-			List<MenuEntity> menues = menuRepository.queryByIds(ids);
+			Set<MenuEntity> menues = menuRepository.queryByIds(ids);
 			entity.setMenus(menues);
-			
-			String[] items2 = permission.getButtons().split(",");
-			List<Long> buttonIds = new ArrayList<>();
-			for (String item : items2) {
-				buttonIds.add(Long.parseLong(item));
+		}
+		if (permission.getButtonIds() != null) {
+			List<Long> ids = new ArrayList<>();
+			for (String[] items : permission.getButtonIds()) {
+				if (items != null && items.length > 0) {
+					String descendant = items[items.length - 1];
+					if (StringUtils.isStrictlyNumeric(descendant)) {
+						ids.add(Long.parseLong(descendant));
+					} 
+				}
 			}
-			List<ButtonEntity> buttons = buttonRepository.queryByIds(buttonIds);
+			Set<ButtonEntity> buttons = buttonRepository.queryByIds(ids);
 			entity.setButtons(buttons);
 		}
 		entity.setId(Snowflaker.getId());
@@ -70,26 +77,33 @@ public class PermissionServiceImpl implements PermissionService {
 		if (!StringUtils.isNullOrEmpty(permission.getDetails())) {
 			entity.setDetails(permission.getDetails());
 		}
-		if (!StringUtils.isNullOrEmpty(permission.getMenus())) {
-			String[] items = permission.getMenus().split(",");
+		if (permission.getMenuIds() != null) {
 			List<Long> ids = new ArrayList<>();
-			for (String item : items) {
-				if (StringUtils.isStrictlyNumeric(item)) {
-					ids.add(Long.parseLong(item));
+			for (String[] items : permission.getMenuIds()) {
+				if (items != null && items.length > 0) {
+					String descendant = items[items.length - 1];
+					if (StringUtils.isStrictlyNumeric(descendant)) {
+						ids.add(Long.parseLong(descendant));
+					}
 				}
 			}
-
-			List<MenuEntity> menues = menuRepository.queryByIds(ids);
+			if (entity.getMenus() != null) {
+				
+			}
+			Set<MenuEntity> menues = menuRepository.queryByIds(ids);
 			entity.setMenus(menues);
 		}
-		if (!StringUtils.isNullOrEmpty(permission.getButtons())) {
-			String[] items = permission.getButtons().split(",");
+		if (permission.getButtonIds() != null) {
 			List<Long> ids = new ArrayList<>();
-			for (String item : items) {
-				ids.add(Long.parseLong(item));
+			for (String[] items : permission.getButtonIds()) {
+				if (items != null && items.length > 0) {
+					String descendant = items[items.length - 1];
+					if (StringUtils.isStrictlyNumeric(descendant)) {
+						ids.add(Long.parseLong(descendant));
+					} 
+				}
 			}
-			
-			List<ButtonEntity> buttons = buttonRepository.queryByIds(ids);
+			Set<ButtonEntity> buttons = buttonRepository.queryByIds(ids);
 			entity.setButtons(buttons);
 		}
 		permissionRepository.save(entity);
@@ -141,4 +155,29 @@ public class PermissionServiceImpl implements PermissionService {
 		permissionRepository.deleteById(id);
 	}
 
+	@Override
+	public List<PermissionDto> findAll() {
+		List<PermissionEntity> entities = permissionRepository.findAll();
+		List<PermissionDto> dtos = new ArrayList<>();
+		for (PermissionEntity entity : entities) {
+			PermissionDto dto = new PermissionDto();
+			BeanUtils.copyProperties(entity, dto);			
+			List<MenuDto> menus = new ArrayList<>();
+			for (MenuEntity menu : entity.getMenus()) {
+				MenuDto m = new MenuDto();
+				BeanUtils.copyProperties(menu, m);
+				menus.add(m);
+			}
+			dto.setMenuList(menus);
+			List<ButtonDto> buttons = new ArrayList<>();
+			for (ButtonEntity button : entity.getButtons()) {
+				ButtonDto b = new ButtonDto();
+				BeanUtils.copyProperties(button, b);
+				buttons.add(b);
+			}
+			dto.setButtonList(buttons);
+			dtos.add(dto);
+		}
+		return dtos;
+	}
 }

@@ -1,6 +1,7 @@
 package com.foxconn.iot.repository;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -19,7 +20,7 @@ public interface ButtonRepository extends JpaRepository<ButtonEntity, Long> {
 	void updateStatusById(@Param("status") int status, @Param("id") long id);
 
 	@Query(value = "select a from ButtonEntity a where a.id in(:ids)")
-	List<ButtonEntity> queryByIds(@Param("ids") List<Long> ids);
+	Set<ButtonEntity> queryByIds(@Param("ids") List<Long> ids);
 
 	@Query(value = "select new com.foxconn.iot.entity.ButtonRelationVo(a.id, a.name, a.details, a.icon, "
 			+ "a.url, a.method, a.createOn, a.status, b.ancestor, b.depth)"

@@ -1,5 +1,7 @@
 package com.foxconn.iot.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,12 @@ public class PermissionController {
 	@CommonResponse
 	public PermissionDto query(@PathVariable(value = "id") long id) {
 		return permissionService.findById(id);
+	}
+	
+	@GetMapping(value = "/all/")
+	@CommonResponse
+	public List<PermissionDto> queryAll() {
+		return permissionService.findAll();
 	}
 
 	@PutMapping(value = "/")

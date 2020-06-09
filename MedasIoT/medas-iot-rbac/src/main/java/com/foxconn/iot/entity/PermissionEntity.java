@@ -1,7 +1,7 @@
 package com.foxconn.iot.entity;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -48,17 +48,17 @@ public class PermissionEntity {
 	@Column(name = "create_on", updatable = false)
 	private Date createOn;
 
-	@ManyToMany(targetEntity = MenuEntity.class, fetch = FetchType.LAZY)
+	@ManyToMany(targetEntity = MenuEntity.class, fetch = FetchType.EAGER)
 	@JoinTable(name = "tb_permission_menu", joinColumns = {
 			@JoinColumn(name = "permission_id", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "menu_id", referencedColumnName = "id") })
-	private List<MenuEntity> menus;
+	private Set<MenuEntity> menus;
 	
-	@ManyToMany(targetEntity = ButtonEntity.class, fetch = FetchType.LAZY)
+	@ManyToMany(targetEntity = ButtonEntity.class, fetch = FetchType.EAGER)
 	@JoinTable(name = "tb_permission_button", joinColumns = {
 			@JoinColumn(name="permission_id", referencedColumnName = "id")}, inverseJoinColumns = {
 					@JoinColumn(name="button_id", referencedColumnName = "id")})
-	private List<ButtonEntity> buttons;
+	private Set<ButtonEntity> buttons;
 
 	public long getId() {
 		return id;
@@ -100,20 +100,19 @@ public class PermissionEntity {
 		this.createOn = createOn;
 	}
 
-	public List<MenuEntity> getMenus() {
+	public Set<MenuEntity> getMenus() {
 		return menus;
 	}
 
-	public void setMenus(List<MenuEntity> menus) {
+	public void setMenus(Set<MenuEntity> menus) {
 		this.menus = menus;
 	}
 
-	public List<ButtonEntity> getButtons() {
+	public Set<ButtonEntity> getButtons() {
 		return buttons;
 	}
 
-	public void setButtons(List<ButtonEntity> buttons) {
+	public void setButtons(Set<ButtonEntity> buttons) {
 		this.buttons = buttons;
 	}
-
 }
