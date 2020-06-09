@@ -30,4 +30,6 @@ public interface PermissionRepository extends JpaRepository<PermissionEntity, Lo
 	List<ButtonEntity> queryButtonsById(@Param("id") long id);
 	
 	List<PermissionEntity> findByIdIn(List<Long> ids);
+	
+	
 }

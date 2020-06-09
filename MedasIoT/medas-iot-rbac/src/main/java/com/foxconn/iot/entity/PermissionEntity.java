@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -52,12 +53,14 @@ public class PermissionEntity {
 	@JoinTable(name = "tb_permission_menu", joinColumns = {
 			@JoinColumn(name = "permission_id", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "menu_id", referencedColumnName = "id") })
+	@OrderBy("id ASC")
 	private Set<MenuEntity> menus;
 	
 	@ManyToMany(targetEntity = ButtonEntity.class, fetch = FetchType.EAGER)
 	@JoinTable(name = "tb_permission_button", joinColumns = {
 			@JoinColumn(name="permission_id", referencedColumnName = "id")}, inverseJoinColumns = {
 					@JoinColumn(name="button_id", referencedColumnName = "id")})
+	@OrderBy("id ASC")
 	private Set<ButtonEntity> buttons;
 
 	public long getId() {
