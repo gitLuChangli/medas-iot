@@ -25,9 +25,15 @@ public class MenuEntity {
 	/**
 	 * 菜单名称
 	 */
-	@Column(name = "name", nullable = false, length = 255)
+	@Column(name = "name", nullable = false, length = 45)
 	private String name;
 
+	/**
+	 * 菜单标题
+	 */
+	@Column(name = "title", nullable = false, length = 45)
+	private String title;
+	
 	/**
 	 * 详情
 	 */
@@ -71,6 +77,14 @@ public class MenuEntity {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getDetails() {

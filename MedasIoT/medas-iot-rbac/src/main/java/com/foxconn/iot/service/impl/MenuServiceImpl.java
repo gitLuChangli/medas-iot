@@ -65,7 +65,7 @@ public class MenuServiceImpl implements MenuService {
 					relations.add(relation);
 				}
 			}
-		}		
+		}
 		menuRelationRepository.saveAll(relations);
 	}
 
@@ -76,19 +76,15 @@ public class MenuServiceImpl implements MenuService {
 		if (entity == null) {
 			throw new BizException("Invalid menu");
 		}
-		if (!StringUtils.isNullOrEmpty(menu.getIcon())) {
-			entity.setIcon(menu.getIcon());
+		if (!StringUtils.isNullOrEmpty(menu.getTitle())) {
+			entity.setTitle(menu.getTitle());
 		}
-		if (!StringUtils.isNullOrEmpty(menu.getDetails())) {
-			entity.setDetails(menu.getDetails());
-		}
-		if (!StringUtils.isNullOrEmpty(menu.getUrl())) {
-			entity.setUrl(menu.getUrl());
-		}
-		entity.setStatus(menu.getStatus());
+		entity.setDetails(menu.getDetails());
+		entity.setIcon(menu.getIcon());
+		entity.setUrl(menu.getUrl());
 		entity.setIndex(menu.getIndex());
 		menuRepository.save(entity);
-		
+
 		if (menu.getAncestor() != null && menu.getAncestor().length > 0) {
 			/** 当前菜单的层级关系 */
 			List<Long> ancestorsOld = menuRelationRepository.queryAncestorsByDescendant(entity.getId());
@@ -127,7 +123,7 @@ public class MenuServiceImpl implements MenuService {
 					menuRelationRepository.saveAll(relations);
 				}
 			}
-		}		
+		}
 	}
 
 	@Override
@@ -206,7 +202,7 @@ public class MenuServiceImpl implements MenuService {
 		}
 		return dtos;
 	}
-	
+
 	@Override
 	public List<MenuDto> queryDescendants(boolean valid) {
 		List<MenuRelationVo> relations = menuRepository.queryDescendants();

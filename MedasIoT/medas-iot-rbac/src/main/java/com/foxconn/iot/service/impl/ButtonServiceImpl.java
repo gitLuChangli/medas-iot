@@ -76,23 +76,16 @@ public class ButtonServiceImpl implements ButtonService {
 		if (entity == null) {
 			throw new BizException("Invalid button");
 		}
-
 		if (!StringUtils.isNullOrEmpty(button.getName())) {
 			entity.setName(button.getName());
 		}
-		if (!StringUtils.isNullOrEmpty(button.getIcon())) {
-			entity.setIcon(button.getIcon());
+		if (!StringUtils.isNullOrEmpty(button.getTitle())) {
+			entity.setTitle(button.getTitle());
 		}
-		if (!StringUtils.isNullOrEmpty(button.getDetails())) {
-			entity.setDetails(button.getDetails());
-		}
-		if (!StringUtils.isNullOrEmpty(button.getUrl())) {
-			entity.setUrl(button.getUrl());
-		}
-		if (!StringUtils.isNullOrEmpty(button.getMethod())) {
-			entity.setMethod(button.getMethod());
-		}
-		entity.setStatus(button.getStatus());
+		entity.setIcon(button.getIcon());
+		entity.setDetails(button.getDetails());
+		entity.setUrl(button.getUrl());
+		entity.setMethod(button.getMethod());
 		buttonRepository.save(entity);
 		if (button.getAncestor() != null && button.getAncestor().length > 0) {
 			/** 当前菜单的层级关系 */

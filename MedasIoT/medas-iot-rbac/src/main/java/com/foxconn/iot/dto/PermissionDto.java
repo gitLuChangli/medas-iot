@@ -26,6 +26,10 @@ public class PermissionDto {
 	private String name;
 	
 	@JsonView(PermissionCreate.class)
+	@NotBlank(message="權限標題不能為空")
+	private String title;
+	
+	@JsonView(PermissionCreate.class)
 	private String details;
 	
 	@JsonView(PermissionSave.class)
@@ -62,6 +66,14 @@ public class PermissionDto {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getDetails() {

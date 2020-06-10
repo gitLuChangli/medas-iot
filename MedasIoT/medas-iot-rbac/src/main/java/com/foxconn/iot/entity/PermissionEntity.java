@@ -36,6 +36,12 @@ public class PermissionEntity {
 	private String name;
 
 	/**
+	 * 权限标题
+	 */
+	@Column(name = "title", nullable = false, length = 45)
+	private String title;
+	
+	/**
 	 * 权限详情
 	 */
 	@Column(name = "details", length = 255)
@@ -77,6 +83,14 @@ public class PermissionEntity {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getDetails() {

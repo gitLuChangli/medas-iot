@@ -28,6 +28,10 @@ public class MenuDto {
 	@JsonView(MenuBasic.class)
 	private String name;
 
+	@NotBlank(message = "菜單標題不能為空")
+	@JsonView(MenuBasic.class)
+	private String title;
+	
 	@JsonView(MenuBasic.class)
 	private String details;
 
@@ -72,6 +76,14 @@ public class MenuDto {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getDetails() {

@@ -13,12 +13,15 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 public class ButtonDto {
 
-	public interface ButtonBasic {}
-	
-	public interface ButtonCreate extends ButtonBasic {}
-	
-	public interface ButtonSave extends ButtonCreate {}
-	
+	public interface ButtonBasic {
+	}
+
+	public interface ButtonCreate extends ButtonBasic {
+	}
+
+	public interface ButtonSave extends ButtonCreate {
+	}
+
 	@JsonFormat(shape = Shape.STRING)
 	@JsonView(ButtonSave.class)
 	private long id;
@@ -26,6 +29,10 @@ public class ButtonDto {
 	@NotBlank(message = "菜單名稱不能為空")
 	@JsonView(ButtonBasic.class)
 	private String name;
+
+	@NotBlank(message = "標題不能為空")
+	@JsonView(ButtonSave.class)
+	private String title;
 
 	@JsonView(ButtonBasic.class)
 	private String details;
@@ -38,7 +45,7 @@ public class ButtonDto {
 
 	@JsonView(ButtonBasic.class)
 	private String method;
-	
+
 	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	@JsonView(ButtonBasic.class)
 	private Date createOn;
@@ -68,6 +75,14 @@ public class ButtonDto {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
 	public String getDetails() {
 		return details;
@@ -92,7 +107,7 @@ public class ButtonDto {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
+
 	public String getMethod() {
 		return method;
 	}

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.foxconn.iot.dto.PermissionDto;
 import com.foxconn.iot.dto.RoleDto;
 import com.foxconn.iot.service.RoleService;
@@ -30,7 +29,7 @@ public class RoleController {
 
 	@PostMapping(value = "/")
 	@CommonResponse
-	public void create(@Valid @JsonView(RoleDto.RoleCreate.class) @RequestBody RoleDto role, BindingResult result) {
+	public void create(@Valid @RequestBody RoleDto role, BindingResult result) {
 		roleService.create(role);
 	}
 
@@ -42,7 +41,7 @@ public class RoleController {
 
 	@PutMapping(value = "/")
 	@CommonResponse
-	public void update(@Valid @JsonView(RoleDto.RoleSave.class) @RequestBody RoleDto role, BindingResult result) {
+	public void update(@Valid @RequestBody RoleDto role, BindingResult result) {
 		roleService.save(role);
 	}
 

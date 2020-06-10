@@ -8,6 +8,8 @@ public class MenuRelationVo {
 	
 	private String name;
 	
+	private String title;
+	
 	private String details;
 	
 	private String icon;
@@ -29,11 +31,12 @@ public class MenuRelationVo {
 		super();
 	}
 
-	public MenuRelationVo(long id, String name, String details, String icon, String url, int index, Date createOn, int status,
+	public MenuRelationVo(long id, String name, String title, String details, String icon, String url, int index, Date createOn, int status,
 			long ancestor, int depth) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.title = title;
 		this.details = details;
 		this.icon = icon;
 		this.url = url;
@@ -58,6 +61,14 @@ public class MenuRelationVo {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getDetails() {

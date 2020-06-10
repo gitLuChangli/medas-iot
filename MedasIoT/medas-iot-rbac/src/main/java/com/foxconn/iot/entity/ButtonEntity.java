@@ -22,6 +22,9 @@ public class ButtonEntity {
 	@Column(name = "name", nullable = false, length = 45)
 	private String name;
 	
+	@Column(name = "title", nullable = false, length = 45)
+	private String title;
+	
 	@Column(name = "details", length = 255)
 	private String details;
 	
@@ -46,6 +49,14 @@ public class ButtonEntity {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getName() {

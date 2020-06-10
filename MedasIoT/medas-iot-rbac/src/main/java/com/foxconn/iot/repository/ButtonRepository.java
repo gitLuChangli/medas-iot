@@ -22,12 +22,12 @@ public interface ButtonRepository extends JpaRepository<ButtonEntity, Long> {
 	@Query(value = "select a from ButtonEntity a where a.id in(:ids)")
 	Set<ButtonEntity> queryByIds(@Param("ids") List<Long> ids);
 
-	@Query(value = "select new com.foxconn.iot.entity.ButtonRelationVo(a.id, a.name, a.details, a.icon, "
+	@Query(value = "select new com.foxconn.iot.entity.ButtonRelationVo(a.id, a.name, a.title, a.details, a.icon, "
 			+ "a.url, a.method, a.createOn, a.status, b.ancestor, b.depth)"
 			+ "from ButtonEntity a left join ButtonRelationEntity b on a.id=b.descendant order by b.depth, a.id asc")
 	List<ButtonRelationVo> queryDescendants();
 
-	@Query(value = "select new com.foxconn.iot.entity.ButtonRelationVo(a.id, a.name, a.details, a.icon, "
+	@Query(value = "select new com.foxconn.iot.entity.ButtonRelationVo(a.id, a.name, a.title, a.details, a.icon, "
 			+ "a.url, a.method, a.createOn, a.status, b.ancestor, b.depth)"
 			+ "from ButtonEntity a left join ButtonRelationEntity b on a.id=b.descendant where a.id in (select b.descendant from b where b.ancestor=:ancestor) order by b.depth, a.id asc")
 	List<ButtonRelationVo> queryDescendantsByAncestor(@Param("ancestor") long ancestor);

@@ -24,4 +24,7 @@ public interface MenuRelationRepository extends JpaRepository<MenuRelationEntity
 	@Modifying
 	@Query(value = "delete from MenuRelationEntity a where a.descendant=:descendant")
 	void deleteByDescendant(@Param("descendant") long descendant);
+	
+	@Query(value = "select a from MenuRelationEntity a order by a.descendant, a.depth desc")
+	List<MenuRelationEntity> findAll();
 }

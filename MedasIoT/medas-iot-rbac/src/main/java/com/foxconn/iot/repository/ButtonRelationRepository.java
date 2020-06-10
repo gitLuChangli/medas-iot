@@ -24,4 +24,7 @@ public interface ButtonRelationRepository extends JpaRepository<ButtonRelationEn
 	@Modifying
 	@Query(value = "delete from ButtonRelationEntity a where a.descendant=:descendant")
 	void deleteByDescendant(@Param("descendant") long descendant);
+	
+	@Query(value = "select a from ButtonRelationEntity a order by a.descendant, a.depth desc")
+	List<ButtonRelationEntity> findAll();
 }

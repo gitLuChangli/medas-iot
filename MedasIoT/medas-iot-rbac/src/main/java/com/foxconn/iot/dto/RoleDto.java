@@ -1,6 +1,7 @@
 package com.foxconn.iot.dto;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
@@ -8,24 +9,16 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class RoleDto {
 
-	public interface RoleCreate {
-		
-	}
-	
-	public interface RoleSave extends RoleCreate {}
-
-	@JsonView(RoleSave.class)
+	@JsonFormat(shape = Shape.STRING)
 	private long id;
 
-	@JsonView(RoleCreate.class)
 	@NotBlank(message = "角色名稱不能為空")
 	private String name;
 
-	@JsonView(RoleCreate.class)
 	private String details;
 
 	private int status;
@@ -34,8 +27,11 @@ public class RoleDto {
 	private Date createOn;
 
 	@JsonInclude(value = Include.NON_NULL)
-	@JsonView(RoleCreate.class)
-	private String permissions;
+	@JsonDeserialize(as = String[].class)
+	private String[] permissionIds;
+	
+	@JsonInclude(value = Include.NON_NULL)
+	private List<String> permissions;
 
 	public long getId() {
 		return id;
@@ -77,12 +73,19 @@ public class RoleDto {
 		this.createOn = createOn;
 	}
 
-	public String getPermissions() {
+	public String[] getPermissionIds() {
+		return permissionIds;
+	}
+
+	public void setPermissionIds(String[] permissionIds) {
+		this.permissionIds = permissionIds;
+	}
+
+	public List<String> getPermissions() {
 		return permissions;
 	}
 
-	public void setPermissions(String permissions) {
+	public void setPermissions(List<String> permissions) {
 		this.permissions = permissions;
 	}
-
 }

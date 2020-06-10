@@ -32,10 +32,9 @@ public class RoleServiceImpl implements RoleService {
 	public void create(RoleDto role) {
 		RoleEntity entity = new RoleEntity();
 		BeanUtils.copyProperties(role, entity);
-		if (!StringUtils.isNullOrEmpty(role.getPermissions())) {
-			String[] items = role.getPermissions().split(",'");
+		if (role.getPermissionIds() != null && role.getPermissionIds().length > 0) {
 			List<Long> ids = new ArrayList<>();
-			for (String item : items) {
+			for (String item : role.getPermissionIds()) {
 				if (StringUtils.isStrictlyNumeric(item)) {
 					ids.add(Long.parseLong(item));
 				}
@@ -57,16 +56,13 @@ public class RoleServiceImpl implements RoleService {
 		if (!StringUtils.isNullOrEmpty(role.getDetails())) {
 			entity.setDetails(role.getDetails());
 		}
-
-		if (!StringUtils.isNullOrEmpty(role.getPermissions())) {
-			String[] items = role.getPermissions().split(",'");
+		if (role.getPermissionIds() != null && role.getPermissionIds().length > 0) {
 			List<Long> ids = new ArrayList<>();
-			for (String item : items) {
+			for (String item : role.getPermissionIds()) {
 				if (StringUtils.isStrictlyNumeric(item)) {
 					ids.add(Long.parseLong(item));
 				}
 			}
-
 			List<PermissionEntity> permissions = permissionRepository.findByIdIn(ids);
 			entity.setPermissions(permissions);
 		}
