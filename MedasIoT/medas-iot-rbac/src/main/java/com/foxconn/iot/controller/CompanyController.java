@@ -50,7 +50,7 @@ public class CompanyController {
 	public void disable(@PathVariable(value = "id") long id, @PathVariable(value = "status") int status) {
 		companyService.updateStatusById(status, id);
 	}
-
+	
 	@CommonResponse
 	@PutMapping(value = "/roles/{id:\\d+}")
 	public void updateRoles(@PathVariable(value = "id") long id, @RequestBody List<Long> roles) {
@@ -74,7 +74,7 @@ public class CompanyController {
 	}
 	
 	/**
-	 * 查询父节点所属部门
+	 * 查询父节点下属部门
 	 * 
 	 * @param id
 	 * @return

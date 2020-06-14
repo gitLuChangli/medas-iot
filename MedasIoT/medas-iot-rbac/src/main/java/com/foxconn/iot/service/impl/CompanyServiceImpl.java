@@ -1,8 +1,10 @@
 package com.foxconn.iot.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -38,45 +40,35 @@ public class CompanyServiceImpl implements CompanyService {
 	@Override
 	@Transactional
 	public CompanyDto crate(CompanyDto company) {
-		
-		/** 部门id通过雪花算法设置 */
-		long id = Snowflaker.getId();
-		
 		/** 保存部门信息 */
 		CompanyEntity entity = new CompanyEntity();
 		BeanUtils.copyProperties(company, entity);
-		entity.setId(id);
+		entity.setId(Snowflaker.getId());
 		companyRepository.save(entity);
 		company.setId(entity.getId());
 		
+		/** 保存部门层级关系 */
 		CompanyRelationEntity self = new CompanyRelationEntity();
 		self.setAncestor(entity.getId());
 		self.setDescendant(entity.getId());
 		self.setDepth(0);
 		
-		/** 保存部门层级关系 */
 		List<CompanyRelationEntity> relations = new ArrayList<>();
-		if (!StringUtils.isNullOrEmpty(company.getAncestor())) {
-			String[] ancestors = company.getAncestor().split(",");			
-			String descendant = ancestors[ancestors.length - 1];
+		if (company.getAncestorIds() != null && company.getAncestorIds().length > 0) {
+			int length = company.getAncestorIds().length;		
+			String descendant = company.getAncestorIds()[length - 1];
 			if (!StringUtils.isStrictlyNumeric(descendant)) {
 				throw new BizException("invalid company relations");
 			}
 			long descendant_ = Long.parseLong(descendant);
-			
 			List<Long> ancestors_ = companyRelationRepository.queryAncestorByDescendant(descendant_);
-			int length = ancestors_.size();
-			
-			if (length != ancestors.length) {
+			if (length != ancestors_.size()) {
 				throw new BizException("Invalid company relations");
 			}
-			
 			for (int i = 0; i < length; i++) {
-				
-				if (!(ancestors_.get(i) + "").equals(ancestors[i])) {
+				if (!(ancestors_.get(i) + "").equals(company.getAncestorIds()[i])) {
 					throw new BizException("Invalid company relations");
 				}
-				
 				CompanyRelationEntity relation = new CompanyRelationEntity();
 				relation.setAncestor(ancestors_.get(i));
 				relation.setDescendant(entity.getId());
@@ -94,25 +86,17 @@ public class CompanyServiceImpl implements CompanyService {
 	@Override
 	@Transactional
 	public CompanyDto save(CompanyDto company) {
-		
-		/** 修改部门的基本信息 */
 		CompanyEntity entity = companyRepository.findByCode(company.getCode());
 		if (entity == null) {
 			throw new BizException("Invalid company");
 		}
-		
+		/** 修改部门基本信息 */
 		if (!StringUtils.isNullOrEmpty(company.getName())) {
 			entity.setName(company.getName());
 		}
-		if (!StringUtils.isNullOrEmpty(company.getDetails())) {
-			entity.setDetails(company.getDetails());
-		}
-		if (!StringUtils.isNullOrEmpty(company.getRegion())) {
-			entity.setRegion(company.getRegion());
-		}
-		if (!StringUtils.isNullOrEmpty(company.getArea())) {
-			entity.setArea(company.getArea());
-		}
+		entity.setDetails(company.getDetails());
+		entity.setRegion(company.getRegion());
+		entity.setArea(company.getArea());
 		if (!StringUtils.isNullOrEmpty(company.getProvince()) && !StringUtils.isNullOrEmpty(company.getCity()) && 
 				!StringUtils.isNullOrEmpty(company.getCounty()) && !StringUtils.isNullOrEmpty(company.getAddress())) {
 			entity.setProvince(company.getProvince());
@@ -124,58 +108,61 @@ public class CompanyServiceImpl implements CompanyService {
 		BeanUtils.copyProperties(entity, company);
 		
 		/** 修改部门的层级关系 */
-		if (!StringUtils.isNullOrEmpty(company.getAncestor())) {
-			
-			String[] ancestors = company.getAncestor().split(",");			
-			String descendant = ancestors[ancestors.length - 1];
+		if (company.getAncestorIds() != null && company.getAncestorIds().length > 0) {
+			int length = company.getAncestorIds().length;
+			String descendant = company.getAncestorIds()[length - 1];
 			if (!StringUtils.isStrictlyNumeric(descendant)) {
 				throw new BizException("invalid company relations");
 			}
-			long descendant_ = Long.parseLong(descendant);
-			
-			
-			/** 当前部门的层级关系 */
+			/** 当前部门的层级关系，注意要去除自己 */
 			List<Long> ancestorsOld = companyRelationRepository.queryAncestorByDescendant(entity.getId());
-			
-
-			/** 传入部门层级查询结果 */
-			List<Long> ancestors_ = companyRelationRepository.queryAncestorByDescendant(descendant_);
-				
-				
-			/** 与现有层级相比较，如果不修改部门层级关系 */
-			ancestorsOld.removeAll(ancestors_);
-			if (ancestorsOld.size() == 1 && ancestorsOld.get(0) == entity.getId()) {
-				/** 不需要修改层级关系 */
+			if (ancestorsOld != null && ancestorsOld.size() > 0) {
+				ancestorsOld.remove(ancestorsOld.size() - 1);
+			}
+			boolean modify = true;
+			if (ancestorsOld.size() == length) {
+				for (int i = 0; i < ancestorsOld.size(); i++) {
+					if (!company.getAncestorIds()[i].equals(ancestorsOld.get(i) + "")) {
+						modify = true;
+						break;
+					}
+				}
 			} else {
-				
-				int length = ancestors_.size();
-				List<CompanyRelationEntity> relations = new ArrayList<>();
-				
-				for (int i = 0; i < length; i++) {
-					
-					if (!(ancestors_.get(i) + "").equals(ancestors[i])) {
-						throw new BizException("Invalid company relations");
+				modify = true;
+			}
+			if (modify) {
+				long descendant_ = Long.parseLong(descendant);
+				/** 传入部门层级查询结果 */
+				List<Long> ancestors_ = companyRelationRepository.queryAncestorByDescendant(descendant_);
+				/** 与现有层级相比较，如果不修改部门层级关系 */
+				ancestorsOld.removeAll(ancestors_);
+				if (ancestorsOld.size() == 1 && ancestorsOld.get(0) == entity.getId()) {
+					/** 不需要修改层级关系 */
+				} else {
+					List<CompanyRelationEntity> relations = new ArrayList<>();
+					for (int i = 0; i < length; i++) {
+						if (!(ancestors_.get(i) + "").equals(company.getAncestorIds()[i])) {
+							throw new BizException("Invalid company relations");
+						}
+						CompanyRelationEntity relation = new CompanyRelationEntity();
+						relation.setAncestor(ancestors_.get(i));
+						relation.setDescendant(entity.getId());
+						relation.setDepth(length - i);
+						relations.add(relation);
 					}
 					
-					CompanyRelationEntity relation = new CompanyRelationEntity();
-					relation.setAncestor(ancestors_.get(i));
-					relation.setDescendant(entity.getId());
-					relation.setDepth(length - i);
-					relations.add(relation);
+					/** 删除旧的层级关系 */
+					companyRelationRepository.deleteByDescendant(entity.getId());
+					
+					CompanyRelationEntity self = new CompanyRelationEntity();
+					self.setAncestor(entity.getId());
+					self.setDescendant(entity.getId());
+					self.setDepth(0);
+					relations.add(self);
+					companyRelationRepository.saveAll(relations);
 				}
-				
-				/** 删除旧的层级关系 */
-				companyRelationRepository.deleteByDescendant(entity.getId());
-				
-				CompanyRelationEntity self = new CompanyRelationEntity();
-				self.setAncestor(entity.getId());
-				self.setDescendant(entity.getId());
-				self.setDepth(0);
-				relations.add(self);
-				companyRelationRepository.saveAll(relations);
 			}
 		}
-		
 		return company;
 	}
 
@@ -213,8 +200,25 @@ public class CompanyServiceImpl implements CompanyService {
 	
 	/** 在插入部门信息时，部门主键一定要满足正向增加 */	 
 	private List<CompanyDto> sort(List<CompanyRelationVo> crs, boolean valid) {
-		List<CompanyDto> dtos = new ArrayList<>();
+		/** 先获取部门的层级关系，需要去除自身 */
+		List<CompanyRelationEntity> companyRelations = companyRelationRepository.findAll();
+		Map<String, String[]> companyMap = new HashMap<>();
+		String companyId;
+		int length;
+		for (CompanyRelationEntity cre : companyRelations) {
+			companyId = cre.getDescendant() + "";
+			if (cre.getDepth() == 0) continue;
+			if (companyMap.containsKey(companyId)) {
+				length = companyMap.get(companyId).length;
+				companyMap.get(companyId)[length - cre.getDepth()] = cre.getAncestor() + "";
+			} else {
+				String[] ids = new String[cre.getDepth()];
+				ids[0] = cre.getAncestor() + "";
+				companyMap.put(companyId, ids);
+			}
+		}
 		
+		List<CompanyDto> dtos = new ArrayList<>();
 		/** 缓存自身的序号 */
 		List<Long> indexes = new LinkedList<>();
 		/** 缓存是否为根节点 */
@@ -229,6 +233,9 @@ public class CompanyServiceImpl implements CompanyService {
 				CompanyDto dto = new CompanyDto();
 				BeanUtils.copyProperties(cr, dto);
 				selfs.add(dto);
+				if (companyMap.containsKey(cr.getId() + "")) {
+					dto.setAncestorIds(companyMap.get(cr.getId() + ""));
+				}
 				indexes.add(cr.getId());
 				/** 禁用的节点要不要显示 */
 				if (valid) {

@@ -1,7 +1,6 @@
 package com.foxconn.iot.dto;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
@@ -19,6 +18,9 @@ public class RoleDto {
 	@NotBlank(message = "角色名稱不能為空")
 	private String name;
 
+	@NotBlank(message = "角色標題不能爲空")
+	private String title;
+	
 	private String details;
 
 	private int status;
@@ -31,7 +33,7 @@ public class RoleDto {
 	private String[] permissionIds;
 	
 	@JsonInclude(value = Include.NON_NULL)
-	private List<String> permissions;
+	private String[] permissions;
 
 	public long getId() {
 		return id;
@@ -47,6 +49,14 @@ public class RoleDto {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getDetails() {
@@ -81,11 +91,11 @@ public class RoleDto {
 		this.permissionIds = permissionIds;
 	}
 
-	public List<String> getPermissions() {
+	public String[] getPermissions() {
 		return permissions;
 	}
 
-	public void setPermissions(List<String> permissions) {
+	public void setPermissions(String[] permissions) {
 		this.permissions = permissions;
 	}
 }

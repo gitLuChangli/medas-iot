@@ -41,10 +41,10 @@ public class CompanyDto {
 	private Date createOn;
 
 	/**
-	 * 所属部门，多层级用逗号隔开
+	 * 所属部门
 	 */
 	@JsonInclude(value = Include.NON_NULL)
-	private String ancestor;
+	private String[] ancestorIds;
 	
 	/**
 	 * 下属部门
@@ -147,13 +147,13 @@ public class CompanyDto {
 	public void setCreateOn(Date createOn) {
 		this.createOn = createOn;
 	}
-
-	public String getAncestor() {
-		return ancestor;
+	
+	public String[] getAncestorIds() {
+		return ancestorIds;
 	}
 
-	public void setAncestor(String ancestor) {
-		this.ancestor = ancestor;
+	public void setAncestorIds(String[] ancestorIds) {
+		this.ancestorIds = ancestorIds;
 	}
 
 	public List<CompanyDto> getDescendants() {

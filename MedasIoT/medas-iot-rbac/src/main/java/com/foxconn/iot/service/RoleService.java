@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.foxconn.iot.dto.PermissionDto;
 import com.foxconn.iot.dto.RoleDto;
+import com.foxconn.iot.entity.RolePermissionVo;
 
 public interface RoleService {
 
@@ -18,4 +19,6 @@ public interface RoleService {
 	void deleteById(long id);
 
 	List<PermissionDto> queryPermissionsById(long id);
+	
+	List<RolePermissionVo> queryAll();
 }

@@ -24,4 +24,7 @@ public interface CompanyRelationRepository extends JpaRepository<CompanyRelation
 	@Modifying
 	@Query(value = "delete from CompanyRelationEntity a where a.descendant=:descendant")
 	void deleteByDescendant(@Param("descendant") long descendant);
+	
+	@Query(value = "select a from CompanyRelationEntity a order by a.descendant, a.depth desc")
+	List<CompanyRelationEntity> findAll();
 }

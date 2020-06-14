@@ -20,7 +20,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Table(name = "tb_role", uniqueConstraints = { @UniqueConstraint(name = "uq_role_name", columnNames = "name") })
+@Table(name = "tb_role", uniqueConstraints = { @UniqueConstraint(name = "uq_role_name", columnNames = "name"), @UniqueConstraint(name = "up_role_title", columnNames = "title") })
 @EntityListeners(AuditingEntityListener.class)
 public class RoleEntity {
 
@@ -33,6 +33,12 @@ public class RoleEntity {
 	 */
 	@Column(name = "name", length = 90, nullable = false)
 	private String name;
+	
+	/**
+	 * 角色標題
+	 */
+	@Column(name="title", length=45, nullable = false)
+	private String title;
 
 	/**
 	 * 详情
@@ -68,6 +74,14 @@ public class RoleEntity {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getDetails() {

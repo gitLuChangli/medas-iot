@@ -1,6 +1,7 @@
 package com.foxconn.iot.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -13,6 +14,7 @@ import com.foxconn.iot.dto.PermissionDto;
 import com.foxconn.iot.dto.RoleDto;
 import com.foxconn.iot.entity.PermissionEntity;
 import com.foxconn.iot.entity.RoleEntity;
+import com.foxconn.iot.entity.RolePermissionVo;
 import com.foxconn.iot.exception.BizException;
 import com.foxconn.iot.repository.PermissionRepository;
 import com.foxconn.iot.repository.RoleRepository;
@@ -102,5 +104,27 @@ public class RoleServiceImpl implements RoleService {
 			dtos.add(dto);
 		}
 		return dtos;
+	}
+
+	@Override
+	public List<RolePermissionVo> queryAll() {
+		List<RolePermissionVo> roles = new ArrayList<>();
+		List<Object[]> roles_ = roleRepository.queryAll();
+		for (Object[] role : roles_) {
+			RolePermissionVo vo = new RolePermissionVo();
+			if (role != null && role.length == 9) {
+				vo.setId(role[0].toString());
+				vo.setName((String) role[1]);
+				vo.setTitle((String)role[2]);
+				vo.setDetails((String) role[3]);
+				vo.setCreateOn((Date) role[4]);
+				vo.setStatus((int) role[5]);
+				vo.setPermissionNames(role[6].toString().split(","));
+				vo.setPermissionTitles(role[7].toString().split(","));
+				vo.setPermissionIds(role[8].toString().split(","));
+				roles.add(vo);
+			}
+		}
+		return roles;
 	}
 }

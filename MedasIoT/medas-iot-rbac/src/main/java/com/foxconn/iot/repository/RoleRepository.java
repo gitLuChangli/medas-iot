@@ -23,4 +23,7 @@ public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
 	
 	@Query(value = "select a.permissions from RoleEntity a where a.id=:id")
 	List<PermissionEntity> queryPermissionsById(@Param("id") long id);
+	
+	@Query(value = "select a.id, a.name, a.title, a.details, a.create_on, a.status, group_concat(c.name), group_concat(c.title), group_concat(c.id) from tb_role a left join tb_role_permission b on a.id = b.role_id left join tb_permission c on b.permission_id = c.id group by a.id", nativeQuery = true)
+	List<Object[]> queryAll();
 }

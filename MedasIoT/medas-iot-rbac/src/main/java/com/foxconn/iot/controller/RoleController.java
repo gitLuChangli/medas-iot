@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.foxconn.iot.dto.PermissionDto;
 import com.foxconn.iot.dto.RoleDto;
+import com.foxconn.iot.entity.RolePermissionVo;
 import com.foxconn.iot.service.RoleService;
 import com.foxconn.iot.support.CommonResponse;
 
@@ -31,6 +32,12 @@ public class RoleController {
 	@CommonResponse
 	public void create(@Valid @RequestBody RoleDto role, BindingResult result) {
 		roleService.create(role);
+	}
+	
+	@GetMapping(value = "/")
+	@CommonResponse
+	public List<RolePermissionVo> queryAll() {
+		return roleService.queryAll();
 	}
 
 	@GetMapping(value = "/{id:\\d+}")
