@@ -1,8 +1,10 @@
 package com.foxconn.iot.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -36,18 +38,17 @@ public class MenuServiceImpl implements MenuService {
 		BeanUtils.copyProperties(menu, entity);
 		entity.setId(Snowflaker.getId());
 		menuRepository.save(entity);
-
+		
 		List<MenuRelationEntity> relations = new ArrayList<>();
-
 		MenuRelationEntity self = new MenuRelationEntity();
 		self.setAncestor(entity.getId());
 		self.setDescendant(entity.getId());
 		self.setDepth(0);
 		relations.add(self);
 
-		if (menu.getAncestor() != null && menu.getAncestor().length > 0) {
-			int length = menu.getAncestor().length;
-			String descendant = menu.getAncestor()[length - 1];
+		if (menu.getAncestorIds() != null && menu.getAncestorIds().length > 0) {
+			int length = menu.getAncestorIds().length;
+			String descendant = menu.getAncestorIds()[length - 1];
 			if (StringUtils.isStrictlyNumeric(descendant)) {
 				long descendant_ = Long.parseLong(descendant);
 				List<Long> ancestors_ = menuRelationRepository.queryAncestorsByDescendant(descendant_);
@@ -55,7 +56,7 @@ public class MenuServiceImpl implements MenuService {
 					throw new BizException("Invalid menu relations");
 				}
 				for (int i = 0; i < length; i++) {
-					if (!(ancestors_.get(i) + "").equals(menu.getAncestor()[i])) {
+					if (!(ancestors_.get(i) + "").equals(menu.getAncestorIds()[i])) {
 						throw new BizException("Invalid menu relations");
 					}
 					MenuRelationEntity relation = new MenuRelationEntity();
@@ -85,43 +86,53 @@ public class MenuServiceImpl implements MenuService {
 		entity.setIndex(menu.getIndex());
 		menuRepository.save(entity);
 
-		if (menu.getAncestor() != null && menu.getAncestor().length > 0) {
-			/** 当前菜单的层级关系 */
+		if (menu.getAncestorIds() != null && menu.getAncestorIds().length > 0) {
+			int length = menu.getAncestorIds().length;
+			String descendant = menu.getAncestorIds()[length - 1];
+			if (!StringUtils.isStrictlyNumeric(descendant)) {
+				throw new BizException("Invalid relations");
+			}
+			/** 当前菜单的层级关系，要去除自己 */
 			List<Long> ancestorsOld = menuRelationRepository.queryAncestorsByDescendant(entity.getId());
-			int length = menu.getAncestor().length;
-			String descendant = menu.getAncestor()[length - 1];
-			if (StringUtils.isStrictlyNumeric(descendant)) {
+			if (ancestorsOld != null && ancestorsOld.size() > 0) {
+				ancestorsOld.remove(entity.getId());
+			}
+			boolean modify = true;
+			if (ancestorsOld.size() == length) {
+				for (int i = 0; i < ancestorsOld.size(); i++) {
+					if (!menu.getAncestorIds()[i].equals(ancestorsOld.get(i) + "")) {
+						modify = true;
+						break;
+					}
+				}
+			} else {
+				modify = true;
+			}
+			if (modify) {
 				long descendant_ = Long.parseLong(descendant);
 				/** 传入菜单层级查询结果 */
-				List<Long> ancestors_ = menuRelationRepository.queryAncestorsByDescendant(descendant_);
-
-				/** 与现有层级相比较，如果不修改部门层级关系 */
-				ancestorsOld.removeAll(ancestors_);
-				if (ancestorsOld.size() == 0) {
-					/** 不需要修改层级关系 */
-				} else {
-					List<MenuRelationEntity> relations = new ArrayList<>();
-					for (int i = 0; i < length; i++) {
-						if (!(ancestors_.get(i) + "").equals(menu.getAncestor()[i])) {
-							throw new BizException("Invalid menu relations");
-						}
-						MenuRelationEntity relation = new MenuRelationEntity();
-						relation.setAncestor(ancestors_.get(i));
-						relation.setDescendant(entity.getId());
-						relation.setDepth(length - i);
-						relations.add(relation);
+				List<Long> ancestors_ = menuRelationRepository.queryAncestorsByDescendant(descendant_);				
+				List<MenuRelationEntity> relations = new ArrayList<>();
+				for (int i = 0; i < length; i++) {
+					if (!(ancestors_.get(i) + "").equals(menu.getAncestorIds()[i])) {
+						throw new BizException("Invalid menu relations");
 					}
-
-					/** 删除旧的层级关系 */
-					menuRelationRepository.deleteByDescendant(entity.getId());
-
-					MenuRelationEntity self = new MenuRelationEntity();
-					self.setAncestor(entity.getId());
-					self.setDescendant(entity.getId());
-					self.setDepth(0);
-					relations.add(self);
-					menuRelationRepository.saveAll(relations);
+					MenuRelationEntity relation = new MenuRelationEntity();
+					relation.setAncestor(ancestors_.get(i));
+					relation.setDescendant(entity.getId());
+					relation.setDepth(length - i);
+					relations.add(relation);
 				}
+
+				/** 删除旧的层级关系 */
+				menuRelationRepository.deleteByDescendant(entity.getId());
+
+				MenuRelationEntity self = new MenuRelationEntity();
+				self.setAncestor(entity.getId());
+				self.setDescendant(entity.getId());
+				self.setDepth(0);
+				relations.add(self);
+				menuRelationRepository.saveAll(relations);
 			}
 		}
 	}
@@ -151,8 +162,23 @@ public class MenuServiceImpl implements MenuService {
 
 	/** 在插入部门信息时，部门主键一定要满足正向增加 */
 	private List<MenuDto> sort(List<MenuRelationVo> mrs, boolean valid) {
+		List<MenuRelationEntity> menuRelations = menuRelationRepository.findAll();
+		Map<String, String[]> menusMap = new HashMap<>();
+		int length = 0;
+		String menuId;
+		for (MenuRelationEntity menu : menuRelations) {
+			menuId = menu.getDescendant() + "";
+			if (menusMap.containsKey(menuId)) {
+				length = menusMap.get(menuId).length;
+				menusMap.get(menuId)[length - menu.getDepth() - 1] = menu.getAncestor() + "";
+			} else {
+				String[] ids = new String[menu.getDepth() + 1];
+				ids[0] = menu.getAncestor() + "";
+				menusMap.put(menuId, ids);
+			}
+		}
+		
 		List<MenuDto> dtos = new ArrayList<>();
-
 		/** 缓存自身的序号 */
 		List<Long> indexes = new LinkedList<>();
 		/** 缓存是否为根节点 */
@@ -166,6 +192,9 @@ public class MenuServiceImpl implements MenuService {
 			if (descendant == -1) {
 				MenuDto dto = new MenuDto();
 				BeanUtils.copyProperties(mr, dto);
+				if (menusMap.containsKey(mr.getId() + "")) {
+					dto.setAncestorIds(menusMap.get(mr.getId() + ""));
+				}
 				selfs.add(dto);
 				indexes.add(mr.getId());
 				/** 禁用的节点要不要显示 */

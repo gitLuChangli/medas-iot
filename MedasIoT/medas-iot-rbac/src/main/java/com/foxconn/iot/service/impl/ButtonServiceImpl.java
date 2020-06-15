@@ -1,8 +1,10 @@
 package com.foxconn.iot.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -45,9 +47,9 @@ public class ButtonServiceImpl implements ButtonService {
 		self.setDepth(0);
 		relations.add(self);
 
-		if (button.getAncestor() != null && button.getAncestor().length > 0) {
-			int length = button.getAncestor().length;
-			String descendant = button.getAncestor()[length - 1];
+		if (button.getAncestorIds() != null && button.getAncestorIds().length > 0) {
+			int length = button.getAncestorIds().length;
+			String descendant = button.getAncestorIds()[length - 1];
 			if (StringUtils.isStrictlyNumeric(descendant)) {
 				long descendant_ = Long.parseLong(descendant);
 				List<Long> ancestors_ = buttonRelationRepository.queryAncestorsByDescendant(descendant_);
@@ -55,7 +57,7 @@ public class ButtonServiceImpl implements ButtonService {
 					throw new BizException("Invalid button relations");
 				}
 				for (int i = 0; i < length; i++) {
-					if (!(ancestors_.get(i) + "").equals(button.getAncestor()[i])) {
+					if (!(ancestors_.get(i) + "").equals(button.getAncestorIds()[i])) {
 						throw new BizException("Invalid button relations");
 					}
 					ButtonRelationEntity relation = new ButtonRelationEntity();
@@ -87,43 +89,53 @@ public class ButtonServiceImpl implements ButtonService {
 		entity.setUrl(button.getUrl());
 		entity.setMethod(button.getMethod());
 		buttonRepository.save(entity);
-		if (button.getAncestor() != null && button.getAncestor().length > 0) {
+		if (button.getAncestorIds() != null && button.getAncestorIds().length > 0) {
+			int length = button.getAncestorIds().length;
+			String descendant = button.getAncestorIds()[length - 1];
+			if (!StringUtils.isStrictlyNumeric(descendant)) {
+				throw new BizException("Invalid relation");
+			}
 			/** 当前菜单的层级关系 */
 			List<Long> ancestorsOld = buttonRelationRepository.queryAncestorsByDescendant(entity.getId());
-			int length = button.getAncestor().length;
-			String descendant = button.getAncestor()[length - 1];
-			if (StringUtils.isStrictlyNumeric(descendant)) {
+			if (ancestorsOld != null && ancestorsOld.size() > 0) {
+				ancestorsOld.remove(entity.getId());
+			}
+			boolean modify = true;
+			if (ancestorsOld.size() == length) {
+				for (int i = 0; i < ancestorsOld.size(); i++) {
+					if (!button.getAncestorIds()[i].equals(ancestorsOld.get(i) + "")) {
+						modify = true;
+						break;
+					}
+				}
+			} else {
+				modify = true;
+			}
+			if (modify) {
 				long descendant_ = Long.parseLong(descendant);
 				/** 传入菜单层级查询结果 */
 				List<Long> ancestors_ = buttonRelationRepository.queryAncestorsByDescendant(descendant_);
-
-				/** 与现有层级相比较，如果不修改部门层级关系 */
-				ancestorsOld.removeAll(ancestors_);
-				if (ancestorsOld.size() == 0) {
-					/** 不需要修改层级关系 */
-				} else {
-					List<ButtonRelationEntity> relations = new ArrayList<>();
-					for (int i = 0; i < length; i++) {
-						if (!(ancestors_.get(i) + "").equals(button.getAncestor()[i])) {
-							throw new BizException("Invalid button relations");
-						}
-						ButtonRelationEntity relation = new ButtonRelationEntity();
-						relation.setAncestor(ancestors_.get(i));
-						relation.setDescendant(entity.getId());
-						relation.setDepth(length - i);
-						relations.add(relation);
+				List<ButtonRelationEntity> relations = new ArrayList<>();
+				for (int i = 0; i < length; i++) {
+					if (!(ancestors_.get(i) + "").equals(button.getAncestorIds()[i])) {
+						throw new BizException("Invalid button relations");
 					}
-
-					/** 删除旧的层级关系 */
-					buttonRelationRepository.deleteByDescendant(entity.getId());
-
-					ButtonRelationEntity self = new ButtonRelationEntity();
-					self.setAncestor(entity.getId());
-					self.setDescendant(entity.getId());
-					self.setDepth(0);
-					relations.add(self);
-					buttonRelationRepository.saveAll(relations);
+					ButtonRelationEntity relation = new ButtonRelationEntity();
+					relation.setAncestor(ancestors_.get(i));
+					relation.setDescendant(entity.getId());
+					relation.setDepth(length - i);
+					relations.add(relation);
 				}
+
+				/** 删除旧的层级关系 */
+				buttonRelationRepository.deleteByDescendant(entity.getId());
+
+				ButtonRelationEntity self = new ButtonRelationEntity();
+				self.setAncestor(entity.getId());
+				self.setDescendant(entity.getId());
+				self.setDepth(0);
+				relations.add(self);
+				buttonRelationRepository.saveAll(relations);
 			}
 		}
 	}
@@ -152,7 +164,22 @@ public class ButtonServiceImpl implements ButtonService {
 	}
 
 	/** 在插入部门信息时，部门主键一定要满足正向增加 */
-	private List<ButtonDto> sort(List<ButtonRelationVo> mrs, boolean valid) {
+	private List<ButtonDto> sort(List<ButtonRelationVo> brs, boolean valid) {
+		List<ButtonRelationEntity> buttonRelations = buttonRelationRepository.findAll();
+		Map<String, String[]> buttonsMap = new HashMap<>();
+		int length = 0;
+		String buttonId;
+		for (ButtonRelationEntity button : buttonRelations) {
+			buttonId = button.getDescendant() + "";
+			if (buttonsMap.containsKey(buttonId)) {
+				length = buttonsMap.get(buttonId).length;
+				buttonsMap.get(buttonId)[length - button.getDepth() - 1] = button.getAncestor() + "";
+			} else {
+				String[] ids = new String[button.getDepth() + 1];
+				ids[0] = button.getAncestor() + "";
+				buttonsMap.put(buttonId, ids);
+			}
+		}
 		List<ButtonDto> dtos = new ArrayList<>();
 
 		/** 缓存自身的序号 */
@@ -162,17 +189,20 @@ public class ButtonServiceImpl implements ButtonService {
 		/** 时候实锤为字节点 */
 		List<Boolean> realDescendants = new LinkedList<>();
 		List<ButtonDto> selfs = new ArrayList<>();
-		for (ButtonRelationVo mr : mrs) {
-			int descendant = indexes.indexOf(mr.getId());
+		for (ButtonRelationVo br : brs) {
+			int descendant = indexes.indexOf(br.getId());
 			/** 自身放入缓存 depth = 0 */
 			if (descendant == -1) {
 				ButtonDto dto = new ButtonDto();
-				BeanUtils.copyProperties(mr, dto);
+				BeanUtils.copyProperties(br, dto);
+				if (buttonsMap.containsKey(br.getId() + "")) {
+					dto.setAncestorIds(buttonsMap.get(br.getId() + ""));
+				}
 				selfs.add(dto);
-				indexes.add(mr.getId());
+				indexes.add(br.getId());
 				/** 禁用的节点要不要显示 */
 				if (valid) {
-					rootIndexes.add(mr.getStatus() == 0);
+					rootIndexes.add(br.getStatus() == 0);
 				} else {
 					rootIndexes.add(true);
 				}
@@ -182,7 +212,7 @@ public class ButtonServiceImpl implements ButtonService {
 
 				/** 深度大于0（按深度升序），说明存在从属关系，将该改部门存储到父节点的部门列表中 */
 				rootIndexes.set(descendant, false);
-				int ancestor = indexes.indexOf(mr.getAncestor());
+				int ancestor = indexes.indexOf(br.getAncestor());
 				if (ancestor > -1) {
 					if (selfs.get(ancestor).getDescendants() == null) {
 						List<ButtonDto> dtos_ = new ArrayList<>();

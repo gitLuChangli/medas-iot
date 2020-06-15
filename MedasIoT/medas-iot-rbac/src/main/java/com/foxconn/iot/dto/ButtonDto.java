@@ -55,7 +55,7 @@ public class ButtonDto {
 
 	@JsonView(ButtonBasic.class)
 	@JsonInclude(value = Include.NON_NULL)
-	private String[] ancestor;
+	private String[] ancestorIds;
 
 	@JsonInclude(value = Include.NON_NULL)
 	private List<ButtonDto> descendants;
@@ -132,12 +132,12 @@ public class ButtonDto {
 		this.status = status;
 	}
 
-	public String[] getAncestor() {
-		return ancestor;
+	public String[] getAncestorIds() {
+		return ancestorIds;
 	}
 
-	public void setAncestor(String[] ancestor) {
-		this.ancestor = ancestor;
+	public void setAncestorIds(String[] ancestorIds) {
+		this.ancestorIds = ancestorIds;
 	}
 
 	public List<ButtonDto> getDescendants() {

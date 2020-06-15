@@ -54,14 +54,11 @@ public class MenuDto {
 	@JsonView(MenuCreate.class)
 	@JsonInclude(value = Include.NON_NULL)
 	@JsonDeserialize(as = String[].class)
-	private String[] ancestor;
+	private String[] ancestorIds;
 
 	@JsonInclude(value = Include.NON_NULL)
 	private List<MenuDto> descendants;
 
-	@JsonInclude(value = Include.NON_EMPTY)
-	private String parent;
-	
 	public long getId() {
 		return id;
 	}
@@ -134,12 +131,12 @@ public class MenuDto {
 		this.index = index;
 	}
 
-	public String[] getAncestor() {
-		return ancestor;
+	public String[] getAncestorIds() {
+		return ancestorIds;
 	}
 
-	public void setAncestor(String[] ancestor) {
-		this.ancestor = ancestor;
+	public void setAncestorIds(String[] ancestorIds) {
+		this.ancestorIds = ancestorIds;
 	}
 
 	public List<MenuDto> getDescendants() {
@@ -148,13 +145,5 @@ public class MenuDto {
 
 	public void setDescendants(List<MenuDto> descendants) {
 		this.descendants = descendants;
-	}
-
-	public String getParent() {
-		return parent;
-	}
-
-	public void setParent(String parent) {
-		this.parent = parent;
 	}
 }

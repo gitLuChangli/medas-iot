@@ -1,6 +1,5 @@
 package com.foxconn.iot.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -68,16 +67,5 @@ public class MenuController {
 			valid = false;
 		}
 		return menuService.queryDescendants(valid);
-	}
-
-	@GetMapping(value = "/ancestors/{id:\\d+}")
-	@CommonResponse
-	public List<String> queryAncestorsByDescendant(@PathVariable(value = "id") long id) {
-		List<Long> ancestors = menuService.queryAncestorsByDescendant(id);
-		List<String> ancestors_ = new ArrayList<>();
-		for (Long i : ancestors) {
-			ancestors_.add(i.toString());
-		}
-		return ancestors_;
 	}
 }
