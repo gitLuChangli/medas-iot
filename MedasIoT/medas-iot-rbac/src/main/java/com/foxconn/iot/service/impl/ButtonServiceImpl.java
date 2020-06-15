@@ -163,19 +163,20 @@ public class ButtonServiceImpl implements ButtonService {
 		buttonRepository.deleteById(id);
 	}
 
-	/** 在插入部门信息时，部门主键一定要满足正向增加 */
 	private List<ButtonDto> sort(List<ButtonRelationVo> brs, boolean valid) {
+		/** 按钮层级关系，注意要删除自己 */
 		List<ButtonRelationEntity> buttonRelations = buttonRelationRepository.findAll();
 		Map<String, String[]> buttonsMap = new HashMap<>();
 		int length = 0;
 		String buttonId;
 		for (ButtonRelationEntity button : buttonRelations) {
+			if (button.getDepth() == 0) continue;
 			buttonId = button.getDescendant() + "";
 			if (buttonsMap.containsKey(buttonId)) {
 				length = buttonsMap.get(buttonId).length;
-				buttonsMap.get(buttonId)[length - button.getDepth() - 1] = button.getAncestor() + "";
+				buttonsMap.get(buttonId)[length - button.getDepth()] = button.getAncestor() + "";
 			} else {
-				String[] ids = new String[button.getDepth() + 1];
+				String[] ids = new String[button.getDepth()];
 				ids[0] = button.getAncestor() + "";
 				buttonsMap.put(buttonId, ids);
 			}

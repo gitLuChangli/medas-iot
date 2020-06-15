@@ -160,19 +160,20 @@ public class MenuServiceImpl implements MenuService {
 		menuRepository.deleteById(id);
 	}
 
-	/** 在插入部门信息时，部门主键一定要满足正向增加 */
 	private List<MenuDto> sort(List<MenuRelationVo> mrs, boolean valid) {
+		/** 菜单层级关系，注意要去除自己 */
 		List<MenuRelationEntity> menuRelations = menuRelationRepository.findAll();
 		Map<String, String[]> menusMap = new HashMap<>();
 		int length = 0;
 		String menuId;
 		for (MenuRelationEntity menu : menuRelations) {
+			if (menu.getDepth() == 0) continue;
 			menuId = menu.getDescendant() + "";
 			if (menusMap.containsKey(menuId)) {
 				length = menusMap.get(menuId).length;
-				menusMap.get(menuId)[length - menu.getDepth() - 1] = menu.getAncestor() + "";
+				menusMap.get(menuId)[length - menu.getDepth()] = menu.getAncestor() + "";
 			} else {
-				String[] ids = new String[menu.getDepth() + 1];
+				String[] ids = new String[menu.getDepth()];
 				ids[0] = menu.getAncestor() + "";
 				menusMap.put(menuId, ids);
 			}
