@@ -134,33 +134,27 @@ public class CompanyServiceImpl implements CompanyService {
 				long descendant_ = Long.parseLong(descendant);
 				/** 传入部门层级查询结果 */
 				List<Long> ancestors_ = companyRelationRepository.queryAncestorByDescendant(descendant_);
-				/** 与现有层级相比较，如果不修改部门层级关系 */
-				ancestorsOld.removeAll(ancestors_);
-				if (ancestorsOld.size() == 1 && ancestorsOld.get(0) == entity.getId()) {
-					/** 不需要修改层级关系 */
-				} else {
-					List<CompanyRelationEntity> relations = new ArrayList<>();
-					for (int i = 0; i < length; i++) {
-						if (!(ancestors_.get(i) + "").equals(company.getAncestorIds()[i])) {
-							throw new BizException("Invalid company relations");
-						}
-						CompanyRelationEntity relation = new CompanyRelationEntity();
-						relation.setAncestor(ancestors_.get(i));
-						relation.setDescendant(entity.getId());
-						relation.setDepth(length - i);
-						relations.add(relation);
+				List<CompanyRelationEntity> relations = new ArrayList<>();
+				for (int i = 0; i < length; i++) {
+					if (!(ancestors_.get(i) + "").equals(company.getAncestorIds()[i])) {
+						throw new BizException("Invalid company relations");
 					}
-					
-					/** 删除旧的层级关系 */
-					companyRelationRepository.deleteByDescendant(entity.getId());
-					
-					CompanyRelationEntity self = new CompanyRelationEntity();
-					self.setAncestor(entity.getId());
-					self.setDescendant(entity.getId());
-					self.setDepth(0);
-					relations.add(self);
-					companyRelationRepository.saveAll(relations);
+					CompanyRelationEntity relation = new CompanyRelationEntity();
+					relation.setAncestor(ancestors_.get(i));
+					relation.setDescendant(entity.getId());
+					relation.setDepth(length - i);
+					relations.add(relation);
 				}
+				
+				/** 删除旧的层级关系 */
+				companyRelationRepository.deleteByDescendant(entity.getId());
+				
+				CompanyRelationEntity self = new CompanyRelationEntity();
+				self.setAncestor(entity.getId());
+				self.setDescendant(entity.getId());
+				self.setDepth(0);
+				relations.add(self);
+				companyRelationRepository.saveAll(relations);
 			}
 		}
 		return company;
