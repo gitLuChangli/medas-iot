@@ -25,14 +25,14 @@ import com.foxconn.iot.support.CommonResponse;
 @RestController
 @RequestMapping(value = "/api/device/version")
 public class DeviceVersionController {
-
+	
 	@Autowired
 	private DeviceVersionService deviceVersionService;
-
+	
 	@PostMapping(value = "/")
 	@CommonResponse
 	public void create(@Valid @RequestBody DeviceVersionDto version,
-			BindingResult result) {
+			BindingResult result) {		
 		deviceVersionService.create(version);
 	}
 

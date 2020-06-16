@@ -62,5 +62,6 @@
 		<module>../medas-iot-core</module>
 		<module>../medas-iot-demo</module>
 		<module>../medas-iot-rbac</module>
+		<module>../medas-iot-res</module>
 	</modules>
 </project>

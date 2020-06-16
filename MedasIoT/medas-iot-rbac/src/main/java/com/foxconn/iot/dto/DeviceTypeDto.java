@@ -6,6 +6,8 @@ import java.util.List;
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
 public class DeviceTypeDto {
@@ -23,8 +25,9 @@ public class DeviceTypeDto {
 	
 	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date createOn;
-	
-	private List<DeviceVersionDto> versions;
+
+	@JsonInclude(value = Include.NON_NULL)
+	private List<DeviceVersionDto> deviceVersions;
 
 	public long getId() {
 		return id;
@@ -66,12 +69,11 @@ public class DeviceTypeDto {
 		this.createOn = createOn;
 	}
 
-	public List<DeviceVersionDto> getVersions() {
-		return versions;
+	public List<DeviceVersionDto> getDeviceVersions() {
+		return deviceVersions;
 	}
 
-	public void setVersions(List<DeviceVersionDto> versions) {
-		this.versions = versions;
+	public void setDeviceVersions(List<DeviceVersionDto> deviceVersions) {
+		this.deviceVersions = deviceVersions;
 	}
-	
 }

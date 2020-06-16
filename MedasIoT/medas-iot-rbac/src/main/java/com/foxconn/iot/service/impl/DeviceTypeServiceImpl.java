@@ -18,6 +18,7 @@ import com.foxconn.iot.entity.DeviceTypeEntity;
 import com.foxconn.iot.entity.DeviceVersionEntity;
 import com.foxconn.iot.exception.BizException;
 import com.foxconn.iot.repository.DeviceTypeRepository;
+import com.foxconn.iot.repository.DeviceVersionRepository;
 import com.foxconn.iot.service.DeviceTypeService;
 import com.foxconn.iot.support.Snowflaker;
 import com.mysql.cj.util.StringUtils;
@@ -27,6 +28,8 @@ public class DeviceTypeServiceImpl implements DeviceTypeService {
 
 	@Autowired
 	private DeviceTypeRepository deviceTypeRepository;
+	@Autowired
+	private DeviceVersionRepository deviceVersionRepository;
 
 	@Override
 	public void create(DeviceTypeDto type) {
@@ -47,7 +50,7 @@ public class DeviceTypeServiceImpl implements DeviceTypeService {
 			BeanUtils.copyProperties(version, dto);
 			versions.add(dto);
 		}
-		deviceTypeDto.setVersions(versions);
+		deviceTypeDto.setDeviceVersions(versions);
 		return deviceTypeDto;
 	}
 
@@ -66,6 +69,10 @@ public class DeviceTypeServiceImpl implements DeviceTypeService {
 	@Override
 	@Transactional
 	public void deleteById(long id) {
+		List<DeviceVersionEntity> versions = deviceVersionRepository.queryByDeviceType(id);
+		if (versions.size() > 0) {
+			throw new BizException("The device type has various version information and cannot be deleted. If you still want to delete, please clear the version information first.");
+		}
 		deviceTypeRepository.deleteById(id);
 	}
 
@@ -88,6 +95,13 @@ public class DeviceTypeServiceImpl implements DeviceTypeService {
 		for (DeviceTypeEntity entity : entities) {
 			DeviceTypeDto dto = new DeviceTypeDto();
 			BeanUtils.copyProperties(entity, dto);
+			List<DeviceVersionDto> vs = new ArrayList<>();
+			for (DeviceVersionEntity version : entity.getVersions()) {
+				DeviceVersionDto v = new DeviceVersionDto();
+				BeanUtils.copyProperties(version, v);
+				vs.add(v);
+			}
+			dto.setDeviceVersions(vs);
 			dtos.add(dto);
 		}
 		return dtos;

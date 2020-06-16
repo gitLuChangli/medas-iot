@@ -7,12 +7,17 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
+import com.alibaba.fastjson.JSONObject;
 import com.foxconn.iot.dto.DeviceVersionDto;
 import com.foxconn.iot.entity.DeviceTypeEntity;
 import com.foxconn.iot.entity.DeviceVersionEntity;
@@ -30,9 +35,27 @@ public class DeviceVersionServiceImpl implements DeviceVersionService {
 	private DeviceVersionRepository deviceVersionRepository;
 	@Autowired
 	private DeviceTypeRepository deviceTypeRepository;
+	
+	@Value("${iot.support.file-server}")
+	private String fileServer;
+	
+	@Autowired
+	private RestTemplate restTemplate;
 
 	@Override
 	public void create(DeviceVersionDto version) {
+		
+		/** 移动图片 */
+		String url = String.format("%s/move", fileServer);
+		MultiValueMap<String, String> requestEntity = new LinkedMultiValueMap<>();
+		requestEntity.add("type", "/img/device/");
+		requestEntity.add("file", version.getImageUrl());
+		JSONObject json = restTemplate.postForEntity(url, requestEntity, JSONObject.class).getBody();
+		if (json == null || !json.containsKey("code") || json.getInteger("code") != 1) {
+			throw new BizException("Move device image failed");
+		}
+		version.setImageUrl(json.getString("filePath"));
+		
 		DeviceVersionEntity entity = new DeviceVersionEntity();
 		BeanUtils.copyProperties(version, entity);
 		entity.setId(Snowflaker.getId());
@@ -54,15 +77,22 @@ public class DeviceVersionServiceImpl implements DeviceVersionService {
 		if (entity == null) {
 			throw new BizException("Invalid device version");
 		}
+		if (!version.getImageUrl().equalsIgnoreCase(entity.getImageUrl())) {
+			/** 移动图片 */
+			String url = String.format("%s/upload/move", fileServer);
+			MultiValueMap<String, String> requestEntity = new LinkedMultiValueMap<>();
+			requestEntity.add("type", "/img/device");
+			requestEntity.add("file", version.getImageUrl());
+			JSONObject json = restTemplate.postForEntity(url, requestEntity, JSONObject.class).getBody();
+			if (json == null || !json.containsKey("code") || json.getInteger("code") != 1) {
+				throw new BizException("Move device image failed");
+			}
+			entity.setImageUrl(json.getString("filePath"));
+		}
 		if (!StringUtils.isNullOrEmpty(version.getHardVersion())) {
 			entity.setHardVersion(version.getHardVersion());
 		}
-		if (!StringUtils.isNullOrEmpty(version.getDetails())) {
-			entity.setDetails(version.getDetails());
-		}
-		if (!StringUtils.isNullOrEmpty(version.getImageUrl())) {
-			entity.setImageUrl(version.getImageUrl());
-		}
+		entity.setDetails(version.getDetails());
 		deviceVersionRepository.save(entity);
 	}
 
