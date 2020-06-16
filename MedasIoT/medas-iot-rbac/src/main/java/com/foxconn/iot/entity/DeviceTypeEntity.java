@@ -47,7 +47,7 @@ public class DeviceTypeEntity {
 	@Column(name = "create_on", updatable = false)
 	private Date createOn;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "dev_type_id")
 	@OrderBy("createOn DESC")
 	private List<DeviceVersionEntity> versions;

@@ -5,9 +5,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,17 +33,16 @@ public class DeviceVersionController {
 		deviceVersionService.create(version);
 	}
 
+	/**
+	 * 根据设备型号查询设备版本
+	 * 
+	 * @param deviceTypeId 设备型号
+	 * @return
+	 */
 	@GetMapping(value = "/type/{id:\\d+}")
 	@CommonResponse
-	public Page<DeviceVersionDto> query(@PathVariable(value = "id") long type,
-			@PageableDefault(size = 15) Pageable pageable) {
-		return deviceVersionService.queryByDeviceType(type, pageable);
-	}
-
-	@GetMapping(value = "/all/type/{id:\\d+}")
-	@CommonResponse
-	public List<DeviceVersionDto> query(@PathVariable(value = "id") long type) {
-		return deviceVersionService.queryByDeviceType(type);
+	public List<DeviceVersionDto> query(@PathVariable(value = "id") long deviceTypeId) {
+		return deviceVersionService.queryByDeviceType(deviceTypeId);
 	}
 
 	@PutMapping(value = "/")

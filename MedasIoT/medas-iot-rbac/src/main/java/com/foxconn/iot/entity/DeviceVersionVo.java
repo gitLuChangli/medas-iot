@@ -1,34 +1,38 @@
-package com.foxconn.iot.dto;
+package com.foxconn.iot.entity;
 
 import java.util.Date;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-
-public class DeviceVersionDto {
+public class DeviceVersionVo {
 	
-	@JsonFormat(shape = Shape.STRING)
 	private long id;
 	
-	@NotBlank(message = "版本号不能为空")
 	private String version;
 	
-	@NotBlank(message = "硬件版本号不能为空")
 	private String hardVersion;
 	
 	private String imageUrl;
 	
 	private String details;
 	
-	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date createOn;
 	
-	@NotNull(message = "设备类型不能为空")
-	@JsonFormat(shape = Shape.STRING)
 	private long deviceTypeId;
+	
+	public DeviceVersionVo() {
+		super();
+	}
+
+	public DeviceVersionVo(long id, String version, String hardVersion, String imageUrl, String details, Date createOn,
+			long deviceTypeId) {
+		super();
+		this.id = id;
+		this.version = version;
+		this.hardVersion = hardVersion;
+		this.imageUrl = imageUrl;
+		this.details = details;
+		this.createOn = createOn;
+		this.deviceTypeId = deviceTypeId;
+	}
 
 	public long getId() {
 		return id;

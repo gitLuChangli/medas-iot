@@ -1,13 +1,10 @@
 package com.foxconn.iot.dto;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
 public class DeviceTypeDto {
@@ -25,9 +22,6 @@ public class DeviceTypeDto {
 	
 	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date createOn;
-
-	@JsonInclude(value = Include.NON_NULL)
-	private List<DeviceVersionDto> deviceVersions;
 
 	public long getId() {
 		return id;
@@ -67,13 +61,5 @@ public class DeviceTypeDto {
 
 	public void setCreateOn(Date createOn) {
 		this.createOn = createOn;
-	}
-
-	public List<DeviceVersionDto> getDeviceVersions() {
-		return deviceVersions;
-	}
-
-	public void setDeviceVersions(List<DeviceVersionDto> deviceVersions) {
-		this.deviceVersions = deviceVersions;
 	}
 }
