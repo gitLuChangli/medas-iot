@@ -45,15 +45,11 @@ public class DeviceServiceImpl implements DeviceService {
 				&& (device.getSns() == null || device.getSns().size() == 0))
 			throw new BizException("Need sn or sns");
 		List<DeviceEntity> entities = new ArrayList<>();
-		if (!StringUtils.isStrictlyNumeric(device.getVersionId())) {
-			throw new BizException("Invalid device version");
-		}
-		long versionId = Long.parseLong(device.getVersionId());
-		DeviceVersionEntity version = deviceVersionRepository.findById(versionId);
+		DeviceVersionEntity version = deviceVersionRepository.findById(device.getVersionId());
 		if (version == null) {
 			throw new BizException("Invalid device version");
 		}
-		DeviceTypeEntity type = deviceVersionRepository.findDeviceTypeById(versionId);
+		DeviceTypeEntity type = deviceVersionRepository.findDeviceTypeById(device.getVersionId());
 		if (type == null) {
 			throw new BizException("Invalid device version");
 		}
@@ -80,22 +76,10 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Override
 	public void save(DeviceDto device) {
-		DeviceEntity entity = deviceRepository.findById(device.getId());
-		if (!StringUtils.isNullOrEmpty(device.getSn())) {
-			entity.setSn(device.getSn());
-		}
-		if (!StringUtils.isNullOrEmpty(device.getDetails())) {
-			entity.setDetails(device.getDetails());
-		}
+		DeviceEntity entity = deviceRepository.findById(device.getId());		
+		entity.setDetails(device.getDetails());
 		if (!StringUtils.isNullOrEmpty(device.getParameter())) {
 			entity.setParameter(device.getParameter());
-		}
-		if (StringUtils.isStrictlyNumeric(device.getVersionId())) {
-			long versionId = Long.parseLong(device.getVersionId());
-			if (entity.getVersion() != null && entity.getVersion().getId() != versionId) {
-				DeviceVersionEntity version = deviceVersionRepository.findById(versionId);
-				entity.setVersion(version);
-			}
 		}
 		deviceRepository.save(entity);
 	}

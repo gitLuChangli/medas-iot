@@ -19,6 +19,7 @@ import com.foxconn.iot.entity.DeviceTypeEntity;
 import com.foxconn.iot.entity.DeviceVersionEntity;
 import com.foxconn.iot.entity.DeviceVersionVo;
 import com.foxconn.iot.exception.BizException;
+import com.foxconn.iot.repository.DeviceRepository;
 import com.foxconn.iot.repository.DeviceTypeRepository;
 import com.foxconn.iot.repository.DeviceVersionRepository;
 import com.foxconn.iot.service.DeviceVersionService;
@@ -32,6 +33,8 @@ public class DeviceVersionServiceImpl implements DeviceVersionService {
 	private DeviceVersionRepository deviceVersionRepository;
 	@Autowired
 	private DeviceTypeRepository deviceTypeRepository;
+	@Autowired
+	private DeviceRepository deviceRepository;
 	
 	@Value("${iot.support.file-server}")
 	private String fileServer;
@@ -104,6 +107,10 @@ public class DeviceVersionServiceImpl implements DeviceVersionService {
 	@Override
 	@Transactional
 	public void deleteById(long id) {
+		long count = deviceRepository.countByVersion(id);
+		if (count > 0) {
+			throw new BizException("Delete this version of the device before deleting");
+		}
 		deviceVersionRepository.deleteById(id);
 	}
 

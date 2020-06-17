@@ -10,6 +10,8 @@ public class UploadProperties {
 	private long workerId;
 	
 	private long datacenterId;
+	
+	private String allowedOrigins;
 
 	public String getPath() {
 		return path;
@@ -35,4 +37,12 @@ public class UploadProperties {
 		this.datacenterId = datacenterId;
 	}
 
+	public String getAllowedOrigins() {
+		return allowedOrigins;
+	}
+
+	public void setAllowedOrigins(String allowedOrigins) {
+		this.allowedOrigins = allowedOrigins;
+	}
+	
 }

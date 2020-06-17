@@ -20,7 +20,6 @@ public interface DeviceRepository extends JpaRepository<DeviceEntity, Long> {
 
 	@Query(value = "select a from DeviceEntity a where (a.model like :mos or a.sn like :mos) and a.company.id=:company order by a.model, a.sn")
 	Page<DeviceEntity> queryByModelOrSnAndCompany(@Param("mos") String mos, @Param("company") long companyId, Pageable pageable);
-	
 
 	@Query(value = "select a from DeviceEntity a where a.model=:model order by a.model, a.sn")
 	Page<DeviceEntity> queryByModel(@Param("model") String model, Pageable pageable);
@@ -49,4 +48,7 @@ public interface DeviceRepository extends JpaRepository<DeviceEntity, Long> {
 	@Modifying
 	@Query(value = "update DeviceEntity a set a.group=:group where a.id=:id and a.company.id=:company")
 	void updateGroupByIdAndCompany(@Param("group") DeviceGroupEntity group, @Param("id") long id, @Param("company") long companyId);
+	
+	@Query(value="select count(a.sn) from DeviceEntity a where a.version.id=:version")
+	long countByVersion(@Param("version") long versionId);
 }

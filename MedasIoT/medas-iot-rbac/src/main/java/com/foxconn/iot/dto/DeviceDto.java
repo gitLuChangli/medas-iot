@@ -3,7 +3,7 @@ package com.foxconn.iot.dto;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
@@ -12,15 +12,16 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 public class DeviceDto {
 
+	@JsonFormat(shape = Shape.STRING)
 	private long id;
 
 	private String model;
 
 	private String name;
 
-	@NotBlank(message = "请选择设备版本号")
+	@NotNull(message = "请选择设备版本号")
 	@JsonInclude(value = Include.NON_NULL)
-	private String versionId;
+	private long versionId;
 
 	private DeviceVersionDto version;
 
@@ -65,11 +66,11 @@ public class DeviceDto {
 		this.name = name;
 	}
 
-	public String getVersionId() {
+	public long getVersionId() {
 		return versionId;
 	}
 
-	public void setVersionId(String versionId) {
+	public void setVersionId(long versionId) {
 		this.versionId = versionId;
 	}
 
