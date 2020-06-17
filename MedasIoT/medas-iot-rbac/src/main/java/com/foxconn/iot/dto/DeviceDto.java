@@ -1,14 +1,9 @@
 package com.foxconn.iot.dto;
 
 import java.util.Date;
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 public class DeviceDto {
 
@@ -19,19 +14,9 @@ public class DeviceDto {
 
 	private String name;
 
-	@NotNull(message = "请选择设备版本号")
-	@JsonInclude(value = Include.NON_NULL)
-	private long versionId;
-
 	private DeviceVersionDto version;
 
 	private String sn;
-
-	/**
-	 * 同时插入同一型号的多台设备
-	 */
-	@JsonInclude(value = Include.NON_NULL)
-	private List<String> sns;
 
 	private String parameter;
 
@@ -41,6 +26,10 @@ public class DeviceDto {
 	private Date createOn;
 
 	private int status;
+	
+	private String firmware;
+	
+	private String software;
 
 	public long getId() {
 		return id;
@@ -66,14 +55,6 @@ public class DeviceDto {
 		this.name = name;
 	}
 
-	public long getVersionId() {
-		return versionId;
-	}
-
-	public void setVersionId(long versionId) {
-		this.versionId = versionId;
-	}
-
 	public DeviceVersionDto getVersion() {
 		return version;
 	}
@@ -88,14 +69,6 @@ public class DeviceDto {
 
 	public void setSn(String sn) {
 		this.sn = sn;
-	}
-
-	public List<String> getSns() {
-		return sns;
-	}
-
-	public void setSns(List<String> sns) {
-		this.sns = sns;
 	}
 
 	public String getParameter() {
@@ -130,4 +103,19 @@ public class DeviceDto {
 		this.status = status;
 	}
 
+	public String getFirmware() {
+		return firmware;
+	}
+
+	public void setFirmware(String firmware) {
+		this.firmware = firmware;
+	}
+
+	public String getSoftware() {
+		return software;
+	}
+
+	public void setSoftware(String software) {
+		this.software = software;
+	}
 }

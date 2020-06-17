@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.foxconn.iot.dto.DeviceAddDto;
 import com.foxconn.iot.dto.DeviceDto;
 import com.foxconn.iot.service.DeviceService;
 import com.foxconn.iot.support.CommonResponse;
@@ -28,7 +29,7 @@ public class AdminDeviceController {
 
 	@CommonResponse
 	@PostMapping(value = "/")
-	public void create(@Valid @RequestBody DeviceDto device, BindingResult result) {
+	public void create(@Valid @RequestBody DeviceAddDto device, BindingResult result) {
 		deviceService.create(device);
 	}
 

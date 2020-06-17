@@ -3,11 +3,12 @@ package com.foxconn.iot.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.foxconn.iot.dto.DeviceAddDto;
 import com.foxconn.iot.dto.DeviceDto;
 
 public interface DeviceService {
 	
-	void create(DeviceDto device);
+	void create(DeviceAddDto device);
 	
 	void save(DeviceDto device);
 	

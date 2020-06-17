@@ -22,15 +22,15 @@ public class ResWebMvcConfigSupport extends WebMvcConfigurationSupport {
 	
 	@Override
 	protected void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/**").allowedOrigins(allowedOrigins).allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE").maxAge(3600).allowCredentials(true);
+		String[] origins = allowedOrigins.split(",");
+		registry.addMapping("/**").allowedOrigins(origins).allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE").maxAge(3600).allowCredentials(true);
 		super.addCorsMappings(registry);
 	}
 	
 	@Override
 	protected void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/img/device/**").addResourceLocations("file:E:/iot/path/img/device/");
+		registry.addResourceHandler("/img/device/**").addResourceLocations("file:" + uploadPath + "/img/device/");
 		System.out.println("file:" + uploadPath + "/img/device/");
-		
 		System.out.println(workerId + "," + datacenterId);
 		Snowflaker.init(workerId, datacenterId);
 		super.addResourceHandlers(registry);

@@ -74,6 +74,10 @@ public class DeviceVersionServiceImpl implements DeviceVersionService {
 			throw new BizException("Invalid device version");
 		}
 		if (!version.getImageUrl().equalsIgnoreCase(entity.getImageUrl())) {
+			/** 刪除旧图片 */
+			String del = String.format("%s/delete?file=%s", fileServer, entity.getImageUrl());
+			restTemplate.delete(del);
+			
 			/** 移动图片 */
 			String url = String.format("%s/move", fileServer);
 			MultiValueMap<String, String> requestEntity = new LinkedMultiValueMap<>();

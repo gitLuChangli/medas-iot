@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,6 +35,7 @@ public class UploadController {
             multipartFile.transferTo(new File(tempPath + fileName));
             result.put("code", 1);
             result.put("filePath", fileName);
+            result.put("message", "Upload success");
         } catch (IOException e) {
             e.printStackTrace();
             result.put("code", 128);
@@ -58,12 +60,27 @@ public class UploadController {
                 file.delete();
             } else {
             	result.put("code", 128);
-            	result.put("message", "move failed");
+            	result.put("message", "Move failed");
             }
         } else {
         	result.put("code", 128);
-            result.put("message", "file not exist");
+            result.put("message", "File not exist");
         }
         return JSON.toJSONString(result);
     }
+	
+	@DeleteMapping(value = "/delete")
+	public String deleteFile(@RequestParam(value = "file", required = true) String fileName) {
+		File file = new File(uploadPath + fileName);
+		Map<String, Object> result = new HashMap<>();
+		if (file.exists()) {
+			file.delete();
+			result.put("code", 1);
+			result.put("message", "Delete success");
+		} else {
+			result.put("code", 2);
+			result.put("message", "File not found");
+		}
+		return JSON.toJSONString(result);
+	}
 }

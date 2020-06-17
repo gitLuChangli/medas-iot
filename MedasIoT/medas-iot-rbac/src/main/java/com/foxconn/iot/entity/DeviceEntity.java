@@ -29,7 +29,7 @@ public class DeviceEntity {
 	@Id
 	private long id;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ver_id")
 	private DeviceVersionEntity version;
 	
@@ -70,6 +70,12 @@ public class DeviceEntity {
 	@Column(name = "status")
 	private int status;
 
+	@Column(name="firm_ver", length = 45)
+	private String firmware;
+	
+	@Column(name="soft_ver", length = 45)
+	private String software;
+	
 	public long getId() {
 		return id;
 	}
@@ -157,5 +163,20 @@ public class DeviceEntity {
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	
+
+	public String getFirmware() {
+		return firmware;
+	}
+
+	public void setFirmware(String firmware) {
+		this.firmware = firmware;
+	}
+
+	public String getSoftware() {
+		return software;
+	}
+
+	public void setSoftware(String software) {
+		this.software = software;
+	}
 }

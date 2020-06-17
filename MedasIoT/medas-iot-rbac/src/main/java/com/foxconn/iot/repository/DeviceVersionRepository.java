@@ -17,5 +17,6 @@ public interface DeviceVersionRepository extends JpaRepository<DeviceVersionEnti
 	@Query(value = "select new com.foxconn.iot.entity.DeviceVersionVo(a.id, a.version, a.hardVersion, a.imageUrl, a.details, a.createOn, a.deviceType.id) from DeviceVersionEntity a where a.deviceType.id=:type order by a.createOn desc")
 	List<DeviceVersionVo> queryByDeviceType(@Param("type") long type);
 	
-	DeviceTypeEntity findDeviceTypeById(long id);
+	@Query(value = "select a.deviceType from DeviceVersionEntity a where a.id=:id")
+	DeviceTypeEntity findDeviceTypeById(@Param("id") long id);
 }

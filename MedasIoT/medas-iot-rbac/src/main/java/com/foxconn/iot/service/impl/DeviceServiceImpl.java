@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.foxconn.iot.dto.DeviceAddDto;
 import com.foxconn.iot.dto.DeviceDto;
 import com.foxconn.iot.entity.CompanyEntity;
 import com.foxconn.iot.entity.DeviceEntity;
@@ -40,29 +41,18 @@ public class DeviceServiceImpl implements DeviceService {
 	private DeviceGroupRepository deviceGroupRepository;
 
 	@Override
-	public void create(DeviceDto device) {
-		if (StringUtils.isNullOrEmpty(device.getSn()) 
-				&& (device.getSns() == null || device.getSns().size() == 0))
-			throw new BizException("Need sn or sns");
+	public void create(DeviceAddDto device) {
 		List<DeviceEntity> entities = new ArrayList<>();
 		DeviceVersionEntity version = deviceVersionRepository.findById(device.getVersionId());
 		if (version == null) {
 			throw new BizException("Invalid device version");
 		}
-		DeviceTypeEntity type = deviceVersionRepository.findDeviceTypeById(device.getVersionId());
+		DeviceTypeEntity type = deviceVersionRepository.findDeviceTypeById(version.getId());
 		if (type == null) {
 			throw new BizException("Invalid device version");
 		}
-		if (StringUtils.isNullOrEmpty(device.getSn())) {
-			List<String> sns = new ArrayList<>();
-			sns.add(device.getSn());
-			device.setSns(sns);
-		}
-		
 		for (String sn : device.getSns()) {
 			DeviceEntity entity = new DeviceEntity();
-			BeanUtils.copyProperties(device, entity);
-			
 			entity.setId(Snowflaker.getId());
 			entity.setSn(sn);
 			entity.setModel(type.getModel());
@@ -70,7 +60,6 @@ public class DeviceServiceImpl implements DeviceService {
 			entity.setVersion(version);
 			entities.add(entity);
 		}
-		
 		deviceRepository.saveAll(entities);
 	}
 
