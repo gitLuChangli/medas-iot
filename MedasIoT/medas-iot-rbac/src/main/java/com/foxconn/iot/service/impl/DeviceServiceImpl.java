@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.foxconn.iot.dto.DeviceAddDto;
+import com.foxconn.iot.dto.DeviceCompanyDto;
 import com.foxconn.iot.dto.DeviceDto;
 import com.foxconn.iot.entity.CompanyEntity;
 import com.foxconn.iot.entity.DeviceEntity;
@@ -20,6 +21,7 @@ import com.foxconn.iot.entity.DeviceGroupEntity;
 import com.foxconn.iot.entity.DeviceTypeEntity;
 import com.foxconn.iot.entity.DeviceVersionEntity;
 import com.foxconn.iot.exception.BizException;
+import com.foxconn.iot.repository.CompanyRelationRepository;
 import com.foxconn.iot.repository.CompanyRepository;
 import com.foxconn.iot.repository.DeviceGroupRepository;
 import com.foxconn.iot.repository.DeviceRepository;
@@ -38,7 +40,9 @@ public class DeviceServiceImpl implements DeviceService {
 	@Autowired
 	private CompanyRepository companyRepository;
 	@Autowired
-	private DeviceGroupRepository deviceGroupRepository;
+	private CompanyRelationRepository companyRelationRepository;
+	@Autowired
+	private DeviceGroupRepository deviceGroupRepository;	
 
 	@Override
 	public void create(DeviceAddDto device) {
@@ -155,12 +159,23 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Override
 	@Transactional
-	public void updateCompany(long id, long companyId) {
-		CompanyEntity company = companyRepository.findById(companyId);
+	public void updateCompany(DeviceCompanyDto dc) {
+		int length = dc.getCompanyIds().length;
+		long descendant = dc.getCompanyIds()[length - 1];
+		List<Long> companyRelations = companyRelationRepository.queryAncestorByDescendant(descendant);
+		if (companyRelations == null || companyRelations.size() < length) {
+			throw new BizException("Invalid company relation");
+		}
+		for (int i = 0; i < length; i++) {
+			if (dc.getCompanyIds()[i] != companyRelations.get(i)) {
+				throw new BizException("Invalid company relation");
+			}
+		}
+		CompanyEntity company = companyRepository.findById(descendant);
 		if (company == null) {
 			throw new BizException("Invalid company");
 		}
-		deviceRepository.updateCompanyById(company, id);
+		deviceRepository.updateCompanyById(company, dc.getDeviceId());
 	}
 
 	@Override

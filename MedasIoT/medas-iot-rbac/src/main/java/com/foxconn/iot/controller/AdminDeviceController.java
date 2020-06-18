@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.foxconn.iot.dto.DeviceAddDto;
+import com.foxconn.iot.dto.DeviceCompanyDto;
 import com.foxconn.iot.dto.DeviceDto;
 import com.foxconn.iot.service.DeviceService;
 import com.foxconn.iot.support.CommonResponse;
@@ -58,10 +59,15 @@ public class AdminDeviceController {
 		return deviceService.queryByModelOrSn(search, pageable);
 	}
 
+	/**
+	 * 给设备分配部门
+	 * 
+	 * @param dc
+	 */
 	@CommonResponse
-	@PutMapping(value = "/set/company/{id:\\d+}/{company:\\d+}")
-	public void setCompany(@PathVariable(value = "id") long id, @PathVariable(value = "company") long companyId) {
-		deviceService.updateCompany(id, companyId);
+	@PutMapping(value = "/set/company/")
+	public void setCompany(@Valid @RequestBody DeviceCompanyDto dc, BindingResult result) {
+		deviceService.updateCompany(dc);
 	}
 
 	@CommonResponse

@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.foxconn.iot.dto.DeviceAddDto;
+import com.foxconn.iot.dto.DeviceCompanyDto;
 import com.foxconn.iot.dto.DeviceDto;
 
 public interface DeviceService {
@@ -26,7 +27,7 @@ public interface DeviceService {
 	
 	Page<DeviceDto> queryByDeviceVersionAndCompany(long versionId, long companyId, Pageable pageable);
 	
-	void updateCompany(long id, long companyId);
+	void updateCompany(DeviceCompanyDto dc);
 	
 	void updateGroup(long id, long companyId, long groupId);
 	
