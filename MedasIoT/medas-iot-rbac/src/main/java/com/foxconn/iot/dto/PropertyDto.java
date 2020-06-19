@@ -14,22 +14,22 @@ public class PropertyDto {
 	
 	public interface Create extends Basic {}
 	
-	@JsonView(Basic.class)
+	//@JsonView(Basic.class)
 	@JsonFormat(shape = Shape.STRING)
 	private long id;
 	
-	@JsonView(Basic.class)
+	//@JsonView(Basic.class)
 	@NotBlank(message = "屬性name不能為空")
 	private String name;
 	
-	@JsonView(Basic.class)
+	//@JsonView(Basic.class)
 	@NotBlank(message = "屬性標題不能為空")
 	private String title;
 	
-	@JsonView(Basic.class)
+	//@JsonView(Basic.class)
 	private String details;
 	
-	@JsonView(Create.class)
+	//@JsonView(Create.class)
 	@JsonInclude(value = Include.NON_NULL)
 	private long applicationId;
 

@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -40,6 +39,9 @@ public class ApplicationEntity {
 	@Column(name = "name", length = 90, nullable = false)
 	private String name;
 
+	@Column(name="details", length = 255)
+	private String details;
+	
 	@CreatedDate
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "create_on", updatable = false)
@@ -59,7 +61,6 @@ public class ApplicationEntity {
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "app_id")
-	@OrderBy("createOn DESC")
 	private Set<PropertyEntity> parameters;
 	
 	@JoinColumn(name = "p_id")
@@ -96,6 +97,14 @@ public class ApplicationEntity {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getDetails() {
+		return details;
+	}
+
+	public void setDetails(String details) {
+		this.details = details;
 	}
 
 	public Date getCreateOn() {
