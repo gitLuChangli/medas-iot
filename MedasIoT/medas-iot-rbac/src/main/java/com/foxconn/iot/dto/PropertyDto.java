@@ -4,8 +4,6 @@ import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonView;
 
 public class PropertyDto {
@@ -14,25 +12,21 @@ public class PropertyDto {
 	
 	public interface Create extends Basic {}
 	
-	//@JsonView(Basic.class)
+	@JsonView(Basic.class)
 	@JsonFormat(shape = Shape.STRING)
 	private long id;
 	
-	//@JsonView(Basic.class)
+	@JsonView(Basic.class)
 	@NotBlank(message = "屬性name不能為空")
 	private String name;
 	
-	//@JsonView(Basic.class)
+	@JsonView(Basic.class)
 	@NotBlank(message = "屬性標題不能為空")
 	private String title;
 	
-	//@JsonView(Basic.class)
+	@JsonView(Basic.class)
 	private String details;
 	
-	//@JsonView(Create.class)
-	@JsonInclude(value = Include.NON_NULL)
-	private long applicationId;
-
 	public long getId() {
 		return id;
 	}
@@ -63,13 +57,5 @@ public class PropertyDto {
 
 	public void setDetails(String details) {
 		this.details = details;
-	}
-
-	public long getApplicationId() {
-		return applicationId;
-	}
-
-	public void setApplicationId(long applicationId) {
-		this.applicationId = applicationId;
 	}
 }

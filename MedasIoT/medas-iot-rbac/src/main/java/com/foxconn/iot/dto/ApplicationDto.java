@@ -1,7 +1,6 @@
 package com.foxconn.iot.dto;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -12,8 +11,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
-import com.foxconn.iot.dto.deserializer.ParametersJsonDeserializer;
 
 public class ApplicationDto {
 
@@ -56,23 +53,11 @@ public class ApplicationDto {
 	@JsonView(Basic.class)
 	private int status;
 
-	@JsonView(Basic.class)
-	@JsonInclude(value = Include.NON_NULL)
-	private List<ApplicationVersionDto> versionList;
-
-	@JsonView(Basic.class)
-	@JsonInclude(value = Include.NON_NULL)
-	@JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
-	@JsonDeserialize(using = ParametersJsonDeserializer.class)
-	private List<PropertyDto> parameterList;
-	
-	@JsonView(Basic.class)
-	private String properties;
-
 	@JsonInclude(value = Include.NON_NULL)
 	@JsonView(Basic.class)
+	@JsonFormat(shape = Shape.STRING)
 	@JsonDeserialize(as = Long.class)
-	private long parentId;
+	private Long parentId;
 
 	@JsonInclude(value = Include.NON_NULL)
 	@JsonView(Detail.class)
@@ -134,27 +119,11 @@ public class ApplicationDto {
 		this.status = status;
 	}
 
-	public List<ApplicationVersionDto> getVersionList() {
-		return versionList;
-	}
-
-	public void setVersionList(List<ApplicationVersionDto> versionList) {
-		this.versionList = versionList;
-	}
-
-	public List<PropertyDto> getParameterList() {
-		return parameterList;
-	}
-
-	public void setParameterList(List<PropertyDto> parameterList) {
-		this.parameterList = parameterList;
-	}
-
-	public long getParentId() {
+	public Long getParentId() {
 		return parentId;
 	}
 
-	public void setParentId(long parentId) {
+	public void setParentId(Long parentId) {
 		this.parentId = parentId;
 	}
 
@@ -164,13 +133,5 @@ public class ApplicationDto {
 
 	public void setParentName(String parentName) {
 		this.parentName = parentName;
-	}
-
-	public String getProperties() {
-		return properties;
-	}
-
-	public void setProperties(String properties) {
-		this.properties = properties;
 	}
 }

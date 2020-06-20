@@ -59,13 +59,13 @@ public class ApplicationEntity {
 	@JoinColumn(name = "app_id")
 	private Set<ApplicationVersionEntity> versions;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "app_id")
 	private Set<PropertyEntity> parameters;
 	
 	@JoinColumn(name = "p_id")
-	@ManyToOne(cascade = CascadeType.ALL)
-	private ApplicationEntity mainApplication;
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private ApplicationEntity parent;
 	
 	public long getId() {
 		return id;
@@ -147,11 +147,11 @@ public class ApplicationEntity {
 		this.parameters = parameters;
 	}
 
-	public ApplicationEntity getMainApplication() {
-		return mainApplication;
+	public ApplicationEntity getParent() {
+		return parent;
 	}
 
-	public void setMainApplication(ApplicationEntity mainApplication) {
-		this.mainApplication = mainApplication;
+	public void setParent(ApplicationEntity parent) {
+		this.parent = parent;
 	}
 }
