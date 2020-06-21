@@ -37,4 +37,6 @@ public interface DeviceService {
 	
 	void deleteById(long id);
 	
+	void setApplication(long id, long appid);
+	
 }

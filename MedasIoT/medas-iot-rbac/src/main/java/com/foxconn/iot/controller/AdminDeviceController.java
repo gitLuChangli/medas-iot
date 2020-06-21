@@ -88,4 +88,10 @@ public class AdminDeviceController {
 	public void delete(@PathVariable(value = "id") long id) {
 		deviceService.deleteById(id);
 	}
+	
+	@CommonResponse
+	@PutMapping(value = "/set/app/{id:\\d+}/{app:\\d+}")
+	public void setApplication(@PathVariable(value = "id") long id, @PathVariable(value = "app") long appid) {
+		deviceService.setApplication(id, appid);
+	}
 }

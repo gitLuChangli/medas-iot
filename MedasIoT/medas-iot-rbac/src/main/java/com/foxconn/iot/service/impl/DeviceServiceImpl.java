@@ -15,12 +15,14 @@ import org.springframework.stereotype.Service;
 import com.foxconn.iot.dto.DeviceAddDto;
 import com.foxconn.iot.dto.DeviceCompanyDto;
 import com.foxconn.iot.dto.DeviceDto;
+import com.foxconn.iot.entity.ApplicationEntity;
 import com.foxconn.iot.entity.CompanyEntity;
 import com.foxconn.iot.entity.DeviceEntity;
 import com.foxconn.iot.entity.DeviceGroupEntity;
 import com.foxconn.iot.entity.DeviceTypeEntity;
 import com.foxconn.iot.entity.DeviceVersionEntity;
 import com.foxconn.iot.exception.BizException;
+import com.foxconn.iot.repository.ApplicationRepository;
 import com.foxconn.iot.repository.CompanyRelationRepository;
 import com.foxconn.iot.repository.CompanyRepository;
 import com.foxconn.iot.repository.DeviceGroupRepository;
@@ -42,7 +44,9 @@ public class DeviceServiceImpl implements DeviceService {
 	@Autowired
 	private CompanyRelationRepository companyRelationRepository;
 	@Autowired
-	private DeviceGroupRepository deviceGroupRepository;	
+	private DeviceGroupRepository deviceGroupRepository;
+	@Autowired
+	private ApplicationRepository applicationRepository;
 
 	@Override
 	public void create(DeviceAddDto device) {
@@ -204,5 +208,14 @@ public class DeviceServiceImpl implements DeviceService {
 	public void deleteById(long id) {
 		deviceRepository.deleteById(id);
 	}
-
+	
+	@Transactional
+	@Override
+	public void setApplication(long id, long appid) {
+		ApplicationEntity application = applicationRepository.findById(appid);
+		if (application == null) {
+			throw new BizException("Invalid application");
+		}
+		deviceRepository.updateApplicationById(id, application);
+	}
 }

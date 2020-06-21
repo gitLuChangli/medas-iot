@@ -76,6 +76,10 @@ public class DeviceEntity {
 	@Column(name="soft_ver", length = 45)
 	private String software;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "app_id")
+	private ApplicationEntity application;
+	
 	public long getId() {
 		return id;
 	}
@@ -178,5 +182,13 @@ public class DeviceEntity {
 
 	public void setSoftware(String software) {
 		this.software = software;
+	}
+
+	public ApplicationEntity getApplication() {
+		return application;
+	}
+
+	public void setApplication(ApplicationEntity application) {
+		this.application = application;
 	}
 }

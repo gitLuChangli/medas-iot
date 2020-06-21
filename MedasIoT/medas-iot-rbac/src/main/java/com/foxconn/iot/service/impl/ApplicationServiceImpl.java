@@ -60,7 +60,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 			entity.setDetails(application.getDetails());
 		}
 		if (application.getParentId() != null && application.getParentId() > 0) {
-			if (entity.getParent() != null && entity.getParent().getId() != application.getParentId()) {
+			if (entity.getParent() == null || (entity.getParent() != null && entity.getParent().getId() != application.getParentId())) {
 				ApplicationEntity parent = applicationRepository.findById((long) application.getParentId());
 				if (parent == null) {
 					throw new BizException("Invalid parent application");

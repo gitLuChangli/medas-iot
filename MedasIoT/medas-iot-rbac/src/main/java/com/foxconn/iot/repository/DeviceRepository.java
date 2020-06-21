@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.foxconn.iot.entity.ApplicationEntity;
 import com.foxconn.iot.entity.CompanyEntity;
 import com.foxconn.iot.entity.DeviceEntity;
 import com.foxconn.iot.entity.DeviceGroupEntity;
@@ -51,4 +52,9 @@ public interface DeviceRepository extends JpaRepository<DeviceEntity, Long> {
 	
 	@Query(value="select count(a.sn) from DeviceEntity a where a.version.id=:version")
 	long countByVersion(@Param("version") long versionId);
+	
+	@Modifying
+	@Query(value = "update DeviceEntity a set a.application=:application where a.id=:id")
+	void updateApplicationById(@Param("id") long id, @Param("application") ApplicationEntity application);
+	
 }

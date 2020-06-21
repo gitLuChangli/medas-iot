@@ -39,10 +39,10 @@ public class ApplicationVersionDto {
 	@JsonView(Basic.class)
 	private int status;
 	
-	@JsonView(Create.class)
+	@JsonView(Basic.class)
 	@JsonFormat(shape = Shape.STRING)
 	@NotNull(message = "應用編號不能為空")
-	private long applicationId;
+	private Long applicationId;
 
 	public long getId() {
 		return id;
@@ -92,11 +92,11 @@ public class ApplicationVersionDto {
 		this.status = status;
 	}
 
-	public long getApplicationId() {
+	public Long getApplicationId() {
 		return applicationId;
 	}
 
-	public void setApplicationId(long applicationId) {
+	public void setApplicationId(Long applicationId) {
 		this.applicationId = applicationId;
 	}
 }
