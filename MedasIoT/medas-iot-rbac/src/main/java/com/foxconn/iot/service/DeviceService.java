@@ -39,4 +39,6 @@ public interface DeviceService {
 	
 	void setApplication(long id, long appid);
 	
+	void setParameter(long id, String parameter);
+	
 }

@@ -52,7 +52,7 @@ public class DeviceEntity {
 	@JoinColumn(name = "company_id")
 	private CompanyEntity company;
 	
-	@Column(name = "param", length = 255)
+	@Column(name = "param", length = 510)
 	private String parameter;
 	
 	@Column(name="details", length = 255)

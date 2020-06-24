@@ -73,7 +73,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Override
 	public void save(DeviceDto device) {
-		DeviceEntity entity = deviceRepository.findById(device.getId());		
+		DeviceEntity entity = deviceRepository.findById((long) device.getId());		
 		entity.setDetails(device.getDetails());
 		if (!StringUtils.isNullOrEmpty(device.getParameter())) {
 			entity.setParameter(device.getParameter());
@@ -115,14 +115,14 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Override
 	public Page<DeviceDto> queryByModel(String model, Pageable pageable) {
-		Page<DeviceEntity> entities = deviceRepository.queryByModel(model, pageable);
+		Page<Object[]> objects = deviceRepository.queryByModel(model, pageable);
 		List<DeviceDto> dtos = new ArrayList<>();
-		for (DeviceEntity entity : entities.getContent()) {
+		for (Object[] objs : objects.getContent()) {
 			DeviceDto dto = new DeviceDto();
-			BeanUtils.copyProperties(entity, dto);
+			dto.setData(objs);
 			dtos.add(dto);
 		}
-		return new PageImpl<>(dtos, pageable, entities.getTotalElements());
+		return new PageImpl<>(dtos, pageable, objects.getTotalElements());
 	}
 	
 	@Override
@@ -217,5 +217,11 @@ public class DeviceServiceImpl implements DeviceService {
 			throw new BizException("Invalid application");
 		}
 		deviceRepository.updateApplicationById(id, application);
+	}
+	
+	@Override
+	@Transactional
+	public void setParameter(long id, String parameter) {
+		deviceRepository.updateParameterById(id, parameter);
 	}
 }

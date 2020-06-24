@@ -9,6 +9,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -60,5 +61,11 @@ public class DeviceController {
 	public void disable(HttpSession session, @PathVariable(value = "id") long id, @PathVariable(value = "status") int status) {
 		long companyId = (long) session.getAttribute("company");
 		deviceService.updateStatusByIdAndCompany(status, id, companyId);
+	}
+	
+	@CommonResponse
+	@PutMapping(value = "/set/parameter/{id:\\d+}")
+	public void setParameter(@PathVariable(value = "id") long id, @RequestBody String parameter) {
+		deviceService.setParameter(id, parameter);
 	}
 }

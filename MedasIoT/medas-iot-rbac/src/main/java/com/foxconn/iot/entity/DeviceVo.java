@@ -1,15 +1,10 @@
-package com.foxconn.iot.dto;
+package com.foxconn.iot.entity;
 
-import java.math.BigInteger;
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-
-public class DeviceDto {
-
-	@JsonFormat(shape = Shape.STRING)
-	private Long id;
+public class DeviceVo {
+	
+	private long id;
 	
 	private String model;
 	
@@ -21,7 +16,6 @@ public class DeviceDto {
 	
 	private String parameter;
 	
-	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date createOn;
 	
 	private int status;
@@ -30,26 +24,49 @@ public class DeviceDto {
 	
 	private String software;
 	
-	@JsonFormat(shape = Shape.STRING)
-	private Long companyId;
+	private long companyId;
 	
 	private String companyName;
 	
-	@JsonFormat(shape = Shape.STRING)
-	private Long applicationId;
+	private long applicationId;
 	
 	private String applicationName;
 	
-	@JsonFormat(shape = Shape.STRING)
-	private Long versionId;
+	private long versionId;
 	
 	private String version;
+	
+	public DeviceVo() {
+		super();
+	}
 
-	public Long getId() {
+	public DeviceVo(long id, String model, String name, String sn, String details, String parameter, Date createOn,
+			int status, String firmware, String software, long companyId, String companyName, long applicationId,
+			String applicationName, long versionId, String version) {
+		super();
+		this.id = id;
+		this.model = model;
+		this.name = name;
+		this.sn = sn;
+		this.details = details;
+		this.parameter = parameter;
+		this.createOn = createOn;
+		this.status = status;
+		this.firmware = firmware;
+		this.software = software;
+		this.companyId = companyId;
+		this.companyName = companyName;
+		this.applicationId = applicationId;
+		this.applicationName = applicationName;
+		this.versionId = versionId;
+		this.version = version;
+	}
+
+	public long getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -125,11 +142,11 @@ public class DeviceDto {
 		this.software = software;
 	}
 
-	public Long getCompanyId() {
+	public long getCompanyId() {
 		return companyId;
 	}
 
-	public void setCompanyId(Long companyId) {
+	public void setCompanyId(long companyId) {
 		this.companyId = companyId;
 	}
 
@@ -141,11 +158,11 @@ public class DeviceDto {
 		this.companyName = companyName;
 	}
 
-	public Long getApplicationId() {
+	public long getApplicationId() {
 		return applicationId;
 	}
 
-	public void setApplicationId(Long applicationId) {
+	public void setApplicationId(long applicationId) {
 		this.applicationId = applicationId;
 	}
 
@@ -157,11 +174,11 @@ public class DeviceDto {
 		this.applicationName = applicationName;
 	}
 
-	public Long getVersionId() {
+	public long getVersionId() {
 		return versionId;
 	}
 
-	public void setVersionId(Long versionId) {
+	public void setVersionId(long versionId) {
 		this.versionId = versionId;
 	}
 
@@ -171,34 +188,5 @@ public class DeviceDto {
 
 	public void setVersion(String version) {
 		this.version = version;
-	}
-
-	public void setData(Object[] objs) {
-		if (objs != null && objs.length == 16) {
-			if (objs[0] != null) {
-				this.id = new BigInteger(objs[0].toString()).longValue();
-			}
-			this.model = (String) objs[1];
-			this.name = (String) objs[2];
-			this.sn = (String) objs[3];
-			this.details = (String) objs[4];
-			this.parameter = (String) objs[5];
-			this.createOn = (Date) objs[6];
-			this.status = (Integer) objs[7];
-			this.firmware = (String) objs[8];
-			this.software = (String) objs[9];
-			if (objs[10] != null) {
-				this.companyId = new BigInteger(objs[10].toString()).longValue();
-			}
-			this.companyName = (String) objs[11];
-			if (objs[12] != null) {
-				this.versionId = new BigInteger(objs[12].toString()).longValue();
-			}
-			this.version = (String) objs[13];
-			if (objs[14] != null) {
-				this.applicationId = new BigInteger(objs[14].toString()).longValue();
-			}
-			this.applicationName = (String) objs[15];
-		}
 	}
 }
