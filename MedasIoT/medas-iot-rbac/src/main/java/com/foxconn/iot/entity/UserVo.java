@@ -1,14 +1,10 @@
-package com.foxconn.iot.dto;
+package com.foxconn.iot.entity;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+public class UserVo {
 
-public class UserDetailDto {
-	
-	@JsonFormat(shape = Shape.STRING)
-	private long id;
+private long id;
 	
 	private String no;
 	
@@ -28,13 +24,33 @@ public class UserDetailDto {
 	
 	private int status;
 	
-	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date createOn;
 	
-	@JsonFormat(shape = Shape.STRING)
 	private long companyId;
 	
 	private String companyName;
+	
+	public UserVo() {
+		super();
+	}
+
+	public UserVo(long id, String no, String name, String email, String openId, String icivetId, String phone,
+			String ext, String avatarUrl, int status, Date createOn, long companyId, String companyName) {
+		super();
+		this.id = id;
+		this.no = no;
+		this.name = name;
+		this.email = email;
+		this.openId = openId;
+		this.icivetId = icivetId;
+		this.phone = phone;
+		this.ext = ext;
+		this.avatarUrl = avatarUrl;
+		this.status = status;
+		this.createOn = createOn;
+		this.companyId = companyId;
+		this.companyName = companyName;
+	}
 
 	public long getId() {
 		return id;
@@ -139,5 +155,4 @@ public class UserDetailDto {
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
 	}
-	
 }

@@ -24,7 +24,7 @@ public interface MenuRepository extends JpaRepository<MenuEntity, Long> {
 
 	@Query(value = "select new com.foxconn.iot.entity.MenuRelationVo(a.id, a.name, a.title, a.details, a.icon, "
 			+ "a.url, a.index, a.createOn, a.status, b.ancestor, b.depth)"
-			+ "from MenuEntity a left join MenuRelationEntity b on a.id=b.descendant order by b.depth, a.id asc")
+			+ "from MenuEntity a left join MenuRelationEntity b on a.id=b.descendant order by b.depth, a.index asc")
 	List<MenuRelationVo> queryDescendants();
 
 	@Query(value = "select new com.foxconn.iot.entity.MenuRelationVo(a.id, a.name, a.title, a.details, a.icon, "

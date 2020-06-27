@@ -18,6 +18,7 @@ import com.foxconn.iot.dto.UserDto;
 import com.foxconn.iot.entity.CompanyEntity;
 import com.foxconn.iot.entity.RoleEntity;
 import com.foxconn.iot.entity.UserEntity;
+import com.foxconn.iot.entity.UserVo;
 import com.foxconn.iot.exception.BizException;
 import com.foxconn.iot.repository.CompanyRelationRepository;
 import com.foxconn.iot.repository.CompanyRepository;
@@ -174,34 +175,26 @@ public class UserServiceImpl implements UserService {
 		userRepository.deleteById(id);
 	}
 	
-	@Override
-	public Page<UserDetailDto> findByStatus(int status, Pageable pageable) {
-		Page<UserEntity> entities = userRepository.findByStatus(status, pageable);
-		if (entities.getTotalElements() > 0) {
-			List<UserDetailDto> dtos = new ArrayList<>();
-			for (UserEntity entity : entities.getContent()) {
-				UserDetailDto dto = new UserDetailDto();
-				BeanUtils.copyProperties(entity, dto);
-				dtos.add(dto);
-			}
-			return new PageImpl<>(dtos, pageable, entities.getTotalElements());
+	private Page<UserDetailDto> generate(Pageable pageable, Page<UserVo> vos) {
+		List<UserDetailDto> dtos = new ArrayList<>();
+		for (UserVo vo : vos.getContent()) {
+			UserDetailDto dto = new UserDetailDto();
+			BeanUtils.copyProperties(vo, dto);
+			dtos.add(dto);
 		}
-		return null;
+		return new PageImpl<>(dtos, pageable, vos.getTotalElements());
 	}
-
+	
 	@Override
-	public Page<UserDetailDto> queryByCompanyAndStatus(long companyid, int status, Pageable pageable) {
-		Page<UserEntity> entities = userRepository.queryByCompanyIdAndStatus(companyid, status, pageable);
-		if (entities.getTotalElements() > 0) {
-			List<UserDetailDto> dtos = new ArrayList<>();
-			for (UserEntity entity : entities.getContent()) {
-				UserDetailDto dto = new UserDetailDto();
-				BeanUtils.copyProperties(entity, dto);
-				dtos.add(dto);
-			}
-			return new PageImpl<>(dtos, pageable, entities.getTotalElements());
-		}
-		return null;
+	public Page<UserDetailDto> query(Pageable pageable) {
+		Page<UserVo> vos = userRepository.query(pageable);
+		return generate(pageable, vos);
+	}
+	
+	@Override
+	public Page<UserDetailDto> query(long companyid,  Pageable pageable) {
+		Page<UserVo> vos = userRepository.queryByCompanyId(companyid, pageable);
+		return generate(pageable, vos);
 	}
 
 	@Override

@@ -13,47 +13,47 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 public class ButtonDto {
 
-	public interface ButtonBasic {
+	public interface Basic {
 	}
 
-	public interface ButtonCreate extends ButtonBasic {
+	public interface Create extends Basic {
 	}
 
-	public interface ButtonSave extends ButtonCreate {
+	public interface Save extends Create {
 	}
 
 	@JsonFormat(shape = Shape.STRING)
-	@JsonView(ButtonSave.class)
+	@JsonView(Save.class)
 	private long id;
 
-	@NotBlank(message = "菜單名稱不能為空")
-	@JsonView(ButtonBasic.class)
+	@NotBlank(message = "名稱不能為空")
+	@JsonView(Basic.class)
 	private String name;
 
 	@NotBlank(message = "標題不能為空")
-	@JsonView(ButtonSave.class)
+	@JsonView(Basic.class)
 	private String title;
 
-	@JsonView(ButtonBasic.class)
+	@JsonView(Basic.class)
 	private String details;
 
-	@JsonView(ButtonBasic.class)
+	@JsonView(Basic.class)
 	private String icon;
 
-	@JsonView(ButtonBasic.class)
+	@JsonView(Basic.class)
 	private String url;
 
-	@JsonView(ButtonBasic.class)
+	@JsonView(Basic.class)
 	private String method;
 
 	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	@JsonView(ButtonBasic.class)
+	@JsonView(Basic.class)
 	private Date createOn;
 
-	@JsonView(ButtonBasic.class)
+	@JsonView(Basic.class)
 	private int status;
 
-	@JsonView(ButtonBasic.class)
+	@JsonView(Basic.class)
 	@JsonInclude(value = Include.NON_NULL)
 	private String[] ancestorIds;
 

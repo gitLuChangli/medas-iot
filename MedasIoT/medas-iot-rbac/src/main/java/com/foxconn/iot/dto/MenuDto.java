@@ -14,44 +14,44 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class MenuDto {
 
-	public interface MenuBasic {}
+	public interface Basic {}
 	
-	public interface MenuCreate extends MenuBasic {}
+	public interface Create extends Basic {}
 	
-	public interface MenuSave extends MenuCreate {}
+	public interface Save extends Create {}
 	
-	@JsonView(MenuSave.class)
+	@JsonView(Save.class)
 	@JsonFormat(shape = Shape.STRING)
 	private long id;
 
 	@NotBlank(message = "菜單名稱不能為空")
-	@JsonView(MenuBasic.class)
+	@JsonView(Basic.class)
 	private String name;
 
 	@NotBlank(message = "菜單標題不能為空")
-	@JsonView(MenuBasic.class)
+	@JsonView(Basic.class)
 	private String title;
 	
-	@JsonView(MenuBasic.class)
+	@JsonView(Basic.class)
 	private String details;
 
-	@JsonView(MenuBasic.class)
+	@JsonView(Basic.class)
 	private String icon;
 
-	@JsonView(MenuBasic.class)
+	@JsonView(Basic.class)
 	private String url;
 
 	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	@JsonView(MenuBasic.class)
+	@JsonView(Basic.class)
 	private Date createOn;
 
-	@JsonView(MenuBasic.class)
+	@JsonView(Basic.class)
 	private int status;
 	
-	@JsonView(MenuBasic.class)
+	@JsonView(Basic.class)
 	private int index;
 
-	@JsonView(MenuCreate.class)
+	@JsonView(Create.class)
 	@JsonInclude(value = Include.NON_NULL)
 	@JsonDeserialize(as = String[].class)
 	private String[] ancestorIds;

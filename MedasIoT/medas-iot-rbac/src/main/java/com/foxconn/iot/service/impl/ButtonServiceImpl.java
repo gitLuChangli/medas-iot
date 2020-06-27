@@ -161,6 +161,7 @@ public class ButtonServiceImpl implements ButtonService {
 	@Transactional
 	public void deleteById(long id) {
 		buttonRepository.deleteById(id);
+		buttonRelationRepository.deleteByAncestor(id);
 	}
 
 	private List<ButtonDto> sort(List<ButtonRelationVo> brs, boolean valid) {

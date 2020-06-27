@@ -10,17 +10,20 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.foxconn.iot.entity.UserEntity;
+import com.foxconn.iot.entity.UserVo;
 
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
 	UserEntity findById(long id);
 	
-	Page<UserEntity> findByStatus(int status, Pageable pageable);
-
 	UserEntity findByNo(String no);
-
-	@Query(value = "select a from UserEntity a inner join CompanyRelationEntity b on a.company.id=b.descendant where b.ancestor=:companyid and a.status=:status")
-	Page<UserEntity> queryByCompanyIdAndStatus(@Param("companyid") long companyid, @Param("status") int status, Pageable pageble);
+	
+	@Query(value = "select new com.foxconn.iot.entity.UserVo(a.id, a.no, a.name, a.email, a.openId, a.icivetId, a.phone, a.ext, a.avatarUrl, a.status, a.createOn, a.company.id, a.company.name) from UserEntity a")
+	Page<UserVo> query(Pageable pageable);
+	
+	@Query(value = "select new com.foxconn.iot.entity.UserVo(a.id, a.no, a.name, a.email, a.openId, a.icivetId, a.phone, a.ext, a.avatarUrl, a.status, a.createOn, a.company.id, a.company.name) "
+			+ "from UserEntity a where a.company.id in (select b.descendant from CompanyRelationEntity b where b.ancestor=:companyid)")
+	Page<UserVo> queryByCompanyId(@Param("companyid") long companyid, Pageable pageble);
 
 	@Modifying
 	@Query(value = "update UserEntity a set a.status=:status where a.id=:id")

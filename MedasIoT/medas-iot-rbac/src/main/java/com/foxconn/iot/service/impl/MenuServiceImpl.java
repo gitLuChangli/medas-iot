@@ -158,6 +158,7 @@ public class MenuServiceImpl implements MenuService {
 	@Transactional
 	public void deleteById(long id) {
 		menuRepository.deleteById(id);
+		menuRelationRepository.deleteByAncestor(id);
 	}
 
 	private List<MenuDto> sort(List<MenuRelationVo> mrs, boolean valid) {

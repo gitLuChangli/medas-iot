@@ -31,7 +31,7 @@ public class MenuController {
 
 	@PostMapping(value = "/")
 	@CommonResponse
-	public void create(@Valid @JsonView(MenuDto.MenuCreate.class) @RequestBody MenuDto menu, BindingResult result) {
+	public void create(@Valid @JsonView(MenuDto.Create.class) @RequestBody MenuDto menu, BindingResult result) {
 		menuService.create(menu);
 	}
 
@@ -43,7 +43,7 @@ public class MenuController {
 
 	@PutMapping(value = "/")
 	@CommonResponse
-	public void update(@Valid @JsonView(MenuDto.MenuSave.class) @RequestBody MenuDto menu, BindingResult result) {
+	public void update(@Valid @JsonView(MenuDto.Save.class) @RequestBody MenuDto menu, BindingResult result) {
 		menuService.save(menu);
 	}
 

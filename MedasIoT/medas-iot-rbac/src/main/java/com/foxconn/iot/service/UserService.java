@@ -22,9 +22,9 @@ public interface UserService {
 	
 	void deleteById(long id);
 	
-	Page<UserDetailDto> findByStatus(int status, Pageable pageable);
+	Page<UserDetailDto> query(Pageable pageable);
 	
-	Page<UserDetailDto> queryByCompanyAndStatus(long companyid, int status, Pageable pageable);
+	Page<UserDetailDto> query(long companyid, Pageable pageable);
 	
 	void updatePwdById(String pwd, long id);
 	

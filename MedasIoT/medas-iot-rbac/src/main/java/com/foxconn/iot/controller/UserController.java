@@ -50,6 +50,7 @@ public class UserController {
 	 * 修改用户
 	 * 
 	 * 只需要传入工号，姓名、邮箱、部门、角色不传值不修改，其他参数传空直接设为空
+	 * 
 	 * @param user
 	 * @param result
 	 */
@@ -72,51 +73,50 @@ public class UserController {
 	}
 
 	/**
-	 * 根据状态查询用户
-	 * @param status
+	 * 查询用户
+	 * 
 	 * @param pageable
 	 * @return
 	 */
-	@GetMapping(value="/status/{status:^[01]$}")
+	@GetMapping(value = "/")
 	@CommonResponse
-	public Page<UserDetailDto> query(@PathVariable(value = "status") int status, @PageableDefault Pageable pageable) {
-		return userService.findByStatus(status, pageable);
+	public Page<UserDetailDto> query(@PageableDefault Pageable pageable) {
+		return userService.query(pageable);
 	}
-	
+
 	/**
-	 * 根据部门及状态编号查询用户
+	 * 根据部门所属用户
 	 * 
 	 * @param companyid
-	 * @param status
 	 * @param pageable
 	 * @return
 	 */
-	@GetMapping(value = "/company/{id:\\d+}/{status:^[01]$}")
+	@GetMapping(value = "/company/{id:\\d+}")
 	@CommonResponse
-	public Page<UserDetailDto> queryByCommpany(@PathVariable(value = "id") long companyid, @PathVariable(value = "status") int status,
+	public Page<UserDetailDto> queryByCommpany(@PathVariable(value = "id") long companyid,
 			@PageableDefault(size = 15) Pageable pageable) {
-		return userService.queryByCompanyAndStatus(companyid, status, pageable);
+		return userService.query(companyid, pageable);
 	}
-	
+
 	@PutMapping(value = "/change_pwd")
 	@CommonResponse
 	public void changePwd(HttpSession session, @RequestParam(value = "pwd", required = true) String newpwd) {
 		long id = (long) session.getAttribute("user_id");
 		userService.updatePwdById(newpwd, id);
 	}
-	
+
 	@PutMapping(value = "/change_pwd/{id:\\d+}")
 	@CommonResponse
 	public void adminChangePwd(@PathVariable(value = "id") long id, @RequestParam(value = "pwd") String pwd) {
 		userService.updatePwdById(pwd, id);
 	}
-	
+
 	@PutMapping(value = "/reset_pwd/{id:\\d+}")
 	@CommonResponse
 	public void adminResetPwdById(@PathVariable(value = "id") long id) {
 		userService.updatePwdById("password1!", id);
 	}
-	
+
 	/**
 	 * 查看用户所属部门之间的关系
 	 * 
