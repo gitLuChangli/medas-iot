@@ -25,11 +25,11 @@ public class DeviceController {
 	private DeviceService deviceService;
 
 	@CommonResponse
-	@GetMapping(value = "/by/model/{model}")
-	public Page<DeviceDto> queryByModel(HttpSession session, @PathVariable(value = "model") String model,
+	@GetMapping(value = "/by/type/{id:\\d+}")
+	public Page<DeviceDto> queryByModel(HttpSession session, @PathVariable(value = "id") long deviceType,
 			@PageableDefault Pageable pageable) {
 		long companyId = (long) session.getAttribute("company");
-		return deviceService.queryByModelAndCompany(model, companyId, pageable);
+		return deviceService.queryByDeviceTypeAndCompany(deviceType, companyId, pageable);
 	}
 
 	@CommonResponse

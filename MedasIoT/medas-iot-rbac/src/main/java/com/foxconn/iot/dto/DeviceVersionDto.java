@@ -23,7 +23,7 @@ public class DeviceVersionDto {
 	
 	private String details;
 	
-	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date createOn;
 	
 	@NotNull(message = "设备类型不能为空")

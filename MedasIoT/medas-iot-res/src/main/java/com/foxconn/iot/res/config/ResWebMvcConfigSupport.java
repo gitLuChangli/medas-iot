@@ -30,6 +30,7 @@ public class ResWebMvcConfigSupport extends WebMvcConfigurationSupport {
 	@Override
 	protected void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/img/device/**").addResourceLocations("file:" + uploadPath + "/img/device/");
+		registry.addResourceHandler("/app/**").addResourceLocations("file:" + uploadPath + "/app/");
 		System.out.println("file:" + uploadPath + "/img/device/");
 		System.out.println(workerId + "," + datacenterId);
 		Snowflaker.init(workerId, datacenterId);

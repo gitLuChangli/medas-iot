@@ -46,7 +46,7 @@ public class ButtonDto {
 	@JsonView(ButtonBasic.class)
 	private String method;
 
-	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@JsonView(ButtonBasic.class)
 	private Date createOn;
 

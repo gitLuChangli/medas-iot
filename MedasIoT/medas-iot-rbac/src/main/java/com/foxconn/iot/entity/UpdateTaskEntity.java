@@ -26,7 +26,7 @@ public class UpdateTaskEntity {
 	private String sn;
 	
 	@JoinColumn(name = "ver_id")
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private ApplicationVersionEntity version;
 	
 	@CreatedDate

@@ -46,7 +46,7 @@ public class ApplicationDto {
 	@JsonView(Basic.class)
 	private String details;
 
-	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@JsonView(Basic.class)
 	private Date createOn;
 

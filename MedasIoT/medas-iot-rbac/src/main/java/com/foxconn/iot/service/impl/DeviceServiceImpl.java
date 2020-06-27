@@ -114,8 +114,8 @@ public class DeviceServiceImpl implements DeviceService {
 	}
 
 	@Override
-	public Page<DeviceDto> queryByModel(String model, Pageable pageable) {
-		Page<Object[]> objects = deviceRepository.queryByModel(model, pageable);
+	public Page<DeviceDto> queryByDeviceType(long deviceType, Pageable pageable) {
+		Page<Object[]> objects = deviceRepository.queryByDeviceType(deviceType, pageable);
 		List<DeviceDto> dtos = new ArrayList<>();
 		for (Object[] objs : objects.getContent()) {
 			DeviceDto dto = new DeviceDto();
@@ -126,15 +126,15 @@ public class DeviceServiceImpl implements DeviceService {
 	}
 	
 	@Override
-	public Page<DeviceDto> queryByModelAndCompany(String model, long companyId, Pageable pageable) {
-		Page<DeviceEntity> entities = deviceRepository.queryByModelAndCompany(model, companyId, pageable);
+	public Page<DeviceDto> queryByDeviceTypeAndCompany(long deviceType, long companyId, Pageable pageable) {
+		Page<Object[]> objects = deviceRepository.queryByDeviceTypeAndCompany(deviceType, companyId, pageable);
 		List<DeviceDto> dtos = new ArrayList<>();
-		for (DeviceEntity entity : entities.getContent()) {
+		for (Object[] objs : objects.getContent()) {
 			DeviceDto dto = new DeviceDto();
-			BeanUtils.copyProperties(entity, dto);
+			dto.setData(objs);
 			dtos.add(dto);
 		}
-		return new PageImpl<>(dtos, pageable, entities.getTotalElements());
+		return new PageImpl<>(dtos, pageable, objects.getTotalElements());
 	}
 
 	@Override
@@ -223,5 +223,17 @@ public class DeviceServiceImpl implements DeviceService {
 	@Transactional
 	public void setParameter(long id, String parameter) {
 		deviceRepository.updateParameterById(id, parameter);
+	}
+	
+	@Override
+	public Page<DeviceDto> queryByApplication(long appid, Pageable pageable) {
+		Page<DeviceEntity> entities = deviceRepository.queryByApplication(appid, pageable);
+		List<DeviceDto> dtos = new ArrayList<>();
+		for (DeviceEntity entity : entities.getContent()) {
+			DeviceDto dto = new DeviceDto();
+			BeanUtils.copyProperties(entity, dto);
+			dtos.add(dto);
+		}
+		return new PageImpl<DeviceDto>(dtos, pageable, entities.getTotalElements());
 	}
 }

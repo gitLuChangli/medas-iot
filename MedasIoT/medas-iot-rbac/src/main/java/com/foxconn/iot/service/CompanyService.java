@@ -21,4 +21,6 @@ public interface CompanyService {
 	List<CompanyDto> queryDescendants();
 	
 	List<CompanyDto> queryDescendantsByAncestor(long ancestor);
+	
+	List<String> queryAncestors(long id);
 }

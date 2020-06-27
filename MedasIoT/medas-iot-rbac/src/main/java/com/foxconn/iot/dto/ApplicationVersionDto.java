@@ -6,6 +6,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -33,7 +35,7 @@ public class ApplicationVersionDto {
 	private String details;
 	
 	@JsonView(Basic.class)
-	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date createOn;
 	
 	@JsonView(Basic.class)
@@ -42,6 +44,7 @@ public class ApplicationVersionDto {
 	@JsonView(Basic.class)
 	@JsonFormat(shape = Shape.STRING)
 	@NotNull(message = "應用編號不能為空")
+	@JsonInclude(value = Include.NON_NULL)
 	private Long applicationId;
 
 	public long getId() {

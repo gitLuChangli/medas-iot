@@ -41,7 +41,7 @@ public class MenuDto {
 	@JsonView(MenuBasic.class)
 	private String url;
 
-	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@JsonView(MenuBasic.class)
 	private Date createOn;
 

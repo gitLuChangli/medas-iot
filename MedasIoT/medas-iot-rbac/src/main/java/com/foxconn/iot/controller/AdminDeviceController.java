@@ -41,10 +41,10 @@ public class AdminDeviceController {
 	}
 
 	@CommonResponse
-	@GetMapping(value = "/by/model/{model}")
-	public Page<DeviceDto> queryByModel(@PathVariable(value = "model") String model,
+	@GetMapping(value = "/by/type/{id:\\d+}")
+	public Page<DeviceDto> queryByModel(@PathVariable(value = "id") long deviceType,
 			@PageableDefault Pageable pageable) {
-		return deviceService.queryByModel(model, pageable);
+		return deviceService.queryByDeviceType(deviceType, pageable);
 	}
 
 	@CommonResponse
@@ -93,5 +93,11 @@ public class AdminDeviceController {
 	@PutMapping(value = "/set/app/{id:\\d+}/{app:\\d+}")
 	public void setApplication(@PathVariable(value = "id") long id, @PathVariable(value = "app") long appid) {
 		deviceService.setApplication(id, appid);
+	}
+	
+	@CommonResponse
+	@GetMapping(value = "/by/app/{id:\\d+}")
+	public Page<DeviceDto> queryByApplication(@PathVariable("id") long appid, @PageableDefault Pageable pageable) {
+		return deviceService.queryByApplication(appid, pageable);
 	}
 }

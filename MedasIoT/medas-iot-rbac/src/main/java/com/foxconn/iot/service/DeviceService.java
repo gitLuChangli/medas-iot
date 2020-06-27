@@ -19,9 +19,9 @@ public interface DeviceService {
 	
 	Page<DeviceDto> qeuryByModelOrSnAndCompany(String mos, long companyId, Pageable pageable);
 	
-	Page<DeviceDto> queryByModel(String model, Pageable pageable);
+	Page<DeviceDto> queryByDeviceType(long deviceType, Pageable pageable);
 	
-	Page<DeviceDto> queryByModelAndCompany(String model, long companyId, Pageable pageable);
+	Page<DeviceDto> queryByDeviceTypeAndCompany(long deviceType, long companyId, Pageable pageable);
 	
 	Page<DeviceDto> queryByDeviceVersion(long versionId, Pageable pageable);
 	
@@ -40,5 +40,7 @@ public interface DeviceService {
 	void setApplication(long id, long appid);
 	
 	void setParameter(long id, String parameter);
+	
+	Page<DeviceDto> queryByApplication(long appid, Pageable pageable);
 	
 }

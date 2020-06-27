@@ -35,7 +35,7 @@ public class PermissionDto {
 	@JsonView(PermissionSave.class)
 	private int status;
 	
-	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date createOn;
 	
 	@JsonView(PermissionCreate.class)

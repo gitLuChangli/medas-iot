@@ -74,14 +74,25 @@ public class CompanyController {
 	}
 	
 	/**
-	 * 查询父节点下属部门
+	 * 查询该节点下属部门
 	 * 
 	 * @param id
 	 * @return
 	 */
 	@CommonResponse
-	@GetMapping(value = "/ancestor/{id:\\d+}")
+	@GetMapping(value = "/descendants/{id:\\d+}")
 	public List<CompanyDto> queryDescendantsByAncestor(@PathVariable(value = "id") long id) {
 		return companyService.queryDescendantsByAncestor(id);
+	}
+	
+	/**
+	 * 查看该部门的层级关系（方便前端显示部门层级）
+	 * @param id
+	 * @return
+	 */
+	@CommonResponse
+	@GetMapping(value = "/ancestors/{id:\\d+}")
+	public List<String> queryAncestorIds(@PathVariable(value = "id") long id) {
+		return companyService.queryAncestors(id);
 	}
 }

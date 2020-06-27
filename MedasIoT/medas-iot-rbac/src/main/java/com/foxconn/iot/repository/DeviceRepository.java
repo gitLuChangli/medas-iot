@@ -23,10 +23,6 @@ public interface DeviceRepository extends JpaRepository<DeviceEntity, Long> {
 	Page<DeviceEntity> queryByModelOrSnAndCompany(@Param("mos") String mos, @Param("company") long companyId,
 			Pageable pageable);
 
-	@Query(value = "select a from DeviceEntity a where a.model=:model and a.company.id=:company order by a.model, a.sn")
-	Page<DeviceEntity> queryByModelAndCompany(@Param("model") String model, @Param("company") long companyId,
-			Pageable pageable);
-
 	@Query(value = "select a from DeviceEntity a where a.version.id=:version order by a.model, a.sn")
 	Page<DeviceEntity> queryByDeviceVersion(@Param("version") long versionId, Pageable pageable);
 
@@ -78,7 +74,17 @@ public interface DeviceRepository extends JpaRepository<DeviceEntity, Long> {
 			+ "a.company_id, b.name as company, a.ver_id, c.ver, a.app_id, d.name as app "
 			+ "from tb_dev a left join tb_company b on a.company_id=b.id "
 			+ "left join tb_dev_version c on a.ver_id=c.id "
-			+ "left join tb_app d on a.app_id = d.id where a.model=:model", nativeQuery = true, countQuery = "select count(*) from tb_dev where model=:model")
-	Page<Object[]> queryByModel(@Param("model") String model, Pageable pageable);
+			+ "left join tb_app d on a.app_id = d.id where c.dev_type_id=:dev_type_id", nativeQuery = true, countQuery = "select count(*) from tb_dev a left join tb_dev_version b on a.ver_id=b.id where b.dev_type_id=:dev_type_id")
+	Page<Object[]> queryByDeviceType(@Param("dev_type_id") long deviceType, Pageable pageable);
+	
+	@Query(value = "select a.id, a.model, a.name, a.sn, a.details, a.param, a.create_on, a.status, a.firm_ver, a.soft_ver, "
+			+ "a.company_id, b.name as company, a.ver_id, c.ver, a.app_id, d.name as app "
+			+ "from tb_dev a left join tb_company b on a.company_id=b.id "
+			+ "left join tb_dev_version c on a.ver_id=c.id "
+			+ "left join tb_app d on a.app_id = d.id where c.dev_type_id=:dev_type_id and a.company_id=:company_id", nativeQuery = true, countQuery = "select count(*) from tb_dev a left join tb_dev_version b on a.ver_id=b.id where b.dev_type_id=:dev_type_id and a.company_id=:company_id")
+	Page<Object[]> queryByDeviceTypeAndCompany(@Param("dev_type_id") long deviceType, @Param("company_id") long companyId, Pageable pageable);
+	
+	@Query(value = "select a from DeviceEntity a where a.application.id=:appid")
+	Page<DeviceEntity> queryByApplication(@Param("appid") long appid, Pageable pageable);
 
 }

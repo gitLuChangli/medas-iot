@@ -277,4 +277,14 @@ public class CompanyServiceImpl implements CompanyService {
 		List<CompanyRelationVo> crs = companyRepository.queryDescendantsByAncestor(ancestor);
 		return sort(crs, true);
 	}
+	
+	@Override
+	public List<String> queryAncestors(long descendant) {
+		List<Long> ids = companyRelationRepository.queryAncestorByDescendant(descendant);
+		List<String> ids_ = new ArrayList<>();
+		for (Long id : ids) {
+			ids_.add(id + "");
+		}
+		return ids_;
+	}
 }

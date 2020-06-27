@@ -1,47 +1,29 @@
-package com.foxconn.iot.entity;
+package com.foxconn.iot.dto;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-@Entity
-@Table(name = "tb_update_log")
-@EntityListeners(AuditingEntityListener.class)
-public class UpdateRecordEntity {
+public class UpdateRecordDto {
 	
-	@Id
+	@JsonFormat(shape = Shape.STRING)
 	private long id;
 	
-	@Column(name = "sn", length = 45, nullable = false)
 	private String sn;
 	
-	@Column(name = "app_id", length = 45)
 	private String appId;
 	
-	@Column(name = "app_name", length = 90)
 	private String applicationName;
 	
-	@Column(name = "ver_id")
+	@JsonFormat(shape = Shape.STRING)
 	private long versionId;
 	
-	@Column(name = "app_ver", length = 45, nullable = false)
 	private String version;
 	
-	@Column(name = "link", length = 45)
 	private String link;
 	
-	@Column(name="create_on")
-	@CreatedDate
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date createOn;
 
 	public long getId() {
@@ -51,7 +33,7 @@ public class UpdateRecordEntity {
 	public void setId(long id) {
 		this.id = id;
 	}
-
+	
 	public String getSn() {
 		return sn;
 	}
@@ -67,7 +49,7 @@ public class UpdateRecordEntity {
 	public void setAppId(String appId) {
 		this.appId = appId;
 	}
-
+	
 	public String getApplicationName() {
 		return applicationName;
 	}
