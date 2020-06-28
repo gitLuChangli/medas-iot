@@ -1,5 +1,6 @@
 package com.foxconn.iot.service.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -251,4 +252,25 @@ public class MenuServiceImpl implements MenuService {
 		return menuRelationRepository.queryAncestorsByDescendant(descendant);
 	}
 
+	@Override
+	public List<MenuDto> queryDescendantsByRoleIds(Long[] roleIds) {
+		List<Object> objs = menuRepository.queryByRoleIds(roleIds);
+		List<Long> ancestors = new ArrayList<>();
+		for (Object obj : objs) {
+			ancestors.add(new BigInteger(obj.toString()).longValue());
+		}
+		List<MenuRelationVo> relations = menuRepository.queryDescendantsByAncestors(ancestors);
+		return sort(relations, true);
+	}
+	
+	@Override
+	public List<MenuDto> queryDescendantsByUserId(long userid) {
+		List<Object> objs = menuRepository.queryByUserId(userid);
+		List<Long> ancestors = new ArrayList<>();
+		for (Object obj : objs) {
+			ancestors.add(new BigInteger(obj.toString()).longValue());
+		}
+		List<MenuRelationVo> relations = menuRepository.queryDescendantsByAncestors(ancestors);
+		return sort(relations, true);
+	}
 }

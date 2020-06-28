@@ -1,6 +1,8 @@
 package com.foxconn.iot.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -15,9 +17,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.foxconn.iot.dto.ButtonDto;
+import com.foxconn.iot.dto.MenuDto;
 import com.foxconn.iot.dto.PermissionDto;
 import com.foxconn.iot.dto.RoleDto;
 import com.foxconn.iot.entity.RolePermissionVo;
+import com.foxconn.iot.service.ButtonService;
+import com.foxconn.iot.service.MenuService;
 import com.foxconn.iot.service.RoleService;
 import com.foxconn.iot.support.CommonResponse;
 
@@ -27,6 +33,10 @@ public class RoleController {
 
 	@Autowired
 	private RoleService roleService;
+	@Autowired
+	private MenuService menuService;
+	@Autowired
+	private ButtonService buttonService;
 
 	@PostMapping(value = "/")
 	@CommonResponse
@@ -68,5 +78,17 @@ public class RoleController {
 	@CommonResponse
 	public List<PermissionDto> queryPermissions(@PathVariable(value = "id") long id) {
 		return roleService.queryPermissionsById(id);
+	}
+	
+	@PostMapping(value = "/resource")
+	@CommonResponse
+	public Map<String, Object> queryResource(@RequestBody Long[] roleIds) {
+		if (roleIds == null || roleIds.length == 0) return null;
+		Map<String, Object> result = new HashMap<>();
+		List<MenuDto> menus = menuService.queryDescendantsByRoleIds(roleIds);
+		result.put("menus", menus);
+		List<ButtonDto> buttons = buttonService.queryDescendantsByRoleIds(roleIds);
+		result.put("buttons", buttons);
+		return result;
 	}
 }

@@ -3,60 +3,86 @@ package com.foxconn.iot.dto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class UserDto {
-
-	public interface UserSave {
+	
+	public interface Basic {
 	}
 
-	public interface UserCreate extends UserSave {
+	public interface Create extends Basic {
+		
 	}
-
-	@JsonView(UserSave.class)
+	
+	public interface Save extends Basic {
+		
+	}
+	
+	@JsonView(Save.class)
+	@JsonFormat(shape = Shape.STRING)
+	@NotNull(message = "用戶編號不能爲空")
+	private long id;
+	
+	@JsonView(Basic.class)
 	@NotBlank(message = "工號不能為空")
 	private String no;
 
-	@JsonView(UserSave.class)
+	@JsonView(Basic.class)
 	@NotBlank(message = "姓名不能為空")
 	private String name;
 
 	/**
 	 * 如果传入的密码为空时，设置成默认password1!
 	 */
-	@JsonView(UserCreate.class)
+	@JsonView(Create.class)
 	private String pwd;
 
-	@JsonView(UserSave.class)
+	@JsonView(Basic.class)
 	@NotBlank(message = "邮箱地址不能为空")
 	private String email;
 
-	@JsonView(UserSave.class)
+	@JsonView(Basic.class)
 	private String openId;
 
-	@JsonView(UserSave.class)
+	@JsonView(Basic.class)
 	private String icivetId;
 
-	@JsonView(UserSave.class)
+	@JsonView(Basic.class)
 	private String phone;
 
-	@JsonView(UserSave.class)
+	@JsonView(Basic.class)
 	private String ext;
 
-	@JsonView(UserSave.class)
+	@JsonView(Basic.class)
 	private String avatarUrl;
 
-	@JsonView(UserSave.class)
+	@JsonView(Basic.class)
 	private int status;
 
-	@JsonView(UserCreate.class)
+	@JsonView(Basic.class)
 	@NotNull(message = "部門關係不能為空")
-	@JsonDeserialize(as = String[].class)
-	private String[] companyIds;
+	@JsonInclude(value = Include.NON_NULL)
+	@JsonDeserialize(as = Long[].class)
+	private Long[] companyIds;
 
-	@JsonView(UserSave.class)
-	private String roles;
+	@JsonView(Basic.class)
+	@JsonInclude(value = Include.NON_NULL)
+	@JsonSerialize(as = Long[].class)
+	private Long[] roles;
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
 
 	public String getNo() {
 		return no;
@@ -138,20 +164,19 @@ public class UserDto {
 		this.status = status;
 	}
 
-	public String[] getCompanyIds() {
+	public Long[] getCompanyIds() {
 		return companyIds;
 	}
 
-	public void setCompanyIds(String[] companyIds) {
+	public void setCompanyIds(Long[] companyIds) {
 		this.companyIds = companyIds;
 	}
 
-	public String getRoles() {
+	public Long[] getRoles() {
 		return roles;
 	}
 
-	public void setRoles(String roles) {
+	public void setRoles(Long[] roles) {
 		this.roles = roles;
 	}
-
 }

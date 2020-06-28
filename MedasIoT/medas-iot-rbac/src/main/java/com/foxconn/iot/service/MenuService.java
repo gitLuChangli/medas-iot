@@ -21,4 +21,8 @@ public interface MenuService {
 	List<MenuDto> queryDescendantsByAncestor(long ancestor);
 	
 	List<Long> queryAncestorsByDescendant(long descendant);
+	
+	List<MenuDto> queryDescendantsByRoleIds(Long[] roleIds);
+	
+	List<MenuDto> queryDescendantsByUserId(long userid);
 }

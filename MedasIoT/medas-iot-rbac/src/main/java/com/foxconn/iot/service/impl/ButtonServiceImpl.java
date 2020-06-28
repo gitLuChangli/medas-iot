@@ -1,5 +1,6 @@
 package com.foxconn.iot.service.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -252,5 +253,27 @@ public class ButtonServiceImpl implements ButtonService {
 	@Override
 	public List<Long> queryAncestorsByDescendant(long descendant) {
 		return buttonRelationRepository.queryAncestorsByDescendant(descendant);
+	}
+
+	@Override
+	public List<ButtonDto> queryDescendantsByRoleIds(Long[] roleIds) {
+		List<Object> objs = buttonRepository.queryByRoleIds(roleIds);
+		List<Long> ancestors = new ArrayList<>();
+		for (Object obj : objs) {
+			ancestors.add(new BigInteger(obj.toString()).longValue());
+		}
+		List<ButtonRelationVo> relations = buttonRepository.queryDescendantsByAncestors(ancestors);
+		return sort(relations, true);
+	}
+
+	@Override
+	public List<ButtonDto> queryDescendantsByUserId(long userid) {
+		List<Object> objs = buttonRepository.queryByUserId(userid);
+		List<Long> ancestors = new ArrayList<>();
+		for (Object obj : objs) {
+			ancestors.add(new BigInteger(obj.toString()).longValue());
+		}
+		List<ButtonRelationVo> relations = buttonRepository.queryDescendantsByAncestors(ancestors);
+		return sort(relations, true);
 	}
 }

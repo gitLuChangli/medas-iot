@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.foxconn.iot.dto.UserDto;
+import com.foxconn.iot.dto.UserRolesDto;
 import com.foxconn.iot.dto.UserDetailDto;
 
 public interface UserService {
@@ -29,4 +30,6 @@ public interface UserService {
 	void updatePwdById(String pwd, long id);
 	
 	List<Long> queryCompanyRelations(long userid);
+	
+	void setRoles(UserRolesDto user);
 }

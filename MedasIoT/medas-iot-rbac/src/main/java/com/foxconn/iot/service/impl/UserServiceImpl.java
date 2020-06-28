@@ -1,6 +1,7 @@
 package com.foxconn.iot.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.foxconn.iot.dto.UserDetailDto;
 import com.foxconn.iot.dto.UserDto;
+import com.foxconn.iot.dto.UserRolesDto;
 import com.foxconn.iot.entity.CompanyEntity;
 import com.foxconn.iot.entity.RoleEntity;
 import com.foxconn.iot.entity.UserEntity;
@@ -47,12 +49,12 @@ public class UserServiceImpl implements UserService {
 		UserEntity entity = new UserEntity();
 		BeanUtils.copyProperties(user, entity);
 		
-		String descendant = user.getCompanyIds()[user.getCompanyIds().length - 1];
-		if (!StringUtils.isStrictlyNumeric(descendant)) {
-			throw new BizException("Invalid company relations");
+		if (user.getCompanyIds() == null) {
+			throw new BizException("Company null");
 		}
-		long descendant_ = Long.parseLong(descendant);
-		List<Long> ancestors_ = companyRelationRepository.queryAncestorByDescendant(descendant_);
+		
+		long descendant = user.getCompanyIds()[user.getCompanyIds().length - 1];
+		List<Long> ancestors_ = companyRelationRepository.queryAncestorByDescendant(descendant);
 		int length = ancestors_.size();
 		if (length == 0) {
 			throw new BizException("Invalid company relations");		
@@ -62,19 +64,14 @@ public class UserServiceImpl implements UserService {
 				throw new BizException("Invalid company relations");
 			}
 		}				
-		CompanyEntity company = companyRepository.findById(descendant_);
+		CompanyEntity company = companyRepository.findById(descendant);
 		if (company == null) {
 			throw new BizException("Invalid company relations");
 		}
 		entity.setCompany(company);
-		if (!StringUtils.isNullOrEmpty(user.getRoles())) {
-			String[] items = user.getRoles().split(",");
-			List<Long> ids = new ArrayList<>();
-			for (String item : items) {
-				if (StringUtils.isStrictlyNumeric(item)) {
-					ids.add(Long.parseLong(item));
-				}
-			}
+		if (user.getRoles() != null) {
+			List<Long> ids = new ArrayList<>(user.getRoles().length);
+			Collections.addAll(ids, user.getRoles());
 			List<RoleEntity> roles = roleRepository.queryByIds(ids);
 			entity.setRoles(roles);
 		}
@@ -106,12 +103,8 @@ public class UserServiceImpl implements UserService {
 		entity.setStatus(user.getStatus());
 		
 		if (user.getCompanyIds() != null) {
-			String descendant = user.getCompanyIds()[user.getCompanyIds().length - 1];
-			if (!StringUtils.isStrictlyNumeric(descendant)) {
-				throw new BizException("Invalid company relations");
-			}
-			long descendant_ = Long.parseLong(descendant);
-			List<Long> ancestors_ = companyRelationRepository.queryAncestorByDescendant(descendant_);
+			long descendant = user.getCompanyIds()[user.getCompanyIds().length - 1];
+			List<Long> ancestors_ = companyRelationRepository.queryAncestorByDescendant(descendant);
 			int length = ancestors_.size();
 			if (length == 0) {
 				throw new BizException("Invalid company relations");		
@@ -121,20 +114,15 @@ public class UserServiceImpl implements UserService {
 					throw new BizException("Invalid company relations");
 				}
 			}				
-			CompanyEntity company = companyRepository.findById(descendant_);
+			CompanyEntity company = companyRepository.findById(descendant);
 			if (company == null) {
 				throw new BizException("Invalid company relations");
 			}
 			entity.setCompany(company);
 		}
-		if (!StringUtils.isNullOrEmpty(user.getRoles())) {
-			String[] items = user.getRoles().split(",");
-			List<Long> ids = new ArrayList<>();
-			for (String item : items) {
-				if (StringUtils.isStrictlyNumeric(item)) {
-					ids.add(Long.parseLong(item));
-				}
-			}
+		if (user.getRoles() != null) {
+			List<Long> ids = new ArrayList<>(user.getRoles().length);
+			Collections.addAll(ids, user.getRoles());
 			List<RoleEntity> roles = roleRepository.queryByIds(ids);
 			entity.setRoles(roles);
 		}
@@ -206,5 +194,23 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<Long> queryCompanyRelations(long userid) {
 		return userRepository.queryCompanyRelations(userid);
+	}
+
+	@Override
+	@Transactional
+	public void setRoles(UserRolesDto user) {
+		UserEntity entity = userRepository.findById(user.getId());
+		if (entity == null) {
+			throw new BizException("Invalid user");
+		}
+		if (user.getRoleIds() != null) {
+			List<Long> ids = new ArrayList<>(user.getRoleIds().length);
+			Collections.addAll(ids, user.getRoleIds());
+			List<RoleEntity> roles = roleRepository.queryByIds(ids);
+			entity.setRoles(roles);
+		} else {
+			entity.setRoles(null);
+		}
+		userRepository.save(entity);
 	}
 }

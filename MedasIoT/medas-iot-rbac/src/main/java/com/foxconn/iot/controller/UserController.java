@@ -1,7 +1,9 @@
 package com.foxconn.iot.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -22,8 +24,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.foxconn.iot.dto.ButtonDto;
+import com.foxconn.iot.dto.MenuDto;
 import com.foxconn.iot.dto.UserDetailDto;
 import com.foxconn.iot.dto.UserDto;
+import com.foxconn.iot.dto.UserRolesDto;
+import com.foxconn.iot.service.ButtonService;
+import com.foxconn.iot.service.MenuService;
 import com.foxconn.iot.service.UserService;
 import com.foxconn.iot.support.CommonResponse;
 
@@ -33,10 +40,14 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-
+	@Autowired
+	private MenuService menuService;
+	@Autowired
+	private ButtonService buttonService;
+	
 	@PostMapping(value = "/")
 	@CommonResponse
-	public void create(@Valid @JsonView(UserDto.UserCreate.class) @RequestBody UserDto user, BindingResult result) {
+	public void create(@Valid @JsonView(UserDto.Create.class) @RequestBody UserDto user, BindingResult result) {
 		userService.create(user);
 	}
 
@@ -132,5 +143,22 @@ public class UserController {
 			relations_.add(relation.toString());
 		}
 		return relations_;
+	}
+	
+	@PutMapping(value = "/set/role")
+	@CommonResponse
+	public void setRole(@Valid @RequestBody UserRolesDto user, BindingResult result) {
+		userService.setRoles(user);
+	}
+	
+	@GetMapping(value = "/resources/{id:\\d+}")
+	@CommonResponse
+	public Map<String, Object> queryResource(@PathVariable(value = "id") long userid) {
+		Map<String, Object> result = new HashMap<>();
+		List<MenuDto> menus = menuService.queryDescendantsByUserId(userid);
+		result.put("menus", menus);
+		List<ButtonDto> buttons = buttonService.queryDescendantsByUserId(userid);
+		result.put("buttons", buttons);
+		return result;
 	}
 }

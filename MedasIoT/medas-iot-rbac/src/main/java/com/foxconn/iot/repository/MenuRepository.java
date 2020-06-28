@@ -31,4 +31,15 @@ public interface MenuRepository extends JpaRepository<MenuEntity, Long> {
 			+ "a.url, a.index, a.createOn, a.status, b.ancestor, b.depth)"
 			+ "from MenuEntity a left join MenuRelationEntity b on a.id=b.descendant where a.id in (select b.descendant from b where b.ancestor=:ancestor) order by b.depth, a.id asc")
 	List<MenuRelationVo> queryDescendantsByAncestor(@Param("ancestor") long ancestor);
+	
+	@Query(value = "select new com.foxconn.iot.entity.MenuRelationVo(a.id, a.name, a.title, a.details, a.icon, "
+			+ "a.url, a.index, a.createOn, a.status, b.ancestor, b.depth)"
+			+ "from MenuEntity a left join MenuRelationEntity b on a.id=b.descendant where a.id in (:ancestors) order by b.depth, a.id asc")
+	List<MenuRelationVo> queryDescendantsByAncestors(@Param("ancestors") List<Long> ancestors);
+	
+	@Query(value = "select b.menu_id from tb_role_permission a left join tb_permission_menu b on a.permission_id = b.permission_id where a.role_id in (:roleIds)", nativeQuery = true)
+	List<Object> queryByRoleIds(@Param("roleIds") Long[] roleIds);
+	
+	@Query(value = "select b.menu_id from tb_role_permission a left join tb_permission_menu b on a.permission_id = b.permission_id where a.role_id in (select c.role_id from tb_user_role c where c.user_id=:userid)", nativeQuery = true)
+	List<Object> queryByUserId(@Param("userid") long userid);
 }
