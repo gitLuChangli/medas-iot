@@ -1,35 +1,30 @@
 package com.foxconn.iot.entity;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Table(name = "tb_menu", uniqueConstraints = { @UniqueConstraint(name = "uq_menu_name", columnNames = "name") })
+@Table(name = "tb_res", uniqueConstraints = { @UniqueConstraint(name = "uq_res_name", columnNames = "name") })
 @EntityListeners(AuditingEntityListener.class)
-public class MenuEntity {
+public class ResourceEntity {
 
 	@Id
 	private long id;
 
 	/**
-	 * 菜单名称
+	 * 资源名称
 	 */
 	@Column(name = "name", nullable = false, length = 45)
 	private String name;
 
 	/**
-	 * 菜单标题
+	 * 资源标题
 	 */
 	@Column(name = "title", nullable = false, length = 45)
 	private String title;
@@ -52,16 +47,29 @@ public class MenuEntity {
 	@Column(name = "url", length = 255)
 	private String url;
 
-	@CreatedDate
-	@Column(name = "create_on", updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date createOn;
-
+	/**
+	 * 访问方式
+	 */
+	@Column(name="method", length = 45)
+	private String method;
+	
+	/**
+	 * 顺序
+	 */
+	@Column(name = "idx")
+	private int index;
+	
+	/**
+	 * 状态
+	 */
 	@Column(name = "status")
 	private int status;
 	
-	@Column(name = "idx")
-	private int index;
+	/**
+	 * 资源类型，1：按钮，0：菜单
+	 */
+	@Column(name = "type")
+	private int type;
 
 	public long getId() {
 		return id;
@@ -78,7 +86,7 @@ public class MenuEntity {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}
@@ -111,12 +119,20 @@ public class MenuEntity {
 		this.url = url;
 	}
 
-	public Date getCreateOn() {
-		return createOn;
+	public String getMethod() {
+		return method;
 	}
 
-	public void setCreateOn(Date createOn) {
-		this.createOn = createOn;
+	public void setMethod(String method) {
+		this.method = method;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	public int getStatus() {
@@ -127,11 +143,11 @@ public class MenuEntity {
 		this.status = status;
 	}
 
-	public int getIndex() {
-		return index;
+	public int getType() {
+		return type;
 	}
 
-	public void setIndex(int index) {
-		this.index = index;
+	public void setType(int type) {
+		this.type = type;
 	}
 }

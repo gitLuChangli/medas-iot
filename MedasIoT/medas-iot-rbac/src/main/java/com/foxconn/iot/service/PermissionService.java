@@ -10,8 +10,6 @@ public interface PermissionService {
 	
 	void save(PermissionDto permission);
 	
-	PermissionDto findById(long id);
-	
 	void updateStatusById(int status, long id);
 	
 	void deleteById(long id);

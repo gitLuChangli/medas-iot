@@ -10,15 +10,15 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "tb_button_relation", indexes = { @Index(name = "idx_button_relation_ancestor", columnList = "ancestor"),
-		@Index(name = "idx_button_relation_descendant", columnList = "descendant") }, uniqueConstraints = {
-				@UniqueConstraint(name = "uq_button_relation", columnNames = { "ancestor", "descendant" }) } )
-public class ButtonRelationEntity {
-	
+@Table(name = "tb_res_relation", indexes = { @Index(name = "idx_res_relation_ancestor", columnList = "ancestor"),
+		@Index(name = "idx_res_relation_descendant", columnList = "descendant") }, uniqueConstraints = {
+				@UniqueConstraint(name = "uq_res_relation", columnNames = { "ancestor", "descendant" }) })
+public class ResourceRelationEntity {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
+
 	@Column(name = "ancestor")
 	private long ancestor;
 

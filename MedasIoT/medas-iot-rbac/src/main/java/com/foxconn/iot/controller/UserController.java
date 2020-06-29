@@ -24,13 +24,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.foxconn.iot.dto.ButtonDto;
-import com.foxconn.iot.dto.MenuDto;
+import com.foxconn.iot.dto.ResourceDto;
 import com.foxconn.iot.dto.UserDetailDto;
 import com.foxconn.iot.dto.UserDto;
 import com.foxconn.iot.dto.UserRolesDto;
-import com.foxconn.iot.service.ButtonService;
-import com.foxconn.iot.service.MenuService;
+import com.foxconn.iot.service.ResourceService;
 import com.foxconn.iot.service.UserService;
 import com.foxconn.iot.support.CommonResponse;
 
@@ -41,9 +39,7 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	@Autowired
-	private MenuService menuService;
-	@Autowired
-	private ButtonService buttonService;
+	private ResourceService resourceService;
 	
 	@PostMapping(value = "/")
 	@CommonResponse
@@ -155,9 +151,9 @@ public class UserController {
 	@CommonResponse
 	public Map<String, Object> queryResource(@PathVariable(value = "id") long userid) {
 		Map<String, Object> result = new HashMap<>();
-		List<MenuDto> menus = menuService.queryDescendantsByUserId(userid);
+		List<ResourceDto> menus = resourceService.queryDescendantsByUserId(userid, 0);
 		result.put("menus", menus);
-		List<ButtonDto> buttons = buttonService.queryDescendantsByUserId(userid);
+		List<ResourceDto> buttons = resourceService.queryDescendantsByUserId(userid, 1);
 		result.put("buttons", buttons);
 		return result;
 	}

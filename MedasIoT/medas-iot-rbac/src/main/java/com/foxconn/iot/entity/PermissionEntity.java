@@ -55,19 +55,12 @@ public class PermissionEntity {
 	@Column(name = "create_on", updatable = false)
 	private Date createOn;
 
-	@ManyToMany(targetEntity = MenuEntity.class, fetch = FetchType.EAGER)
-	@JoinTable(name = "tb_permission_menu", joinColumns = {
+	@ManyToMany(targetEntity = ResourceEntity.class, fetch = FetchType.EAGER)
+	@JoinTable(name = "tb_permission_res", joinColumns = {
 			@JoinColumn(name = "permission_id", referencedColumnName = "id") }, inverseJoinColumns = {
-					@JoinColumn(name = "menu_id", referencedColumnName = "id") })
+					@JoinColumn(name = "res_id", referencedColumnName = "id") })
 	@OrderBy("id ASC")
-	private Set<MenuEntity> menus;
-	
-	@ManyToMany(targetEntity = ButtonEntity.class, fetch = FetchType.EAGER)
-	@JoinTable(name = "tb_permission_button", joinColumns = {
-			@JoinColumn(name="permission_id", referencedColumnName = "id")}, inverseJoinColumns = {
-					@JoinColumn(name="button_id", referencedColumnName = "id")})
-	@OrderBy("id ASC")
-	private Set<ButtonEntity> buttons;
+	private Set<ResourceEntity> resources;
 
 	public long getId() {
 		return id;
@@ -117,19 +110,12 @@ public class PermissionEntity {
 		this.createOn = createOn;
 	}
 
-	public Set<MenuEntity> getMenus() {
-		return menus;
+	public Set<ResourceEntity> getResources() {
+		return resources;
 	}
 
-	public void setMenus(Set<MenuEntity> menus) {
-		this.menus = menus;
+	public void setResources(Set<ResourceEntity> resources) {
+		this.resources = resources;
 	}
-
-	public Set<ButtonEntity> getButtons() {
-		return buttons;
-	}
-
-	public void setButtons(Set<ButtonEntity> buttons) {
-		this.buttons = buttons;
-	}
+	
 }

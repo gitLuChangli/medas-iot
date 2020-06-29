@@ -43,14 +43,14 @@ public class PermissionDto {
 	private List<String[]> menuIds;
 	
 	@JsonInclude(value = Include.NON_NULL)
-	private List<MenuDto> menuList;
+	private List<ResourceDto> menuList;
 	
 	@JsonView(PermissionCreate.class)
 	@JsonInclude(value = Include.NON_NULL)
 	private List<String[]> buttonIds;
 	
 	@JsonInclude(value = Include.NON_NULL)
-	private List<ButtonDto> buttonList;
+	private List<ResourceDto> buttonList;
 
 	public long getId() {
 		return id;
@@ -108,11 +108,11 @@ public class PermissionDto {
 		this.menuIds = menuIds;
 	}
 
-	public List<MenuDto> getMenuList() {
+	public List<ResourceDto> getMenuList() {
 		return menuList;
 	}
 
-	public void setMenuList(List<MenuDto> menuList) {
+	public void setMenuList(List<ResourceDto> menuList) {
 		this.menuList = menuList;
 	}
 
@@ -124,11 +124,12 @@ public class PermissionDto {
 		this.buttonIds = buttonIds;
 	}
 
-	public List<ButtonDto> getButtonList() {
+	public List<ResourceDto> getButtonList() {
 		return buttonList;
 	}
 
-	public void setButtonList(List<ButtonDto> buttonList) {
+	public void setButtonList(List<ResourceDto> buttonList) {
 		this.buttonList = buttonList;
 	}
+	
 }

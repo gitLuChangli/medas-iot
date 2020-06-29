@@ -18,54 +18,48 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.druid.util.StringUtils;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.foxconn.iot.dto.ButtonDto;
-import com.foxconn.iot.service.ButtonService;
+import com.foxconn.iot.dto.ResourceDto;
+import com.foxconn.iot.service.ResourceService;
 import com.foxconn.iot.support.CommonResponse;
 
 @RestController
-@RequestMapping(value = "/api/button")
-public class ButtonController {
+@RequestMapping(value = "/api/res")
+public class ResourceController {
 
 	@Autowired
-	private ButtonService buttonService;
+	private ResourceService resourceService;
 
 	@PostMapping(value = "/")
 	@CommonResponse
-	public void create(@Valid @JsonView(ButtonDto.Create.class) @RequestBody ButtonDto menu, BindingResult result) {
-		buttonService.create(menu);
-	}
-
-	@GetMapping(value = "/{id:\\d+}")
-	@CommonResponse
-	public List<ButtonDto> query(@PathVariable(value = "id") long id) {
-		return buttonService.queryDescendantsByAncestor(id);
+	public void create(@Valid @JsonView(ResourceDto.Create.class) @RequestBody ResourceDto res, BindingResult result) {
+		resourceService.create(res);
 	}
 
 	@PutMapping(value = "/")
 	@CommonResponse
-	public void update(@Valid @JsonView(ButtonDto.Save.class) @RequestBody ButtonDto menu, BindingResult result) {
-		buttonService.save(menu);
+	public void update(@Valid @JsonView(ResourceDto.Save.class) @RequestBody ResourceDto res, BindingResult result) {
+		resourceService.save(res);
 	}
 
 	@PutMapping(value = "/disable/{id:\\d+}/{status:^[01]$}")
 	@CommonResponse
 	public void disable(@PathVariable(value = "id") long id, @PathVariable(value = "status") int status) {
-		buttonService.updateStatusById(status, id);
+		resourceService.updateStatusById(status, id);
 	}
 
 	@DeleteMapping(value = "/{id:\\d+}")
 	@CommonResponse
 	public void delete(@PathVariable(value = "id") long id) {
-		buttonService.deleteById(id);
+		resourceService.deleteById(id);
 	}
 
-	@GetMapping(value = "/descendants")
+	@GetMapping(value = "/descendants/type/{type:^[01]$}")
 	@CommonResponse
-	public List<ButtonDto> queryAllDescendants(@RequestParam(value = "all", required = false) String all) {
+	public List<ResourceDto> queryAllDescendants(@PathVariable(value = "type") int type, @RequestParam(value = "all", required = false) String all) {
 		boolean valid = true;
 		if (!StringUtils.isEmpty(all) && "true".equalsIgnoreCase(all)) {
 			valid = false;
 		}
-		return buttonService.queryDescendants(valid);
+		return resourceService.queryDescendants(valid, type);
 	}
 }

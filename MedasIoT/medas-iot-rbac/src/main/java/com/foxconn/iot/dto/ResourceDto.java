@@ -1,6 +1,5 @@
 package com.foxconn.iot.dto;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
@@ -9,29 +8,32 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.annotation.JsonView;
 
-public class MenuDto {
+public class ResourceDto {
 
-	public interface Basic {}
-	
-	public interface Create extends Basic {}
-	
-	public interface Save extends Create {}
-	
-	@JsonView(Save.class)
+	public interface Basic {
+	}
+
+	public interface Create extends Basic {
+	}
+
+	public interface Save extends Create {
+	}
+
 	@JsonFormat(shape = Shape.STRING)
+	@JsonView(Save.class)
 	private long id;
 
-	@NotBlank(message = "菜單名稱不能為空")
+	@NotBlank(message = "名稱不能為空")
 	@JsonView(Basic.class)
 	private String name;
 
-	@NotBlank(message = "菜單標題不能為空")
+	@NotBlank(message = "標題不能為空")
 	@JsonView(Basic.class)
 	private String title;
-	
+
 	@JsonView(Basic.class)
 	private String details;
 
@@ -41,23 +43,25 @@ public class MenuDto {
 	@JsonView(Basic.class)
 	private String url;
 
-	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@JsonView(Basic.class)
-	private Date createOn;
+	private String method;
 
-	@JsonView(Basic.class)
-	private int status;
-	
 	@JsonView(Basic.class)
 	private int index;
 
-	@JsonView(Create.class)
+	@JsonView(Basic.class)
+	private int status;
+
+	@JsonView(Basic.class)
+	private int type;
+
+	@JsonView(Basic.class)
 	@JsonInclude(value = Include.NON_NULL)
 	@JsonDeserialize(as = String[].class)
 	private String[] ancestorIds;
 
 	@JsonInclude(value = Include.NON_NULL)
-	private List<MenuDto> descendants;
+	private List<ResourceDto> descendants;
 
 	public long getId() {
 		return id;
@@ -74,7 +78,7 @@ public class MenuDto {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}
@@ -107,20 +111,12 @@ public class MenuDto {
 		this.url = url;
 	}
 
-	public Date getCreateOn() {
-		return createOn;
+	public String getMethod() {
+		return method;
 	}
 
-	public void setCreateOn(Date createOn) {
-		this.createOn = createOn;
-	}
-
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
+	public void setMethod(String method) {
+		this.method = method;
 	}
 
 	public int getIndex() {
@@ -131,6 +127,22 @@ public class MenuDto {
 		this.index = index;
 	}
 
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
 	public String[] getAncestorIds() {
 		return ancestorIds;
 	}
@@ -139,11 +151,11 @@ public class MenuDto {
 		this.ancestorIds = ancestorIds;
 	}
 
-	public List<MenuDto> getDescendants() {
+	public List<ResourceDto> getDescendants() {
 		return descendants;
 	}
 
-	public void setDescendants(List<MenuDto> descendants) {
+	public void setDescendants(List<ResourceDto> descendants) {
 		this.descendants = descendants;
 	}
 }

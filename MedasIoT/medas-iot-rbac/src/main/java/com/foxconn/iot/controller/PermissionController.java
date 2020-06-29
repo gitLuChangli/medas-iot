@@ -34,12 +34,6 @@ public class PermissionController {
 		permissionService.create(permission);
 	}
 
-	@GetMapping(value = "/{id:\\d+}")
-	@CommonResponse
-	public PermissionDto query(@PathVariable(value = "id") long id) {
-		return permissionService.findById(id);
-	}
-	
 	@GetMapping(value = "/all/")
 	@CommonResponse
 	public List<PermissionDto> queryAll() {

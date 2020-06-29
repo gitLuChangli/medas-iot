@@ -1,8 +1,6 @@
 package com.foxconn.iot.entity;
 
-import java.util.Date;
-
-public class ButtonRelationVo {
+public class ResourceRelationVo {
 	
 	private long id;
 	
@@ -18,21 +16,22 @@ public class ButtonRelationVo {
 	
 	private String method;
 	
-	private Date createOn;
+	private int index;
 	
 	private int status;
+	
+	private int type;
 	
 	private long ancestor;
 	
 	private int depth;
 	
-	
-	public ButtonRelationVo() {
+	public ResourceRelationVo() {
 		super();
 	}
-
-	public ButtonRelationVo(long id, String name, String title, String details, String icon, String url, String method, Date createOn, int status,
-			long ancestor, int depth) {
+	
+	public ResourceRelationVo(long id, String name, String title, String details, String icon, String url,
+			String method, int index, int status, int type, long ancestor, int depth) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -41,11 +40,14 @@ public class ButtonRelationVo {
 		this.icon = icon;
 		this.url = url;
 		this.method = method;
-		this.createOn = createOn;
+		this.index = index;
 		this.status = status;
+		this.type = type;
 		this.ancestor = ancestor;
 		this.depth = depth;
 	}
+
+
 
 	public long getId() {
 		return id;
@@ -94,7 +96,7 @@ public class ButtonRelationVo {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
+
 	public String getMethod() {
 		return method;
 	}
@@ -103,12 +105,12 @@ public class ButtonRelationVo {
 		this.method = method;
 	}
 
-	public Date getCreateOn() {
-		return createOn;
+	public int getIndex() {
+		return index;
 	}
 
-	public void setCreateOn(Date createOn) {
-		this.createOn = createOn;
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	public int getStatus() {
@@ -117,6 +119,14 @@ public class ButtonRelationVo {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
 	}
 
 	public long getAncestor() {
