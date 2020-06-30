@@ -29,4 +29,7 @@ public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
 	
 	@Query(value = "select a from RoleEntity a where a.id in (:ids)")
 	List<Long> queryMenuIds(@Param("ids") Long[] ids);
+	
+	@Query(value = "select role_id from tb_user_role where user_id=:userid", nativeQuery = true)
+	List<Object> queryIds(@Param("userid") long userid); 
 }

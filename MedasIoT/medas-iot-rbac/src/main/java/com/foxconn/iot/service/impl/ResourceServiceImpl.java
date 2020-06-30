@@ -245,6 +245,9 @@ public class ResourceServiceImpl implements ResourceService {
 	@Override
 	public List<ResourceDto> queryDescendantsByRoleIds(Long[] roleIds, int type) {
 		List<Object> objs = resourceRepository.queryByRoleIds(roleIds, type);
+		if (objs == null || objs.size() == 0) {
+			return null;
+		}
 		List<Long> ancestors = new ArrayList<>();
 		for (Object obj : objs) {
 			ancestors.add(new BigInteger(obj.toString()).longValue());
@@ -256,6 +259,9 @@ public class ResourceServiceImpl implements ResourceService {
 	@Override
 	public List<ResourceDto> queryDescendantsByUserId(long userid, int type) {
 		List<Object> objs = resourceRepository.queryByUserId(userid, type);
+		if (objs == null || objs.size() == 0) {
+			return null;
+		}
 		List<Long> ancestors = new ArrayList<>();
 		for (Object obj : objs) {
 			ancestors.add(new BigInteger(obj.toString()).longValue());

@@ -1,5 +1,6 @@
 package com.foxconn.iot.service.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -126,5 +127,15 @@ public class RoleServiceImpl implements RoleService {
 			}
 		}
 		return roles;
+	}
+	
+	@Override
+	public List<Long> queryIds(long userid) {
+		List<Object> objs = roleRepository.queryIds(userid);
+		List<Long> ids = new ArrayList<>();
+		for (Object obj : objs) {
+			ids.add(new BigInteger(obj.toString()).longValue());
+		}
+		return ids;
 	}
 }

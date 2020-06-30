@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.annotation.JsonView;
 
-public class ResourceDto {
+public class ResourceDto{
 
 	public interface Basic {
 	}

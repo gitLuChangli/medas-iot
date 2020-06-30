@@ -29,6 +29,7 @@ import com.foxconn.iot.dto.UserDetailDto;
 import com.foxconn.iot.dto.UserDto;
 import com.foxconn.iot.dto.UserRolesDto;
 import com.foxconn.iot.service.ResourceService;
+import com.foxconn.iot.service.RoleService;
 import com.foxconn.iot.service.UserService;
 import com.foxconn.iot.support.CommonResponse;
 
@@ -40,6 +41,8 @@ public class UserController {
 	private UserService userService;
 	@Autowired
 	private ResourceService resourceService;
+	@Autowired
+	private RoleService roleService;
 	
 	@PostMapping(value = "/")
 	@CommonResponse
@@ -151,6 +154,8 @@ public class UserController {
 	@CommonResponse
 	public Map<String, Object> queryResource(@PathVariable(value = "id") long userid) {
 		Map<String, Object> result = new HashMap<>();
+		List<Long> roleIds = roleService.queryIds(userid);
+		result.put("roleIds", roleIds);
 		List<ResourceDto> menus = resourceService.queryDescendantsByUserId(userid, 0);
 		result.put("menus", menus);
 		List<ResourceDto> buttons = resourceService.queryDescendantsByUserId(userid, 1);

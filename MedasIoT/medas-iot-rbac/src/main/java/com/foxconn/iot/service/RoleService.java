@@ -21,4 +21,6 @@ public interface RoleService {
 	List<PermissionDto> queryPermissionsById(long id);
 	
 	List<RolePermissionVo> queryAll();
+	
+	List<Long> queryIds(long userid);
 }
