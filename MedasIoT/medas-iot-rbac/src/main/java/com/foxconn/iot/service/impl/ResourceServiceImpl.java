@@ -84,7 +84,7 @@ public class ResourceServiceImpl implements ResourceService {
 		entity.setDetails(res.getDetails());
 		entity.setIcon(res.getIcon());
 		entity.setUrl(res.getUrl());
-		entity.setUrl(res.getMethod());
+		entity.setMethod(res.getMethod());
 		entity.setIndex(res.getIndex());
 		resourceRepository.save(entity);
 

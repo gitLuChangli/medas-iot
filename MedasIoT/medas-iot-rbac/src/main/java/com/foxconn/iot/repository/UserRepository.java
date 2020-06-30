@@ -30,8 +30,12 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	void updateStatusById(@Param("status") int status, @Param("id") long id);
 	
 	@Modifying
-	@Query(value = "update UserEntity a set a.pwd=:pwd where a.id=:id")
+	@Query(value = "update UserEntity a set a.pwd=:pwd, a.modify=1 where a.id=:id")
 	void updatePwdById(@Param("pwd") String pwd, @Param("id") long id);
+	
+	@Modifying
+	@Query(value = "update UserEntity a set a.pwd=:pwd, a.modify=0 where a.id=:id")
+	void resetPwd(@Param("pwd") String pwd, @Param("id") long id);
 	
 	@Query(value = "select b.ancestor from UserEntity a inner join CompanyRelationEntity b on a.company.id = b.descendant where a.id=:userid order by b.depth desc")
 	List<Long> queryCompanyRelations(@Param("userid") long userid);

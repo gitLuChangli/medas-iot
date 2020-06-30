@@ -66,6 +66,9 @@ public class UserEntity {
 
 	@Column(name = "status")
 	private int status;
+	
+	@Column(name="modify")
+	private int modify;
 
 	@CreatedDate
 	@Temporal(TemporalType.TIMESTAMP)
@@ -190,4 +193,11 @@ public class UserEntity {
 		this.roles = roles;
 	}
 
+	public int getModify() {
+		return modify;
+	}
+
+	public void setModify(int modify) {
+		this.modify = modify;
+	}
 }

@@ -29,6 +29,8 @@ public interface UserService {
 	
 	void updatePwdById(String pwd, long id);
 	
+	void resetPwd(String pwd, long id);
+	
 	List<Long> queryCompanyRelations(long userid);
 	
 	void setRoles(UserRolesDto user);

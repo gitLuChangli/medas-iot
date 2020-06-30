@@ -76,7 +76,7 @@ public class RoleController {
 		return roleService.queryPermissionsById(id);
 	}
 	
-	@PostMapping(value = "/resource")
+	@PostMapping(value = "/resources")
 	@CommonResponse
 	public Map<String, Object> queryResource(@RequestBody Long[] roleIds) {
 		if (roleIds == null || roleIds.length == 0) return null;

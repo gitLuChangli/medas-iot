@@ -124,7 +124,7 @@ public class UserController {
 	@PutMapping(value = "/reset_pwd/{id:\\d+}")
 	@CommonResponse
 	public void adminResetPwdById(@PathVariable(value = "id") long id) {
-		userService.updatePwdById("password1!", id);
+		userService.resetPwd("password1!", id);
 	}
 
 	/**
@@ -155,7 +155,11 @@ public class UserController {
 	public Map<String, Object> queryResource(@PathVariable(value = "id") long userid) {
 		Map<String, Object> result = new HashMap<>();
 		List<Long> roleIds = roleService.queryIds(userid);
-		result.put("roleIds", roleIds);
+		List<String> ids = new ArrayList<>();
+		for (Long id : roleIds) {
+			ids.add(id + "");
+		}
+		result.put("roleIds", ids);
 		List<ResourceDto> menus = resourceService.queryDescendantsByUserId(userid, 0);
 		result.put("menus", menus);
 		List<ResourceDto> buttons = resourceService.queryDescendantsByUserId(userid, 1);

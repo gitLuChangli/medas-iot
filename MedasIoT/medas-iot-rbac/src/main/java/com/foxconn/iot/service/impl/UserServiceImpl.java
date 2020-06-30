@@ -192,6 +192,12 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
+	@Transactional
+	public void resetPwd(String pwd, long id) {
+		userRepository.resetPwd(encoder.encode(pwd), id);
+	}
+	
+	@Override
 	public List<Long> queryCompanyRelations(long userid) {
 		return userRepository.queryCompanyRelations(userid);
 	}
