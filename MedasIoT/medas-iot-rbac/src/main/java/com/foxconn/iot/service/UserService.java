@@ -34,4 +34,8 @@ public interface UserService {
 	List<Long> queryCompanyRelations(long userid);
 	
 	void setRoles(UserRolesDto user);
+	
+	List<String> queryRoles(long userid);
+	
+	List<String> queryPermissions(long userid);
 }

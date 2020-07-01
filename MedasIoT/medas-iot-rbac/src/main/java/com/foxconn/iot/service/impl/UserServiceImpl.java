@@ -219,4 +219,24 @@ public class UserServiceImpl implements UserService {
 		}
 		userRepository.save(entity);
 	}
+
+	@Override
+	public List<String> queryRoles(long userid) {
+		List<Object> objs = userRepository.queryRoles(userid);
+		List<String> roles = new ArrayList<>();
+		for (Object obj : objs) {
+			roles.add(obj.toString());
+		}
+		return roles;
+	}
+
+	@Override
+	public List<String> queryPermissions(long userid) {
+		List<Object> objs = userRepository.queryPermissions(userid);
+		List<String> permissions = new ArrayList<>();
+		for (Object obj : objs) {
+			permissions.add(obj.toString());
+		}
+		return permissions;
+	}
 }

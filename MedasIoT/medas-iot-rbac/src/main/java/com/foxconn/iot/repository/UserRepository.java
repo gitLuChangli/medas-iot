@@ -39,4 +39,10 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	
 	@Query(value = "select b.ancestor from UserEntity a inner join CompanyRelationEntity b on a.company.id = b.descendant where a.id=:userid order by b.depth desc")
 	List<Long> queryCompanyRelations(@Param("userid") long userid);
+	
+	@Query(value = "select a.name from tb_role a left join tb_user_role b on a.id = b.role_id where b.user_id=:userid and a.status=0", nativeQuery = true)
+	List<Object> queryRoles(@Param("userid") long userid);
+	
+	@Query(value = "select a.name from tb_permission a left join tb_role_permission b on a.id = b.permission_id left join tb_user_role c on b.role_id = c.role_id left join tb_role d on c.role_id=d.id where c.user_id=userid and a.status=0 and d.status=0", nativeQuery = true)
+	List<Object> queryPermissions(@Param("userid") long userid);
 }

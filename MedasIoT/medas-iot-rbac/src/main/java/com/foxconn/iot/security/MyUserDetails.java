@@ -13,6 +13,7 @@ public class MyUserDetails implements UserDetails {
 	private String username;
 	private String password;
 	private int status;
+	private int modify;
 	private Set<? extends GrantedAuthority> authorities;
 	
 	public void setAuthorities(Set<? extends GrantedAuthority> authorities) {
@@ -36,7 +37,7 @@ public class MyUserDetails implements UserDetails {
 
 	@Override
 	public boolean isAccountNonExpired() {
-		return true;
+		return this.modify > 0;
 	}
 
 	@Override
@@ -68,5 +69,13 @@ public class MyUserDetails implements UserDetails {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public int getModify() {
+		return modify;
+	}
+
+	public void setModify(int modify) {
+		this.modify = modify;
 	}
 }

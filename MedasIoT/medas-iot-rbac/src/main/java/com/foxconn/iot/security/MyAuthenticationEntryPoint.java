@@ -8,12 +8,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 
+@Component
+@Order(Integer.MIN_VALUE + 2)
 public class MyAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
 	@Override

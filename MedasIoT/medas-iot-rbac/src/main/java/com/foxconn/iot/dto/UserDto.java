@@ -75,6 +75,8 @@ public class UserDto {
 	@JsonInclude(value = Include.NON_NULL)
 	@JsonSerialize(as = Long[].class)
 	private Long[] roles;
+	
+	private int modify;
 
 	public long getId() {
 		return id;
@@ -178,5 +180,13 @@ public class UserDto {
 
 	public void setRoles(Long[] roles) {
 		this.roles = roles;
+	}
+
+	public int getModify() {
+		return modify;
+	}
+
+	public void setModify(int modify) {
+		this.modify = modify;
 	}
 }
