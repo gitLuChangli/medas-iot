@@ -38,27 +38,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors()
+		http.cors().and().csrf().disable();
 		
-			.and()
-			.httpBasic()
-			.authenticationEntryPoint(authenticationEntryPoint)
-		
-			.and()
-			.authorizeRequests()
-			.anyRequest()
-			.authenticated()
-		
-			.and()
-			.formLogin()
+		http.formLogin()
+			.loginProcessingUrl("/form/login")
 			.successHandler(authenticationSuccessHandler)
 			.failureHandler(authenticationFailureHandler)
 			.permitAll()
 			
 			.and()
 			.logout()
+			.logoutUrl("/logout")
 			.logoutSuccessHandler(logoutSuccessHandler)
-			.permitAll();
+			.permitAll()
+		
+			.and()
+			.authorizeRequests()
+			.anyRequest()
+			.authenticated();
 		
 		http.exceptionHandling().accessDeniedHandler(accessDeniedHandler);
 		http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
@@ -67,7 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		//web.ignoring().antMatchers("/**");
+		web.ignoring().antMatchers("/login");
 	}
 	
 	@Bean

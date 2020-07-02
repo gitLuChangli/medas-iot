@@ -1,6 +1,7 @@
 package com.foxconn.iot.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -59,11 +60,17 @@ public class UserServiceImpl implements UserService {
 		if (length == 0) {
 			throw new BizException("Invalid company relations");		
 		}
+		
+		if (!Arrays.equals(user.getCompanyIds(), ancestors_.toArray())) {
+			throw new BizException("Invalid company relations");
+		}
+		
+		/*
 		for (int i = 0; i < length; i++) {
 			if (!(ancestors_.get(i) + "").equals(user.getCompanyIds()[i])) {
 				throw new BizException("Invalid company relations");
 			}
-		}				
+		}*/				
 		CompanyEntity company = companyRepository.findById(descendant);
 		if (company == null) {
 			throw new BizException("Invalid company relations");
@@ -109,11 +116,15 @@ public class UserServiceImpl implements UserService {
 			if (length == 0) {
 				throw new BizException("Invalid company relations");		
 			}
+			if (!Arrays.equals(user.getCompanyIds(), ancestors_.toArray())) {
+				throw new BizException("Invalid company relations");
+			}
+			/*
 			for (int i = 0; i < length; i++) {
 				if (!(ancestors_.get(i) + "").equals(user.getCompanyIds()[i])) {
 					throw new BizException("Invalid company relations");
 				}
-			}				
+			}*/				
 			CompanyEntity company = companyRepository.findById(descendant);
 			if (company == null) {
 				throw new BizException("Invalid company relations");

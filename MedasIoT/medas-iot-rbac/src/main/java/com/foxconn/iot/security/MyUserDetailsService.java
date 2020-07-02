@@ -28,13 +28,13 @@ public class MyUserDetailsService implements UserDetailsService {
 		MyUserDetails userDetails = new MyUserDetails();
 		UserDto user = userService.findByNO(username);
 		if (user == null) {
-			throw new UsernameNotFoundException("用户不存在");
+			return null;
 		}
 		userDetails.setUsername(user.getNo());
 		userDetails.setPassword(user.getPwd());
 		userDetails.setStatus(user.getStatus());
 		userDetails.setModify(user.getModify());
-		if (user.getStatus() > 0) {
+		if (user.getStatus() == 0 && user.getModify() > 0) {
 			Set<GrantedAuthority> authorities = new HashSet<>();
 			List<String> roles = userService.queryRoles(user.getId());
 			List<String> permissions = userService.queryPermissions(user.getId());
