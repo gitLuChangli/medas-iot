@@ -1,6 +1,6 @@
 package com.foxconn.iot.sso.dao;
 
-import com.foxconn.iot.sso.entity.User;
+import com.foxconn.iot.sso.model.User;
 
 public interface UserDao {
 	
