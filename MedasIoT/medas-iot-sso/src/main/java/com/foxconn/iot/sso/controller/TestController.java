@@ -1,5 +1,7 @@
 package com.foxconn.iot.sso.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +17,8 @@ public class TestController {
 	private UserService userService;
 	
 	@GetMapping(value = "/user/")
-	public UserDetails queryRoles(@RequestParam(value = "no", required = true) String username) {
+	public UserDetails queryRoles(HttpSession session, @RequestParam(value = "no", required = true) String username) {
+		System.out.print(session.getId());
 		return userService.loadUserByUsername(username);
 	}
 }

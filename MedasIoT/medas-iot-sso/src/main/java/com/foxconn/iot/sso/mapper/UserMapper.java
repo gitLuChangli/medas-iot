@@ -31,7 +31,7 @@ public interface UserMapper {
 	})
 	User findByNO(@Param("username") String username);
 	
-	@Update("update tb_user a set a.pwd=#{pwd} where a.user_no=#{username}")
+	@Update("update tb_user a set a.pwd=#{pwd}, a.modify=1 where a.user_no=#{username}")
 	int updatePwd(@Param("username") String username, @Param("pwd") String pwd);
 	
 	@Select("select a.pwd from tb_user a where a.user_no=#{username}")
